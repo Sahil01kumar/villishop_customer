@@ -11,6 +11,9 @@ import '../../features/main/presentation/screens/main_screen.dart';
 import '../../features/search/presentation/screens/search_screen.dart';
 import '../../features/location/presentation/screens/address_list_screen.dart';
 import '../../features/location/presentation/screens/add_edit_address_screen.dart';
+import '../../features/shops/presentation/screens/shops_screen.dart';
+import '../../features/shops/presentation/screens/shop_details_screen.dart';
+import '../../features/products/presentation/screens/product_catalog_screen.dart';
 
 class AppRoutes {
   static const String splash = '/';
@@ -23,6 +26,9 @@ class AppRoutes {
   static const String search = '/search';
   static const String addresses = '/addresses';
   static const String addAddress = '/add-address';
+  static const String shops = '/shops';
+  static const String shopDetails = '/shop-details';
+  static const String productCatalog = '/product-catalog';
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -102,6 +108,25 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.addAddress,
         builder: (context, state) => const AddEditAddressScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.shops,
+        builder: (context, state) => const ShopsScreen(),
+      ),
+      GoRoute(
+        path: '${AppRoutes.shopDetails}/:id',
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return ShopDetailsScreen(shopId: id);
+        },
+      ),
+      GoRoute(
+        path: '${AppRoutes.productCatalog}/:shopId',
+        builder: (context, state) {
+          final shopId = state.pathParameters['shopId']!;
+          final shopName = (state.extra as Map<String, dynamic>?)?['shopName'] ?? 'Shop';
+          return ProductCatalogScreen(shopId: shopId, shopName: shopName);
+        },
       ),
     ],
   );

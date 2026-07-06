@@ -28,6 +28,18 @@ mixin _$ProductModel {
   String get imageUrl => throw _privateConstructorUsedError;
   int get discountPercentage => throw _privateConstructorUsedError;
   double get rating => throw _privateConstructorUsedError;
+  String? get brand => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError;
+  String? get unit =>
+      throw _privateConstructorUsedError; // e.g. kg, ltr, gm, packet
+  StockStatus get stockStatus => throw _privateConstructorUsedError;
+  bool get isVeg => throw _privateConstructorUsedError;
+  bool get isBestseller => throw _privateConstructorUsedError;
+  bool get isNewArrival => throw _privateConstructorUsedError;
+  bool get isLimitedOffer => throw _privateConstructorUsedError;
+  String? get expiryDate => throw _privateConstructorUsedError;
+  List<String> get categories => throw _privateConstructorUsedError;
+  int get quantityInCart => throw _privateConstructorUsedError;
 
   /// Serializes this ProductModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -53,7 +65,18 @@ abstract class $ProductModelCopyWith<$Res> {
       String weight,
       String imageUrl,
       int discountPercentage,
-      double rating});
+      double rating,
+      String? brand,
+      String? description,
+      String? unit,
+      StockStatus stockStatus,
+      bool isVeg,
+      bool isBestseller,
+      bool isNewArrival,
+      bool isLimitedOffer,
+      String? expiryDate,
+      List<String> categories,
+      int quantityInCart});
 }
 
 /// @nodoc
@@ -79,6 +102,17 @@ class _$ProductModelCopyWithImpl<$Res, $Val extends ProductModel>
     Object? imageUrl = null,
     Object? discountPercentage = null,
     Object? rating = null,
+    Object? brand = freezed,
+    Object? description = freezed,
+    Object? unit = freezed,
+    Object? stockStatus = null,
+    Object? isVeg = null,
+    Object? isBestseller = null,
+    Object? isNewArrival = null,
+    Object? isLimitedOffer = null,
+    Object? expiryDate = freezed,
+    Object? categories = null,
+    Object? quantityInCart = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -113,6 +147,50 @@ class _$ProductModelCopyWithImpl<$Res, $Val extends ProductModel>
           ? _value.rating
           : rating // ignore: cast_nullable_to_non_nullable
               as double,
+      brand: freezed == brand
+          ? _value.brand
+          : brand // ignore: cast_nullable_to_non_nullable
+              as String?,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
+      unit: freezed == unit
+          ? _value.unit
+          : unit // ignore: cast_nullable_to_non_nullable
+              as String?,
+      stockStatus: null == stockStatus
+          ? _value.stockStatus
+          : stockStatus // ignore: cast_nullable_to_non_nullable
+              as StockStatus,
+      isVeg: null == isVeg
+          ? _value.isVeg
+          : isVeg // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isBestseller: null == isBestseller
+          ? _value.isBestseller
+          : isBestseller // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isNewArrival: null == isNewArrival
+          ? _value.isNewArrival
+          : isNewArrival // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isLimitedOffer: null == isLimitedOffer
+          ? _value.isLimitedOffer
+          : isLimitedOffer // ignore: cast_nullable_to_non_nullable
+              as bool,
+      expiryDate: freezed == expiryDate
+          ? _value.expiryDate
+          : expiryDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      categories: null == categories
+          ? _value.categories
+          : categories // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      quantityInCart: null == quantityInCart
+          ? _value.quantityInCart
+          : quantityInCart // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -133,7 +211,18 @@ abstract class _$$ProductModelImplCopyWith<$Res>
       String weight,
       String imageUrl,
       int discountPercentage,
-      double rating});
+      double rating,
+      String? brand,
+      String? description,
+      String? unit,
+      StockStatus stockStatus,
+      bool isVeg,
+      bool isBestseller,
+      bool isNewArrival,
+      bool isLimitedOffer,
+      String? expiryDate,
+      List<String> categories,
+      int quantityInCart});
 }
 
 /// @nodoc
@@ -157,6 +246,17 @@ class __$$ProductModelImplCopyWithImpl<$Res>
     Object? imageUrl = null,
     Object? discountPercentage = null,
     Object? rating = null,
+    Object? brand = freezed,
+    Object? description = freezed,
+    Object? unit = freezed,
+    Object? stockStatus = null,
+    Object? isVeg = null,
+    Object? isBestseller = null,
+    Object? isNewArrival = null,
+    Object? isLimitedOffer = null,
+    Object? expiryDate = freezed,
+    Object? categories = null,
+    Object? quantityInCart = null,
   }) {
     return _then(_$ProductModelImpl(
       id: null == id
@@ -191,6 +291,50 @@ class __$$ProductModelImplCopyWithImpl<$Res>
           ? _value.rating
           : rating // ignore: cast_nullable_to_non_nullable
               as double,
+      brand: freezed == brand
+          ? _value.brand
+          : brand // ignore: cast_nullable_to_non_nullable
+              as String?,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
+      unit: freezed == unit
+          ? _value.unit
+          : unit // ignore: cast_nullable_to_non_nullable
+              as String?,
+      stockStatus: null == stockStatus
+          ? _value.stockStatus
+          : stockStatus // ignore: cast_nullable_to_non_nullable
+              as StockStatus,
+      isVeg: null == isVeg
+          ? _value.isVeg
+          : isVeg // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isBestseller: null == isBestseller
+          ? _value.isBestseller
+          : isBestseller // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isNewArrival: null == isNewArrival
+          ? _value.isNewArrival
+          : isNewArrival // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isLimitedOffer: null == isLimitedOffer
+          ? _value.isLimitedOffer
+          : isLimitedOffer // ignore: cast_nullable_to_non_nullable
+              as bool,
+      expiryDate: freezed == expiryDate
+          ? _value.expiryDate
+          : expiryDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      categories: null == categories
+          ? _value._categories
+          : categories // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      quantityInCart: null == quantityInCart
+          ? _value.quantityInCart
+          : quantityInCart // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -206,7 +350,19 @@ class _$ProductModelImpl implements _ProductModel {
       required this.weight,
       required this.imageUrl,
       this.discountPercentage = 0,
-      this.rating = 0.0});
+      this.rating = 0.0,
+      this.brand,
+      this.description,
+      this.unit,
+      this.stockStatus = StockStatus.inStock,
+      this.isVeg = false,
+      this.isBestseller = false,
+      this.isNewArrival = false,
+      this.isLimitedOffer = false,
+      this.expiryDate,
+      final List<String> categories = const [],
+      this.quantityInCart = 0})
+      : _categories = categories;
 
   factory _$ProductModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProductModelImplFromJson(json);
@@ -229,10 +385,46 @@ class _$ProductModelImpl implements _ProductModel {
   @override
   @JsonKey()
   final double rating;
+  @override
+  final String? brand;
+  @override
+  final String? description;
+  @override
+  final String? unit;
+// e.g. kg, ltr, gm, packet
+  @override
+  @JsonKey()
+  final StockStatus stockStatus;
+  @override
+  @JsonKey()
+  final bool isVeg;
+  @override
+  @JsonKey()
+  final bool isBestseller;
+  @override
+  @JsonKey()
+  final bool isNewArrival;
+  @override
+  @JsonKey()
+  final bool isLimitedOffer;
+  @override
+  final String? expiryDate;
+  final List<String> _categories;
+  @override
+  @JsonKey()
+  List<String> get categories {
+    if (_categories is EqualUnmodifiableListView) return _categories;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_categories);
+  }
+
+  @override
+  @JsonKey()
+  final int quantityInCart;
 
   @override
   String toString() {
-    return 'ProductModel(id: $id, name: $name, price: $price, originalPrice: $originalPrice, weight: $weight, imageUrl: $imageUrl, discountPercentage: $discountPercentage, rating: $rating)';
+    return 'ProductModel(id: $id, name: $name, price: $price, originalPrice: $originalPrice, weight: $weight, imageUrl: $imageUrl, discountPercentage: $discountPercentage, rating: $rating, brand: $brand, description: $description, unit: $unit, stockStatus: $stockStatus, isVeg: $isVeg, isBestseller: $isBestseller, isNewArrival: $isNewArrival, isLimitedOffer: $isLimitedOffer, expiryDate: $expiryDate, categories: $categories, quantityInCart: $quantityInCart)';
   }
 
   @override
@@ -250,13 +442,52 @@ class _$ProductModelImpl implements _ProductModel {
                 other.imageUrl == imageUrl) &&
             (identical(other.discountPercentage, discountPercentage) ||
                 other.discountPercentage == discountPercentage) &&
-            (identical(other.rating, rating) || other.rating == rating));
+            (identical(other.rating, rating) || other.rating == rating) &&
+            (identical(other.brand, brand) || other.brand == brand) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
+            (identical(other.unit, unit) || other.unit == unit) &&
+            (identical(other.stockStatus, stockStatus) ||
+                other.stockStatus == stockStatus) &&
+            (identical(other.isVeg, isVeg) || other.isVeg == isVeg) &&
+            (identical(other.isBestseller, isBestseller) ||
+                other.isBestseller == isBestseller) &&
+            (identical(other.isNewArrival, isNewArrival) ||
+                other.isNewArrival == isNewArrival) &&
+            (identical(other.isLimitedOffer, isLimitedOffer) ||
+                other.isLimitedOffer == isLimitedOffer) &&
+            (identical(other.expiryDate, expiryDate) ||
+                other.expiryDate == expiryDate) &&
+            const DeepCollectionEquality()
+                .equals(other._categories, _categories) &&
+            (identical(other.quantityInCart, quantityInCart) ||
+                other.quantityInCart == quantityInCart));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, price, originalPrice,
-      weight, imageUrl, discountPercentage, rating);
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        id,
+        name,
+        price,
+        originalPrice,
+        weight,
+        imageUrl,
+        discountPercentage,
+        rating,
+        brand,
+        description,
+        unit,
+        stockStatus,
+        isVeg,
+        isBestseller,
+        isNewArrival,
+        isLimitedOffer,
+        expiryDate,
+        const DeepCollectionEquality().hash(_categories),
+        quantityInCart
+      ]);
 
   /// Create a copy of ProductModel
   /// with the given fields replaced by the non-null parameter values.
@@ -283,7 +514,18 @@ abstract class _ProductModel implements ProductModel {
       required final String weight,
       required final String imageUrl,
       final int discountPercentage,
-      final double rating}) = _$ProductModelImpl;
+      final double rating,
+      final String? brand,
+      final String? description,
+      final String? unit,
+      final StockStatus stockStatus,
+      final bool isVeg,
+      final bool isBestseller,
+      final bool isNewArrival,
+      final bool isLimitedOffer,
+      final String? expiryDate,
+      final List<String> categories,
+      final int quantityInCart}) = _$ProductModelImpl;
 
   factory _ProductModel.fromJson(Map<String, dynamic> json) =
       _$ProductModelImpl.fromJson;
@@ -304,6 +546,28 @@ abstract class _ProductModel implements ProductModel {
   int get discountPercentage;
   @override
   double get rating;
+  @override
+  String? get brand;
+  @override
+  String? get description;
+  @override
+  String? get unit; // e.g. kg, ltr, gm, packet
+  @override
+  StockStatus get stockStatus;
+  @override
+  bool get isVeg;
+  @override
+  bool get isBestseller;
+  @override
+  bool get isNewArrival;
+  @override
+  bool get isLimitedOffer;
+  @override
+  String? get expiryDate;
+  @override
+  List<String> get categories;
+  @override
+  int get quantityInCart;
 
   /// Create a copy of ProductModel
   /// with the given fields replaced by the non-null parameter values.

@@ -195,7 +195,11 @@ class HomeScreen extends ConsumerWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SectionHeader(title: 'Popular Shops', subtitle: 'Trusted stores in your village', onSeeAll: () {}),
+                              SectionHeader(
+                                title: 'Popular Shops',
+                                subtitle: 'Trusted stores in your village',
+                                onSeeAll: () => context.push(AppRoutes.shops),
+                              ),
                               SizedBox(
                                 height: 260,
                                 child: ListView.builder(
