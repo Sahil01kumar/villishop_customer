@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "16906123725",
+    "project_id": "villishop-customer",
+    "storage_bucket": "villishop-customer.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:16906123725:android:45314ebc36c16aa2386c84",
+        "android_client_info": {
+          "package_name": "com.youngxcode.villishop.villishop_customer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBf2dFGNuH77fzIn8qkDnDfq95W2eoQ8i8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

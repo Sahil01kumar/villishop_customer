@@ -8,6 +8,8 @@ class CustomSearchBar extends StatelessWidget {
   final Function(String)? onChanged;
   final VoidCallback? onTap;
   final bool readOnly;
+  final String? hint;
+  final Widget? suffixIcon;
 
   const CustomSearchBar({
     super.key,
@@ -15,6 +17,8 @@ class CustomSearchBar extends StatelessWidget {
     this.onChanged,
     this.onTap,
     this.readOnly = false,
+    this.hint,
+    this.suffixIcon,
   });
 
   @override
@@ -30,13 +34,15 @@ class CustomSearchBar extends StatelessWidget {
         onChanged: onChanged,
         onTap: onTap,
         readOnly: readOnly,
-        decoration: const InputDecoration(
-          hintText: AppStrings.searchHint,
-          prefixIcon: Icon(Icons.search, color: AppColors.primary),
+        decoration: InputDecoration(
+          hintText: hint ?? AppStrings.searchHint,
+          hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14, fontWeight: FontWeight.w500),
+          prefixIcon: const Icon(Icons.search, color: AppColors.primary, size: 22),
+          suffixIcon: suffixIcon,
           border: InputBorder.none,
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(vertical: 14),
+          contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
         ),
       ),
     );

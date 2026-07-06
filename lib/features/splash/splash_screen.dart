@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_strings.dart';
-import '../../core/router/app_router.dart';
 import '../../core/constants/app_dimensions.dart';
+import '../authentication/providers/auth_provider.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
@@ -34,15 +34,18 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     );
 
     _controller.forward();
-    _navigateToNext();
+    
+    // We don't need context.go here anymore because GoRouter redirect
+    // will watch authProvider and navigate automatically.
+    // We just need to make sure authProvider is initialized.
+    _initAuth();
   }
 
-  void _navigateToNext() async {
-    await Future.delayed(const Duration(seconds: 3));
-    if (mounted) {
-      // ignore: use_build_context_synchronously
-      context.go(AppRoutes.home);
-    }
+  void _initAuth() async {
+    // Wait for animation and auth check
+    await Future.delayed(const Duration(seconds: 2));
+    // Triggering authProvider if not already
+    ref.read(authProvider);
   }
 
   @override
