@@ -12,4 +12,5 @@ abstract class ProductRepository {
   Future<ProductModel?> getProductDetails(String productId);
   Future<List<String>> getProductCategories(String shopId);
   Future<List<String>> getProductBrands(String shopId);
+  Future<List<ProductModel>> getRelatedProducts(String productId);
 }

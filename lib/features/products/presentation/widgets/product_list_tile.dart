@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
+import '../../../../core/router/app_router.dart';
 import '../../../home/data/models/product_model.dart';
+import '../../data/models/sub_models/inventory_info.dart';
 
 class ProductListTile extends StatelessWidget {
   final ProductModel product;
@@ -10,44 +13,47 @@ class ProductListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.s),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: AppRadius.rM,
-        border: Border.all(color: Colors.grey.withAlpha(40)),
-      ),
-      child: Row(
-        children: [
-          _buildProductImage(),
-          AppSpacing.hM,
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildBadges(),
-                Text(
-                  product.name,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                if (product.brand != null)
+    return GestureDetector(
+      onTap: () => context.push('${AppRoutes.productDetails}/${product.id}'),
+      child: Container(
+        padding: const EdgeInsets.all(AppSpacing.s),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: AppRadius.rM,
+          border: Border.all(color: Colors.grey.withAlpha(40)),
+        ),
+        child: Row(
+          children: [
+            _buildProductImage(),
+            AppSpacing.hM,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildBadges(),
                   Text(
-                    product.brand!,
-                    style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                    product.name,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                AppSpacing.vS,
-                Text(
-                  '${product.weight} ${product.unit ?? ''}',
-                  style: TextStyle(color: Colors.grey[500], fontSize: 13),
-                ),
-                const Spacer(),
-                _buildPriceSection(),
-              ],
+                  if (product.brand != null)
+                    Text(
+                      product.brand!,
+                      style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                    ),
+                  AppSpacing.vS,
+                  Text(
+                    '${product.packaging.weight} ${product.packaging.unit}',
+                    style: TextStyle(color: Colors.grey[500], fontSize: 13),
+                  ),
+                  const Spacer(),
+                  _buildPriceSection(),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -62,9 +68,16 @@ class ProductListTile extends StatelessWidget {
             color: Colors.grey[50],
             borderRadius: AppRadius.rM,
           ),
-          child: const Center(child: Icon(Icons.shopping_bag_outlined, size: 40, color: Colors.grey)),
+          child: Center(
+            child: Hero(
+              tag: 'product-${product.id}',
+              child: product.imageUrl.isNotEmpty
+                  ? Image.network(product.imageUrl, fit: BoxFit.contain)
+                  : Icon(Icons.shopping_bag_outlined, size: 40, color: Colors.grey.withAlpha(100)),
+            ),
+          ),
         ),
-        if (product.stockStatus == StockStatus.outOfStock)
+        if (product.inventory.stockStatus == StockStatus.outOfStock)
           Positioned.fill(
             child: Container(
               decoration: BoxDecoration(
@@ -83,9 +96,9 @@ class ProductListTile extends StatelessWidget {
   Widget _buildBadges() {
     return Row(
       children: [
-        if (product.isVeg)
+        if (product.healthLabels.isVegan)
           const Icon(Icons.radio_button_checked, color: Colors.green, size: 14),
-        if (product.isBestseller) ...[
+        if (product.inventory.isBestseller) ...[
           const SizedBox(width: 4),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -104,13 +117,13 @@ class ProductListTile extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (product.originalPrice > product.price)
+            if (product.pricing.mrp > product.pricing.sellingPrice)
               Text(
-                '₹${product.originalPrice.toStringAsFixed(0)}',
+                '₹${product.pricing.mrp.toStringAsFixed(0)}',
                 style: const TextStyle(color: Colors.grey, fontSize: 12, decoration: TextDecoration.lineThrough),
               ),
             Text(
-              '₹${product.price.toStringAsFixed(0)}',
+              '₹${product.pricing.sellingPrice.toStringAsFixed(0)}',
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: AppColors.textPrimary),
             ),
           ],

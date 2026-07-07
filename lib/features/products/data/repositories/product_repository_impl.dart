@@ -1,5 +1,10 @@
 import '../../domain/repositories/product_repository.dart';
 import '../../../home/data/models/product_model.dart';
+import '../models/sub_models/packaging_info.dart';
+import '../models/sub_models/manufacturing_info.dart';
+import '../models/sub_models/pricing_info.dart';
+import '../models/sub_models/inventory_info.dart';
+import '../models/sub_models/delivery_info.dart';
 
 class ProductRepositoryImpl implements ProductRepository {
   @override
@@ -11,75 +16,17 @@ class ProductRepositoryImpl implements ProductRepository {
     Map<String, dynamic>? filters,
   }) async {
     await Future.delayed(const Duration(milliseconds: 600));
-    
-    // Mock Data
-    List<ProductModel> products = [
-      const ProductModel(
-        id: 'p1',
-        name: 'Fresh Cow Milk',
-        brand: 'Yadav Dairy',
-        price: 28,
-        originalPrice: 32,
-        weight: '500',
-        unit: 'ml',
-        imageUrl: '',
-        discountPercentage: 12,
-        rating: 4.5,
-        isVeg: true,
-        isBestseller: true,
-        stockStatus: StockStatus.inStock,
-        categories: ['Milk & Dairy'],
-        description: 'Pure and fresh cow milk delivered within hours of milking.',
-      ),
-      const ProductModel(
-        id: 'p2',
-        name: 'Organic Wheat Atta',
-        brand: 'Village Fresh',
-        price: 180,
-        originalPrice: 210,
-        weight: '5',
-        unit: 'kg',
-        imageUrl: '',
-        discountPercentage: 14,
-        rating: 4.8,
-        isVeg: true,
-        isNewArrival: true,
-        stockStatus: StockStatus.lowStock,
-        categories: ['Atta & Dal'],
-      ),
-      const ProductModel(
-        id: 'p3',
-        name: 'Spiced Paneer',
-        brand: 'Yadav Dairy',
-        price: 120,
-        originalPrice: 135,
-        weight: '200',
-        unit: 'gm',
-        imageUrl: '',
-        discountPercentage: 11,
-        rating: 4.2,
-        isVeg: true,
-        stockStatus: StockStatus.outOfStock,
-        categories: ['Milk & Dairy'],
-      ),
-    ];
-
-    // Basic Mock Filtering/Sorting
-    if (searchQuery != null && searchQuery.isNotEmpty) {
-      products = products.where((p) => p.name.toLowerCase().contains(searchQuery.toLowerCase())).toList();
-    }
-    
-    if (categoryId != null && categoryId != 'All') {
-      products = products.where((p) => p.categories.contains(categoryId)).toList();
-    }
-
-    return products;
+    return _dummyProducts;
   }
 
   @override
   Future<ProductModel?> getProductDetails(String productId) async {
-    final products = await getProducts();
-    return products.firstWhere((p) => p.id == productId);
+    await Future.delayed(const Duration(milliseconds: 800));
+    try {
+      return _dummyProducts.firstWhere((p) => p.id == productId);
+    } catch (_) {
+      return null;
+    }
   }
 
   @override
@@ -91,4 +38,50 @@ class ProductRepositoryImpl implements ProductRepository {
   Future<List<String>> getProductBrands(String shopId) async {
     return ['Yadav Dairy', 'Village Fresh', 'Organic Farms'];
   }
+
+  @override
+  Future<List<ProductModel>> getRelatedProducts(String productId) async {
+    return _dummyProducts.where((p) => p.id != productId).toList();
+  }
+
+  final List<ProductModel> _dummyProducts = [
+    const ProductModel(
+      id: 'p1',
+      name: 'Fresh Cow Milk (A2)',
+      imageUrl: '',
+      category: 'Milk & Dairy',
+      brand: 'Yadav Dairy Farm',
+      packaging: PackagingInfo(weight: 500, unit: 'ml', packSize: 'Single'),
+      manufacturing: ManufacturingInfo(
+        manufacturer: 'Yadav Farms',
+        packedBy: 'Yadav Dairy',
+        countryOfOrigin: 'India',
+        fssaiNumber: '12345678901234',
+        shelfLife: '2 Days',
+      ),
+      pricing: PricingInfo(mrp: 32, sellingPrice: 28, discountPercentage: 12),
+      inventory: InventoryInfo(stockStatus: StockStatus.inStock, availableQuantity: 50, isBestseller: true),
+      delivery: DeliveryInfo(deliveryEta: '10 min', isFreeDelivery: true),
+      shopId: 's1',
+      shopName: 'Yadav Dairy Farm',
+      description: 'Pure and fresh A2 cow milk.',
+    ),
+    const ProductModel(
+      id: 'p2',
+      name: 'Organic Wheat Atta',
+      imageUrl: '',
+      category: 'Atta & Dal',
+      brand: 'Village Fresh',
+      packaging: PackagingInfo(weight: 5, unit: 'kg'),
+      manufacturing: ManufacturingInfo(
+        manufacturer: 'Village Mills',
+        packedBy: 'Village Fresh',
+        countryOfOrigin: 'India',
+      ),
+      pricing: PricingInfo(mrp: 210, sellingPrice: 180, discountPercentage: 14),
+      inventory: InventoryInfo(stockStatus: StockStatus.lowStock, availableQuantity: 5, isNewArrival: true),
+      shopId: 's2',
+      shopName: 'Village Veg Mart',
+    ),
+  ];
 }

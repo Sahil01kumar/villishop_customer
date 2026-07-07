@@ -20,26 +20,41 @@ ProductModel _$ProductModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ProductModel {
+// Basic Product
   String get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
-  double get price => throw _privateConstructorUsedError;
-  double get originalPrice => throw _privateConstructorUsedError;
-  String get weight => throw _privateConstructorUsedError;
   String get imageUrl => throw _privateConstructorUsedError;
-  int get discountPercentage => throw _privateConstructorUsedError;
-  double get rating => throw _privateConstructorUsedError;
+  List<String> get imageUrls => throw _privateConstructorUsedError;
+  String? get videoUrl => throw _privateConstructorUsedError;
+  String get category => throw _privateConstructorUsedError;
+  String? get subCategory => throw _privateConstructorUsedError;
   String? get brand => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
-  String? get unit =>
-      throw _privateConstructorUsedError; // e.g. kg, ltr, gm, packet
-  StockStatus get stockStatus => throw _privateConstructorUsedError;
-  bool get isVeg => throw _privateConstructorUsedError;
-  bool get isBestseller => throw _privateConstructorUsedError;
-  bool get isNewArrival => throw _privateConstructorUsedError;
-  bool get isLimitedOffer => throw _privateConstructorUsedError;
-  String? get expiryDate => throw _privateConstructorUsedError;
-  List<String> get categories => throw _privateConstructorUsedError;
+  String? get shortDescription => throw _privateConstructorUsedError;
+  String? get sku => throw _privateConstructorUsedError;
+  String? get barcode => throw _privateConstructorUsedError; // Usage & Safety
+  String? get usageInstructions => throw _privateConstructorUsedError;
+  String? get safetyWarning => throw _privateConstructorUsedError;
+  String? get careInstructions =>
+      throw _privateConstructorUsedError; // Complex Info Objects
+  PackagingInfo get packaging => throw _privateConstructorUsedError;
+  ManufacturingInfo get manufacturing => throw _privateConstructorUsedError;
+  StorageInfo get storage => throw _privateConstructorUsedError;
+  NutritionInfo get nutrition => throw _privateConstructorUsedError;
+  HealthLabels get healthLabels => throw _privateConstructorUsedError;
+  InventoryInfo get inventory => throw _privateConstructorUsedError;
+  PricingInfo get pricing => throw _privateConstructorUsedError;
+  SubscriptionInfo get subscription => throw _privateConstructorUsedError;
+  DeliveryInfo get delivery => throw _privateConstructorUsedError;
+  AiIntelligence get ai => throw _privateConstructorUsedError;
+  CustomerDiscovery get discovery =>
+      throw _privateConstructorUsedError; // Metadata
+  double get rating => throw _privateConstructorUsedError;
+  int get totalReviews => throw _privateConstructorUsedError;
   int get quantityInCart => throw _privateConstructorUsedError;
+  String? get shopId => throw _privateConstructorUsedError;
+  String? get shopName => throw _privateConstructorUsedError;
+  List<ProductModel> get relatedProducts => throw _privateConstructorUsedError;
 
   /// Serializes this ProductModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -60,23 +75,48 @@ abstract class $ProductModelCopyWith<$Res> {
   $Res call(
       {String id,
       String name,
-      double price,
-      double originalPrice,
-      String weight,
       String imageUrl,
-      int discountPercentage,
-      double rating,
+      List<String> imageUrls,
+      String? videoUrl,
+      String category,
+      String? subCategory,
       String? brand,
       String? description,
-      String? unit,
-      StockStatus stockStatus,
-      bool isVeg,
-      bool isBestseller,
-      bool isNewArrival,
-      bool isLimitedOffer,
-      String? expiryDate,
-      List<String> categories,
-      int quantityInCart});
+      String? shortDescription,
+      String? sku,
+      String? barcode,
+      String? usageInstructions,
+      String? safetyWarning,
+      String? careInstructions,
+      PackagingInfo packaging,
+      ManufacturingInfo manufacturing,
+      StorageInfo storage,
+      NutritionInfo nutrition,
+      HealthLabels healthLabels,
+      InventoryInfo inventory,
+      PricingInfo pricing,
+      SubscriptionInfo subscription,
+      DeliveryInfo delivery,
+      AiIntelligence ai,
+      CustomerDiscovery discovery,
+      double rating,
+      int totalReviews,
+      int quantityInCart,
+      String? shopId,
+      String? shopName,
+      List<ProductModel> relatedProducts});
+
+  $PackagingInfoCopyWith<$Res> get packaging;
+  $ManufacturingInfoCopyWith<$Res> get manufacturing;
+  $StorageInfoCopyWith<$Res> get storage;
+  $NutritionInfoCopyWith<$Res> get nutrition;
+  $HealthLabelsCopyWith<$Res> get healthLabels;
+  $InventoryInfoCopyWith<$Res> get inventory;
+  $PricingInfoCopyWith<$Res> get pricing;
+  $SubscriptionInfoCopyWith<$Res> get subscription;
+  $DeliveryInfoCopyWith<$Res> get delivery;
+  $AiIntelligenceCopyWith<$Res> get ai;
+  $CustomerDiscoveryCopyWith<$Res> get discovery;
 }
 
 /// @nodoc
@@ -96,23 +136,36 @@ class _$ProductModelCopyWithImpl<$Res, $Val extends ProductModel>
   $Res call({
     Object? id = null,
     Object? name = null,
-    Object? price = null,
-    Object? originalPrice = null,
-    Object? weight = null,
     Object? imageUrl = null,
-    Object? discountPercentage = null,
-    Object? rating = null,
+    Object? imageUrls = null,
+    Object? videoUrl = freezed,
+    Object? category = null,
+    Object? subCategory = freezed,
     Object? brand = freezed,
     Object? description = freezed,
-    Object? unit = freezed,
-    Object? stockStatus = null,
-    Object? isVeg = null,
-    Object? isBestseller = null,
-    Object? isNewArrival = null,
-    Object? isLimitedOffer = null,
-    Object? expiryDate = freezed,
-    Object? categories = null,
+    Object? shortDescription = freezed,
+    Object? sku = freezed,
+    Object? barcode = freezed,
+    Object? usageInstructions = freezed,
+    Object? safetyWarning = freezed,
+    Object? careInstructions = freezed,
+    Object? packaging = null,
+    Object? manufacturing = null,
+    Object? storage = null,
+    Object? nutrition = null,
+    Object? healthLabels = null,
+    Object? inventory = null,
+    Object? pricing = null,
+    Object? subscription = null,
+    Object? delivery = null,
+    Object? ai = null,
+    Object? discovery = null,
+    Object? rating = null,
+    Object? totalReviews = null,
     Object? quantityInCart = null,
+    Object? shopId = freezed,
+    Object? shopName = freezed,
+    Object? relatedProducts = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -123,30 +176,26 @@ class _$ProductModelCopyWithImpl<$Res, $Val extends ProductModel>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      price: null == price
-          ? _value.price
-          : price // ignore: cast_nullable_to_non_nullable
-              as double,
-      originalPrice: null == originalPrice
-          ? _value.originalPrice
-          : originalPrice // ignore: cast_nullable_to_non_nullable
-              as double,
-      weight: null == weight
-          ? _value.weight
-          : weight // ignore: cast_nullable_to_non_nullable
-              as String,
       imageUrl: null == imageUrl
           ? _value.imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
               as String,
-      discountPercentage: null == discountPercentage
-          ? _value.discountPercentage
-          : discountPercentage // ignore: cast_nullable_to_non_nullable
-              as int,
-      rating: null == rating
-          ? _value.rating
-          : rating // ignore: cast_nullable_to_non_nullable
-              as double,
+      imageUrls: null == imageUrls
+          ? _value.imageUrls
+          : imageUrls // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      videoUrl: freezed == videoUrl
+          ? _value.videoUrl
+          : videoUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      category: null == category
+          ? _value.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as String,
+      subCategory: freezed == subCategory
+          ? _value.subCategory
+          : subCategory // ignore: cast_nullable_to_non_nullable
+              as String?,
       brand: freezed == brand
           ? _value.brand
           : brand // ignore: cast_nullable_to_non_nullable
@@ -155,43 +204,209 @@ class _$ProductModelCopyWithImpl<$Res, $Val extends ProductModel>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String?,
-      unit: freezed == unit
-          ? _value.unit
-          : unit // ignore: cast_nullable_to_non_nullable
+      shortDescription: freezed == shortDescription
+          ? _value.shortDescription
+          : shortDescription // ignore: cast_nullable_to_non_nullable
               as String?,
-      stockStatus: null == stockStatus
-          ? _value.stockStatus
-          : stockStatus // ignore: cast_nullable_to_non_nullable
-              as StockStatus,
-      isVeg: null == isVeg
-          ? _value.isVeg
-          : isVeg // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isBestseller: null == isBestseller
-          ? _value.isBestseller
-          : isBestseller // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isNewArrival: null == isNewArrival
-          ? _value.isNewArrival
-          : isNewArrival // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isLimitedOffer: null == isLimitedOffer
-          ? _value.isLimitedOffer
-          : isLimitedOffer // ignore: cast_nullable_to_non_nullable
-              as bool,
-      expiryDate: freezed == expiryDate
-          ? _value.expiryDate
-          : expiryDate // ignore: cast_nullable_to_non_nullable
+      sku: freezed == sku
+          ? _value.sku
+          : sku // ignore: cast_nullable_to_non_nullable
               as String?,
-      categories: null == categories
-          ? _value.categories
-          : categories // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+      barcode: freezed == barcode
+          ? _value.barcode
+          : barcode // ignore: cast_nullable_to_non_nullable
+              as String?,
+      usageInstructions: freezed == usageInstructions
+          ? _value.usageInstructions
+          : usageInstructions // ignore: cast_nullable_to_non_nullable
+              as String?,
+      safetyWarning: freezed == safetyWarning
+          ? _value.safetyWarning
+          : safetyWarning // ignore: cast_nullable_to_non_nullable
+              as String?,
+      careInstructions: freezed == careInstructions
+          ? _value.careInstructions
+          : careInstructions // ignore: cast_nullable_to_non_nullable
+              as String?,
+      packaging: null == packaging
+          ? _value.packaging
+          : packaging // ignore: cast_nullable_to_non_nullable
+              as PackagingInfo,
+      manufacturing: null == manufacturing
+          ? _value.manufacturing
+          : manufacturing // ignore: cast_nullable_to_non_nullable
+              as ManufacturingInfo,
+      storage: null == storage
+          ? _value.storage
+          : storage // ignore: cast_nullable_to_non_nullable
+              as StorageInfo,
+      nutrition: null == nutrition
+          ? _value.nutrition
+          : nutrition // ignore: cast_nullable_to_non_nullable
+              as NutritionInfo,
+      healthLabels: null == healthLabels
+          ? _value.healthLabels
+          : healthLabels // ignore: cast_nullable_to_non_nullable
+              as HealthLabels,
+      inventory: null == inventory
+          ? _value.inventory
+          : inventory // ignore: cast_nullable_to_non_nullable
+              as InventoryInfo,
+      pricing: null == pricing
+          ? _value.pricing
+          : pricing // ignore: cast_nullable_to_non_nullable
+              as PricingInfo,
+      subscription: null == subscription
+          ? _value.subscription
+          : subscription // ignore: cast_nullable_to_non_nullable
+              as SubscriptionInfo,
+      delivery: null == delivery
+          ? _value.delivery
+          : delivery // ignore: cast_nullable_to_non_nullable
+              as DeliveryInfo,
+      ai: null == ai
+          ? _value.ai
+          : ai // ignore: cast_nullable_to_non_nullable
+              as AiIntelligence,
+      discovery: null == discovery
+          ? _value.discovery
+          : discovery // ignore: cast_nullable_to_non_nullable
+              as CustomerDiscovery,
+      rating: null == rating
+          ? _value.rating
+          : rating // ignore: cast_nullable_to_non_nullable
+              as double,
+      totalReviews: null == totalReviews
+          ? _value.totalReviews
+          : totalReviews // ignore: cast_nullable_to_non_nullable
+              as int,
       quantityInCart: null == quantityInCart
           ? _value.quantityInCart
           : quantityInCart // ignore: cast_nullable_to_non_nullable
               as int,
+      shopId: freezed == shopId
+          ? _value.shopId
+          : shopId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      shopName: freezed == shopName
+          ? _value.shopName
+          : shopName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      relatedProducts: null == relatedProducts
+          ? _value.relatedProducts
+          : relatedProducts // ignore: cast_nullable_to_non_nullable
+              as List<ProductModel>,
     ) as $Val);
+  }
+
+  /// Create a copy of ProductModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $PackagingInfoCopyWith<$Res> get packaging {
+    return $PackagingInfoCopyWith<$Res>(_value.packaging, (value) {
+      return _then(_value.copyWith(packaging: value) as $Val);
+    });
+  }
+
+  /// Create a copy of ProductModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $ManufacturingInfoCopyWith<$Res> get manufacturing {
+    return $ManufacturingInfoCopyWith<$Res>(_value.manufacturing, (value) {
+      return _then(_value.copyWith(manufacturing: value) as $Val);
+    });
+  }
+
+  /// Create a copy of ProductModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $StorageInfoCopyWith<$Res> get storage {
+    return $StorageInfoCopyWith<$Res>(_value.storage, (value) {
+      return _then(_value.copyWith(storage: value) as $Val);
+    });
+  }
+
+  /// Create a copy of ProductModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $NutritionInfoCopyWith<$Res> get nutrition {
+    return $NutritionInfoCopyWith<$Res>(_value.nutrition, (value) {
+      return _then(_value.copyWith(nutrition: value) as $Val);
+    });
+  }
+
+  /// Create a copy of ProductModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $HealthLabelsCopyWith<$Res> get healthLabels {
+    return $HealthLabelsCopyWith<$Res>(_value.healthLabels, (value) {
+      return _then(_value.copyWith(healthLabels: value) as $Val);
+    });
+  }
+
+  /// Create a copy of ProductModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $InventoryInfoCopyWith<$Res> get inventory {
+    return $InventoryInfoCopyWith<$Res>(_value.inventory, (value) {
+      return _then(_value.copyWith(inventory: value) as $Val);
+    });
+  }
+
+  /// Create a copy of ProductModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $PricingInfoCopyWith<$Res> get pricing {
+    return $PricingInfoCopyWith<$Res>(_value.pricing, (value) {
+      return _then(_value.copyWith(pricing: value) as $Val);
+    });
+  }
+
+  /// Create a copy of ProductModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $SubscriptionInfoCopyWith<$Res> get subscription {
+    return $SubscriptionInfoCopyWith<$Res>(_value.subscription, (value) {
+      return _then(_value.copyWith(subscription: value) as $Val);
+    });
+  }
+
+  /// Create a copy of ProductModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $DeliveryInfoCopyWith<$Res> get delivery {
+    return $DeliveryInfoCopyWith<$Res>(_value.delivery, (value) {
+      return _then(_value.copyWith(delivery: value) as $Val);
+    });
+  }
+
+  /// Create a copy of ProductModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $AiIntelligenceCopyWith<$Res> get ai {
+    return $AiIntelligenceCopyWith<$Res>(_value.ai, (value) {
+      return _then(_value.copyWith(ai: value) as $Val);
+    });
+  }
+
+  /// Create a copy of ProductModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $CustomerDiscoveryCopyWith<$Res> get discovery {
+    return $CustomerDiscoveryCopyWith<$Res>(_value.discovery, (value) {
+      return _then(_value.copyWith(discovery: value) as $Val);
+    });
   }
 }
 
@@ -206,23 +421,59 @@ abstract class _$$ProductModelImplCopyWith<$Res>
   $Res call(
       {String id,
       String name,
-      double price,
-      double originalPrice,
-      String weight,
       String imageUrl,
-      int discountPercentage,
-      double rating,
+      List<String> imageUrls,
+      String? videoUrl,
+      String category,
+      String? subCategory,
       String? brand,
       String? description,
-      String? unit,
-      StockStatus stockStatus,
-      bool isVeg,
-      bool isBestseller,
-      bool isNewArrival,
-      bool isLimitedOffer,
-      String? expiryDate,
-      List<String> categories,
-      int quantityInCart});
+      String? shortDescription,
+      String? sku,
+      String? barcode,
+      String? usageInstructions,
+      String? safetyWarning,
+      String? careInstructions,
+      PackagingInfo packaging,
+      ManufacturingInfo manufacturing,
+      StorageInfo storage,
+      NutritionInfo nutrition,
+      HealthLabels healthLabels,
+      InventoryInfo inventory,
+      PricingInfo pricing,
+      SubscriptionInfo subscription,
+      DeliveryInfo delivery,
+      AiIntelligence ai,
+      CustomerDiscovery discovery,
+      double rating,
+      int totalReviews,
+      int quantityInCart,
+      String? shopId,
+      String? shopName,
+      List<ProductModel> relatedProducts});
+
+  @override
+  $PackagingInfoCopyWith<$Res> get packaging;
+  @override
+  $ManufacturingInfoCopyWith<$Res> get manufacturing;
+  @override
+  $StorageInfoCopyWith<$Res> get storage;
+  @override
+  $NutritionInfoCopyWith<$Res> get nutrition;
+  @override
+  $HealthLabelsCopyWith<$Res> get healthLabels;
+  @override
+  $InventoryInfoCopyWith<$Res> get inventory;
+  @override
+  $PricingInfoCopyWith<$Res> get pricing;
+  @override
+  $SubscriptionInfoCopyWith<$Res> get subscription;
+  @override
+  $DeliveryInfoCopyWith<$Res> get delivery;
+  @override
+  $AiIntelligenceCopyWith<$Res> get ai;
+  @override
+  $CustomerDiscoveryCopyWith<$Res> get discovery;
 }
 
 /// @nodoc
@@ -240,23 +491,36 @@ class __$$ProductModelImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? name = null,
-    Object? price = null,
-    Object? originalPrice = null,
-    Object? weight = null,
     Object? imageUrl = null,
-    Object? discountPercentage = null,
-    Object? rating = null,
+    Object? imageUrls = null,
+    Object? videoUrl = freezed,
+    Object? category = null,
+    Object? subCategory = freezed,
     Object? brand = freezed,
     Object? description = freezed,
-    Object? unit = freezed,
-    Object? stockStatus = null,
-    Object? isVeg = null,
-    Object? isBestseller = null,
-    Object? isNewArrival = null,
-    Object? isLimitedOffer = null,
-    Object? expiryDate = freezed,
-    Object? categories = null,
+    Object? shortDescription = freezed,
+    Object? sku = freezed,
+    Object? barcode = freezed,
+    Object? usageInstructions = freezed,
+    Object? safetyWarning = freezed,
+    Object? careInstructions = freezed,
+    Object? packaging = null,
+    Object? manufacturing = null,
+    Object? storage = null,
+    Object? nutrition = null,
+    Object? healthLabels = null,
+    Object? inventory = null,
+    Object? pricing = null,
+    Object? subscription = null,
+    Object? delivery = null,
+    Object? ai = null,
+    Object? discovery = null,
+    Object? rating = null,
+    Object? totalReviews = null,
     Object? quantityInCart = null,
+    Object? shopId = freezed,
+    Object? shopName = freezed,
+    Object? relatedProducts = null,
   }) {
     return _then(_$ProductModelImpl(
       id: null == id
@@ -267,30 +531,26 @@ class __$$ProductModelImplCopyWithImpl<$Res>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      price: null == price
-          ? _value.price
-          : price // ignore: cast_nullable_to_non_nullable
-              as double,
-      originalPrice: null == originalPrice
-          ? _value.originalPrice
-          : originalPrice // ignore: cast_nullable_to_non_nullable
-              as double,
-      weight: null == weight
-          ? _value.weight
-          : weight // ignore: cast_nullable_to_non_nullable
-              as String,
       imageUrl: null == imageUrl
           ? _value.imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
               as String,
-      discountPercentage: null == discountPercentage
-          ? _value.discountPercentage
-          : discountPercentage // ignore: cast_nullable_to_non_nullable
-              as int,
-      rating: null == rating
-          ? _value.rating
-          : rating // ignore: cast_nullable_to_non_nullable
-              as double,
+      imageUrls: null == imageUrls
+          ? _value._imageUrls
+          : imageUrls // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      videoUrl: freezed == videoUrl
+          ? _value.videoUrl
+          : videoUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      category: null == category
+          ? _value.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as String,
+      subCategory: freezed == subCategory
+          ? _value.subCategory
+          : subCategory // ignore: cast_nullable_to_non_nullable
+              as String?,
       brand: freezed == brand
           ? _value.brand
           : brand // ignore: cast_nullable_to_non_nullable
@@ -299,42 +559,98 @@ class __$$ProductModelImplCopyWithImpl<$Res>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String?,
-      unit: freezed == unit
-          ? _value.unit
-          : unit // ignore: cast_nullable_to_non_nullable
+      shortDescription: freezed == shortDescription
+          ? _value.shortDescription
+          : shortDescription // ignore: cast_nullable_to_non_nullable
               as String?,
-      stockStatus: null == stockStatus
-          ? _value.stockStatus
-          : stockStatus // ignore: cast_nullable_to_non_nullable
-              as StockStatus,
-      isVeg: null == isVeg
-          ? _value.isVeg
-          : isVeg // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isBestseller: null == isBestseller
-          ? _value.isBestseller
-          : isBestseller // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isNewArrival: null == isNewArrival
-          ? _value.isNewArrival
-          : isNewArrival // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isLimitedOffer: null == isLimitedOffer
-          ? _value.isLimitedOffer
-          : isLimitedOffer // ignore: cast_nullable_to_non_nullable
-              as bool,
-      expiryDate: freezed == expiryDate
-          ? _value.expiryDate
-          : expiryDate // ignore: cast_nullable_to_non_nullable
+      sku: freezed == sku
+          ? _value.sku
+          : sku // ignore: cast_nullable_to_non_nullable
               as String?,
-      categories: null == categories
-          ? _value._categories
-          : categories // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+      barcode: freezed == barcode
+          ? _value.barcode
+          : barcode // ignore: cast_nullable_to_non_nullable
+              as String?,
+      usageInstructions: freezed == usageInstructions
+          ? _value.usageInstructions
+          : usageInstructions // ignore: cast_nullable_to_non_nullable
+              as String?,
+      safetyWarning: freezed == safetyWarning
+          ? _value.safetyWarning
+          : safetyWarning // ignore: cast_nullable_to_non_nullable
+              as String?,
+      careInstructions: freezed == careInstructions
+          ? _value.careInstructions
+          : careInstructions // ignore: cast_nullable_to_non_nullable
+              as String?,
+      packaging: null == packaging
+          ? _value.packaging
+          : packaging // ignore: cast_nullable_to_non_nullable
+              as PackagingInfo,
+      manufacturing: null == manufacturing
+          ? _value.manufacturing
+          : manufacturing // ignore: cast_nullable_to_non_nullable
+              as ManufacturingInfo,
+      storage: null == storage
+          ? _value.storage
+          : storage // ignore: cast_nullable_to_non_nullable
+              as StorageInfo,
+      nutrition: null == nutrition
+          ? _value.nutrition
+          : nutrition // ignore: cast_nullable_to_non_nullable
+              as NutritionInfo,
+      healthLabels: null == healthLabels
+          ? _value.healthLabels
+          : healthLabels // ignore: cast_nullable_to_non_nullable
+              as HealthLabels,
+      inventory: null == inventory
+          ? _value.inventory
+          : inventory // ignore: cast_nullable_to_non_nullable
+              as InventoryInfo,
+      pricing: null == pricing
+          ? _value.pricing
+          : pricing // ignore: cast_nullable_to_non_nullable
+              as PricingInfo,
+      subscription: null == subscription
+          ? _value.subscription
+          : subscription // ignore: cast_nullable_to_non_nullable
+              as SubscriptionInfo,
+      delivery: null == delivery
+          ? _value.delivery
+          : delivery // ignore: cast_nullable_to_non_nullable
+              as DeliveryInfo,
+      ai: null == ai
+          ? _value.ai
+          : ai // ignore: cast_nullable_to_non_nullable
+              as AiIntelligence,
+      discovery: null == discovery
+          ? _value.discovery
+          : discovery // ignore: cast_nullable_to_non_nullable
+              as CustomerDiscovery,
+      rating: null == rating
+          ? _value.rating
+          : rating // ignore: cast_nullable_to_non_nullable
+              as double,
+      totalReviews: null == totalReviews
+          ? _value.totalReviews
+          : totalReviews // ignore: cast_nullable_to_non_nullable
+              as int,
       quantityInCart: null == quantityInCart
           ? _value.quantityInCart
           : quantityInCart // ignore: cast_nullable_to_non_nullable
               as int,
+      shopId: freezed == shopId
+          ? _value.shopId
+          : shopId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      shopName: freezed == shopName
+          ? _value.shopName
+          : shopName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      relatedProducts: null == relatedProducts
+          ? _value._relatedProducts
+          : relatedProducts // ignore: cast_nullable_to_non_nullable
+              as List<ProductModel>,
     ));
   }
 }
@@ -345,86 +661,138 @@ class _$ProductModelImpl implements _ProductModel {
   const _$ProductModelImpl(
       {required this.id,
       required this.name,
-      required this.price,
-      required this.originalPrice,
-      required this.weight,
       required this.imageUrl,
-      this.discountPercentage = 0,
-      this.rating = 0.0,
+      final List<String> imageUrls = const [],
+      this.videoUrl,
+      required this.category,
+      this.subCategory,
       this.brand,
       this.description,
-      this.unit,
-      this.stockStatus = StockStatus.inStock,
-      this.isVeg = false,
-      this.isBestseller = false,
-      this.isNewArrival = false,
-      this.isLimitedOffer = false,
-      this.expiryDate,
-      final List<String> categories = const [],
-      this.quantityInCart = 0})
-      : _categories = categories;
+      this.shortDescription,
+      this.sku,
+      this.barcode,
+      this.usageInstructions,
+      this.safetyWarning,
+      this.careInstructions,
+      required this.packaging,
+      required this.manufacturing,
+      this.storage = const StorageInfo(),
+      this.nutrition = const NutritionInfo(),
+      this.healthLabels = const HealthLabels(),
+      this.inventory = const InventoryInfo(),
+      required this.pricing,
+      this.subscription = const SubscriptionInfo(),
+      this.delivery = const DeliveryInfo(),
+      this.ai = const AiIntelligence(),
+      this.discovery = const CustomerDiscovery(),
+      this.rating = 0.0,
+      this.totalReviews = 0,
+      this.quantityInCart = 0,
+      this.shopId,
+      this.shopName,
+      final List<ProductModel> relatedProducts = const []})
+      : _imageUrls = imageUrls,
+        _relatedProducts = relatedProducts;
 
   factory _$ProductModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProductModelImplFromJson(json);
 
+// Basic Product
   @override
   final String id;
   @override
   final String name;
   @override
-  final double price;
-  @override
-  final double originalPrice;
-  @override
-  final String weight;
-  @override
   final String imageUrl;
+  final List<String> _imageUrls;
   @override
   @JsonKey()
-  final int discountPercentage;
+  List<String> get imageUrls {
+    if (_imageUrls is EqualUnmodifiableListView) return _imageUrls;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_imageUrls);
+  }
+
   @override
-  @JsonKey()
-  final double rating;
+  final String? videoUrl;
+  @override
+  final String category;
+  @override
+  final String? subCategory;
   @override
   final String? brand;
   @override
   final String? description;
   @override
-  final String? unit;
-// e.g. kg, ltr, gm, packet
+  final String? shortDescription;
+  @override
+  final String? sku;
+  @override
+  final String? barcode;
+// Usage & Safety
+  @override
+  final String? usageInstructions;
+  @override
+  final String? safetyWarning;
+  @override
+  final String? careInstructions;
+// Complex Info Objects
+  @override
+  final PackagingInfo packaging;
+  @override
+  final ManufacturingInfo manufacturing;
   @override
   @JsonKey()
-  final StockStatus stockStatus;
+  final StorageInfo storage;
   @override
   @JsonKey()
-  final bool isVeg;
+  final NutritionInfo nutrition;
   @override
   @JsonKey()
-  final bool isBestseller;
+  final HealthLabels healthLabels;
   @override
   @JsonKey()
-  final bool isNewArrival;
+  final InventoryInfo inventory;
+  @override
+  final PricingInfo pricing;
   @override
   @JsonKey()
-  final bool isLimitedOffer;
-  @override
-  final String? expiryDate;
-  final List<String> _categories;
+  final SubscriptionInfo subscription;
   @override
   @JsonKey()
-  List<String> get categories {
-    if (_categories is EqualUnmodifiableListView) return _categories;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_categories);
-  }
-
+  final DeliveryInfo delivery;
+  @override
+  @JsonKey()
+  final AiIntelligence ai;
+  @override
+  @JsonKey()
+  final CustomerDiscovery discovery;
+// Metadata
+  @override
+  @JsonKey()
+  final double rating;
+  @override
+  @JsonKey()
+  final int totalReviews;
   @override
   @JsonKey()
   final int quantityInCart;
+  @override
+  final String? shopId;
+  @override
+  final String? shopName;
+  final List<ProductModel> _relatedProducts;
+  @override
+  @JsonKey()
+  List<ProductModel> get relatedProducts {
+    if (_relatedProducts is EqualUnmodifiableListView) return _relatedProducts;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_relatedProducts);
+  }
 
   @override
   String toString() {
-    return 'ProductModel(id: $id, name: $name, price: $price, originalPrice: $originalPrice, weight: $weight, imageUrl: $imageUrl, discountPercentage: $discountPercentage, rating: $rating, brand: $brand, description: $description, unit: $unit, stockStatus: $stockStatus, isVeg: $isVeg, isBestseller: $isBestseller, isNewArrival: $isNewArrival, isLimitedOffer: $isLimitedOffer, expiryDate: $expiryDate, categories: $categories, quantityInCart: $quantityInCart)';
+    return 'ProductModel(id: $id, name: $name, imageUrl: $imageUrl, imageUrls: $imageUrls, videoUrl: $videoUrl, category: $category, subCategory: $subCategory, brand: $brand, description: $description, shortDescription: $shortDescription, sku: $sku, barcode: $barcode, usageInstructions: $usageInstructions, safetyWarning: $safetyWarning, careInstructions: $careInstructions, packaging: $packaging, manufacturing: $manufacturing, storage: $storage, nutrition: $nutrition, healthLabels: $healthLabels, inventory: $inventory, pricing: $pricing, subscription: $subscription, delivery: $delivery, ai: $ai, discovery: $discovery, rating: $rating, totalReviews: $totalReviews, quantityInCart: $quantityInCart, shopId: $shopId, shopName: $shopName, relatedProducts: $relatedProducts)';
   }
 
   @override
@@ -434,34 +802,58 @@ class _$ProductModelImpl implements _ProductModel {
             other is _$ProductModelImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.price, price) || other.price == price) &&
-            (identical(other.originalPrice, originalPrice) ||
-                other.originalPrice == originalPrice) &&
-            (identical(other.weight, weight) || other.weight == weight) &&
             (identical(other.imageUrl, imageUrl) ||
                 other.imageUrl == imageUrl) &&
-            (identical(other.discountPercentage, discountPercentage) ||
-                other.discountPercentage == discountPercentage) &&
-            (identical(other.rating, rating) || other.rating == rating) &&
+            const DeepCollectionEquality()
+                .equals(other._imageUrls, _imageUrls) &&
+            (identical(other.videoUrl, videoUrl) ||
+                other.videoUrl == videoUrl) &&
+            (identical(other.category, category) ||
+                other.category == category) &&
+            (identical(other.subCategory, subCategory) ||
+                other.subCategory == subCategory) &&
             (identical(other.brand, brand) || other.brand == brand) &&
             (identical(other.description, description) ||
                 other.description == description) &&
-            (identical(other.unit, unit) || other.unit == unit) &&
-            (identical(other.stockStatus, stockStatus) ||
-                other.stockStatus == stockStatus) &&
-            (identical(other.isVeg, isVeg) || other.isVeg == isVeg) &&
-            (identical(other.isBestseller, isBestseller) ||
-                other.isBestseller == isBestseller) &&
-            (identical(other.isNewArrival, isNewArrival) ||
-                other.isNewArrival == isNewArrival) &&
-            (identical(other.isLimitedOffer, isLimitedOffer) ||
-                other.isLimitedOffer == isLimitedOffer) &&
-            (identical(other.expiryDate, expiryDate) ||
-                other.expiryDate == expiryDate) &&
-            const DeepCollectionEquality()
-                .equals(other._categories, _categories) &&
+            (identical(other.shortDescription, shortDescription) ||
+                other.shortDescription == shortDescription) &&
+            (identical(other.sku, sku) || other.sku == sku) &&
+            (identical(other.barcode, barcode) || other.barcode == barcode) &&
+            (identical(other.usageInstructions, usageInstructions) ||
+                other.usageInstructions == usageInstructions) &&
+            (identical(other.safetyWarning, safetyWarning) ||
+                other.safetyWarning == safetyWarning) &&
+            (identical(other.careInstructions, careInstructions) ||
+                other.careInstructions == careInstructions) &&
+            (identical(other.packaging, packaging) ||
+                other.packaging == packaging) &&
+            (identical(other.manufacturing, manufacturing) ||
+                other.manufacturing == manufacturing) &&
+            (identical(other.storage, storage) || other.storage == storage) &&
+            (identical(other.nutrition, nutrition) ||
+                other.nutrition == nutrition) &&
+            (identical(other.healthLabels, healthLabels) ||
+                other.healthLabels == healthLabels) &&
+            (identical(other.inventory, inventory) ||
+                other.inventory == inventory) &&
+            (identical(other.pricing, pricing) || other.pricing == pricing) &&
+            (identical(other.subscription, subscription) ||
+                other.subscription == subscription) &&
+            (identical(other.delivery, delivery) ||
+                other.delivery == delivery) &&
+            (identical(other.ai, ai) || other.ai == ai) &&
+            (identical(other.discovery, discovery) ||
+                other.discovery == discovery) &&
+            (identical(other.rating, rating) || other.rating == rating) &&
+            (identical(other.totalReviews, totalReviews) ||
+                other.totalReviews == totalReviews) &&
             (identical(other.quantityInCart, quantityInCart) ||
-                other.quantityInCart == quantityInCart));
+                other.quantityInCart == quantityInCart) &&
+            (identical(other.shopId, shopId) || other.shopId == shopId) &&
+            (identical(other.shopName, shopName) ||
+                other.shopName == shopName) &&
+            const DeepCollectionEquality()
+                .equals(other._relatedProducts, _relatedProducts));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -470,23 +862,36 @@ class _$ProductModelImpl implements _ProductModel {
         runtimeType,
         id,
         name,
-        price,
-        originalPrice,
-        weight,
         imageUrl,
-        discountPercentage,
-        rating,
+        const DeepCollectionEquality().hash(_imageUrls),
+        videoUrl,
+        category,
+        subCategory,
         brand,
         description,
-        unit,
-        stockStatus,
-        isVeg,
-        isBestseller,
-        isNewArrival,
-        isLimitedOffer,
-        expiryDate,
-        const DeepCollectionEquality().hash(_categories),
-        quantityInCart
+        shortDescription,
+        sku,
+        barcode,
+        usageInstructions,
+        safetyWarning,
+        careInstructions,
+        packaging,
+        manufacturing,
+        storage,
+        nutrition,
+        healthLabels,
+        inventory,
+        pricing,
+        subscription,
+        delivery,
+        ai,
+        discovery,
+        rating,
+        totalReviews,
+        quantityInCart,
+        shopId,
+        shopName,
+        const DeepCollectionEquality().hash(_relatedProducts)
       ]);
 
   /// Create a copy of ProductModel
@@ -509,65 +914,105 @@ abstract class _ProductModel implements ProductModel {
   const factory _ProductModel(
       {required final String id,
       required final String name,
-      required final double price,
-      required final double originalPrice,
-      required final String weight,
       required final String imageUrl,
-      final int discountPercentage,
-      final double rating,
+      final List<String> imageUrls,
+      final String? videoUrl,
+      required final String category,
+      final String? subCategory,
       final String? brand,
       final String? description,
-      final String? unit,
-      final StockStatus stockStatus,
-      final bool isVeg,
-      final bool isBestseller,
-      final bool isNewArrival,
-      final bool isLimitedOffer,
-      final String? expiryDate,
-      final List<String> categories,
-      final int quantityInCart}) = _$ProductModelImpl;
+      final String? shortDescription,
+      final String? sku,
+      final String? barcode,
+      final String? usageInstructions,
+      final String? safetyWarning,
+      final String? careInstructions,
+      required final PackagingInfo packaging,
+      required final ManufacturingInfo manufacturing,
+      final StorageInfo storage,
+      final NutritionInfo nutrition,
+      final HealthLabels healthLabels,
+      final InventoryInfo inventory,
+      required final PricingInfo pricing,
+      final SubscriptionInfo subscription,
+      final DeliveryInfo delivery,
+      final AiIntelligence ai,
+      final CustomerDiscovery discovery,
+      final double rating,
+      final int totalReviews,
+      final int quantityInCart,
+      final String? shopId,
+      final String? shopName,
+      final List<ProductModel> relatedProducts}) = _$ProductModelImpl;
 
   factory _ProductModel.fromJson(Map<String, dynamic> json) =
       _$ProductModelImpl.fromJson;
 
+// Basic Product
   @override
   String get id;
   @override
   String get name;
   @override
-  double get price;
-  @override
-  double get originalPrice;
-  @override
-  String get weight;
-  @override
   String get imageUrl;
   @override
-  int get discountPercentage;
+  List<String> get imageUrls;
   @override
-  double get rating;
+  String? get videoUrl;
+  @override
+  String get category;
+  @override
+  String? get subCategory;
   @override
   String? get brand;
   @override
   String? get description;
   @override
-  String? get unit; // e.g. kg, ltr, gm, packet
+  String? get shortDescription;
   @override
-  StockStatus get stockStatus;
+  String? get sku;
   @override
-  bool get isVeg;
+  String? get barcode; // Usage & Safety
   @override
-  bool get isBestseller;
+  String? get usageInstructions;
   @override
-  bool get isNewArrival;
+  String? get safetyWarning;
   @override
-  bool get isLimitedOffer;
+  String? get careInstructions; // Complex Info Objects
   @override
-  String? get expiryDate;
+  PackagingInfo get packaging;
   @override
-  List<String> get categories;
+  ManufacturingInfo get manufacturing;
+  @override
+  StorageInfo get storage;
+  @override
+  NutritionInfo get nutrition;
+  @override
+  HealthLabels get healthLabels;
+  @override
+  InventoryInfo get inventory;
+  @override
+  PricingInfo get pricing;
+  @override
+  SubscriptionInfo get subscription;
+  @override
+  DeliveryInfo get delivery;
+  @override
+  AiIntelligence get ai;
+  @override
+  CustomerDiscovery get discovery; // Metadata
+  @override
+  double get rating;
+  @override
+  int get totalReviews;
   @override
   int get quantityInCart;
+  @override
+  String? get shopId;
+  @override
+  String? get shopName;
+  @override
+  List<ProductModel> get relatedProducts;
 
   /// Create a copy of ProductModel
   /// with the given fields replaced by the non-null parameter values.

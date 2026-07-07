@@ -14,6 +14,12 @@ import '../../features/location/presentation/screens/add_edit_address_screen.dar
 import '../../features/shops/presentation/screens/shops_screen.dart';
 import '../../features/shops/presentation/screens/shop_details_screen.dart';
 import '../../features/products/presentation/screens/product_catalog_screen.dart';
+import '../../features/products/presentation/screens/product_details_screen.dart';
+import '../../features/reviews/presentation/screens/reviews_list_screen.dart';
+import '../../features/reviews/presentation/screens/write_review_screen.dart';
+import '../../features/wishlist/presentation/screens/wishlist_screen.dart';
+import '../../features/offers/presentation/screens/offers_screen.dart';
+import '../../features/wallet/presentation/screens/wallet_screen.dart';
 
 class AppRoutes {
   static const String splash = '/';
@@ -29,6 +35,12 @@ class AppRoutes {
   static const String shops = '/shops';
   static const String shopDetails = '/shop-details';
   static const String productCatalog = '/product-catalog';
+  static const String productDetails = '/product-details';
+  static const String reviews = '/reviews';
+  static const String writeReview = '/write-review';
+  static const String wishlist = '/wishlist';
+  static const String offers = '/offers';
+  static const String wallet = '/wallet';
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -127,6 +139,45 @@ final routerProvider = Provider<GoRouter>((ref) {
           final shopName = (state.extra as Map<String, dynamic>?)?['shopName'] ?? 'Shop';
           return ProductCatalogScreen(shopId: shopId, shopName: shopName);
         },
+      ),
+      GoRoute(
+        path: '${AppRoutes.productDetails}/:id',
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return ProductDetailsScreen(productId: id);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.reviews,
+        builder: (context, state) {
+          final extras = state.extra as Map<String, dynamic>?;
+          return ReviewsListScreen(
+            targetId: extras?['targetId'] ?? '',
+            targetName: extras?['targetName'] ?? 'Items',
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.writeReview,
+        builder: (context, state) {
+          final extras = state.extra as Map<String, dynamic>?;
+          return WriteReviewScreen(
+            targetId: extras?['targetId'] ?? '',
+            targetName: extras?['targetName'] ?? 'Items',
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.wishlist,
+        builder: (context, state) => const WishlistScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.offers,
+        builder: (context, state) => const OffersScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.wallet,
+        builder: (context, state) => const WalletScreen(),
       ),
     ],
   );

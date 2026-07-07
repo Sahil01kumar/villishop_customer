@@ -57,6 +57,14 @@ class HomeScreen extends ConsumerWidget {
                         ),
                         actions: [
                           IconButton(
+                            icon: const Icon(Icons.local_offer_outlined, color: Colors.white),
+                            onPressed: () => context.push(AppRoutes.offers),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.favorite_border, color: Colors.white),
+                            onPressed: () => context.push(AppRoutes.wishlist),
+                          ),
+                          IconButton(
                             icon: const Icon(Icons.notifications_outlined, color: Colors.white),
                             onPressed: () {},
                           ),

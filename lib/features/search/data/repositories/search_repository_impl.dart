@@ -2,6 +2,9 @@ import '../../domain/repositories/search_repository.dart';
 import '../../../home/data/models/product_model.dart';
 import '../../../home/data/models/shop_model.dart';
 import '../../../../core/services/shared_pref_service.dart';
+import '../../../products/data/models/sub_models/packaging_info.dart';
+import '../../../products/data/models/sub_models/manufacturing_info.dart';
+import '../../../products/data/models/sub_models/pricing_info.dart';
 
 class SearchRepositoryImpl implements SearchRepository {
   final SharedPreferenceService _prefs;
@@ -46,21 +49,21 @@ class SearchRepositoryImpl implements SearchRepository {
       const ProductModel(
         id: '1',
         name: 'Fresh Cow Milk',
-        price: 28,
-        originalPrice: 32,
-        weight: '500 ml',
         imageUrl: '',
-        discountPercentage: 12,
+        category: 'Milk & Dairy',
+        packaging: PackagingInfo(weight: 500, unit: 'ml'),
+        manufacturing: ManufacturingInfo(manufacturer: 'Yadav Dairy', packedBy: 'Yadav Dairy', countryOfOrigin: 'India'),
+        pricing: PricingInfo(mrp: 32, sellingPrice: 28, discountPercentage: 12),
         rating: 4.5,
       ),
       const ProductModel(
         id: '2',
         name: 'Organic Wheat Atta',
-        price: 180,
-        originalPrice: 210,
-        weight: '5 kg',
         imageUrl: '',
-        discountPercentage: 14,
+        category: 'Atta & Dal',
+        packaging: PackagingInfo(weight: 5, unit: 'kg'),
+        manufacturing: ManufacturingInfo(manufacturer: 'Village Fresh', packedBy: 'Village Fresh', countryOfOrigin: 'India'),
+        pricing: PricingInfo(mrp: 210, sellingPrice: 180, discountPercentage: 14),
         rating: 4.8,
       ),
     ].where((p) => p.name.toLowerCase().contains(query.toLowerCase())).toList();

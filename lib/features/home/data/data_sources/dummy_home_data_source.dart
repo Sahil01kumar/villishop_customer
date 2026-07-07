@@ -3,6 +3,10 @@ import '../models/category_model.dart';
 import '../models/shop_model.dart';
 import '../models/product_model.dart';
 import '../models/deal_model.dart';
+import '../../../products/data/models/sub_models/packaging_info.dart';
+import '../../../products/data/models/sub_models/manufacturing_info.dart';
+import '../../../products/data/models/sub_models/pricing_info.dart';
+import '../../../products/data/models/sub_models/inventory_info.dart';
 
 class DummyHomeDataSource {
   Future<List<BannerModel>> getBanners() async {
@@ -67,31 +71,33 @@ class DummyHomeDataSource {
       const ProductModel(
         id: '1',
         name: 'Fresh Cow Milk',
-        price: 28,
-        originalPrice: 32,
-        weight: '500 ml',
         imageUrl: '',
-        discountPercentage: 12,
+        category: 'Milk & Dairy',
+        packaging: PackagingInfo(weight: 500, unit: 'ml'),
+        manufacturing: ManufacturingInfo(manufacturer: 'Yadav Dairy', packedBy: 'Yadav Dairy', countryOfOrigin: 'India'),
+        pricing: PricingInfo(mrp: 32, sellingPrice: 28, discountPercentage: 12),
+        inventory: InventoryInfo(isBestseller: true),
         rating: 4.5,
       ),
       const ProductModel(
         id: '2',
         name: 'Organic Wheat Atta',
-        price: 180,
-        originalPrice: 210,
-        weight: '5 kg',
         imageUrl: '',
-        discountPercentage: 14,
+        category: 'Atta & Dal',
+        packaging: PackagingInfo(weight: 5, unit: 'kg'),
+        manufacturing: ManufacturingInfo(manufacturer: 'Village Fresh', packedBy: 'Village Fresh', countryOfOrigin: 'India'),
+        pricing: PricingInfo(mrp: 210, sellingPrice: 180, discountPercentage: 14),
+        inventory: InventoryInfo(isNewArrival: true),
         rating: 4.8,
       ),
       const ProductModel(
         id: '3',
         name: 'Basmati Rice Premium',
-        price: 450,
-        originalPrice: 500,
-        weight: '5 kg',
         imageUrl: '',
-        discountPercentage: 10,
+        category: 'Atta & Dal',
+        packaging: PackagingInfo(weight: 5, unit: 'kg'),
+        manufacturing: ManufacturingInfo(manufacturer: 'Organic Farms', packedBy: 'Organic Farms', countryOfOrigin: 'India'),
+        pricing: PricingInfo(mrp: 500, sellingPrice: 450, discountPercentage: 10),
         rating: 4.6,
       ),
     ];

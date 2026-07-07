@@ -1,6 +1,10 @@
 import '../../domain/repositories/shop_repository.dart';
 import '../models/shop_model.dart';
 import '../../../home/data/models/product_model.dart';
+import '../../../products/data/models/sub_models/packaging_info.dart';
+import '../../../products/data/models/sub_models/manufacturing_info.dart';
+import '../../../products/data/models/sub_models/pricing_info.dart';
+import '../../../products/data/models/sub_models/inventory_info.dart';
 
 class ShopRepositoryImpl implements ShopRepository {
   @override
@@ -73,31 +77,34 @@ class ShopRepositoryImpl implements ShopRepository {
       const ProductModel(
         id: 'p1',
         name: 'Fresh Cow Milk',
-        price: 28,
-        originalPrice: 32,
-        weight: '500 ml',
         imageUrl: '',
-        discountPercentage: 12,
+        category: 'Milk & Dairy',
+        packaging: PackagingInfo(weight: 500, unit: 'ml'),
+        manufacturing: ManufacturingInfo(manufacturer: 'Yadav Dairy', packedBy: 'Yadav Dairy', countryOfOrigin: 'India'),
+        pricing: PricingInfo(mrp: 32, sellingPrice: 28, discountPercentage: 12),
+        inventory: InventoryInfo(stockStatus: StockStatus.inStock),
         rating: 4.5,
       ),
       const ProductModel(
         id: 'p2',
         name: 'Pure Desi Ghee',
-        price: 650,
-        originalPrice: 750,
-        weight: '1 kg',
         imageUrl: '',
-        discountPercentage: 13,
+        category: 'Milk & Dairy',
+        packaging: PackagingInfo(weight: 1, unit: 'kg'),
+        manufacturing: ManufacturingInfo(manufacturer: 'Yadav Dairy', packedBy: 'Yadav Dairy', countryOfOrigin: 'India'),
+        pricing: PricingInfo(mrp: 750, sellingPrice: 650, discountPercentage: 13),
+        inventory: InventoryInfo(stockStatus: StockStatus.inStock),
         rating: 4.9,
       ),
       const ProductModel(
         id: 'p3',
         name: 'Paneer Fresh',
-        price: 90,
-        originalPrice: 100,
-        weight: '250 g',
         imageUrl: '',
-        discountPercentage: 10,
+        category: 'Milk & Dairy',
+        packaging: PackagingInfo(weight: 250, unit: 'gm'),
+        manufacturing: ManufacturingInfo(manufacturer: 'Yadav Dairy', packedBy: 'Yadav Dairy', countryOfOrigin: 'India'),
+        pricing: PricingInfo(mrp: 100, sellingPrice: 90, discountPercentage: 10),
+        inventory: InventoryInfo(stockStatus: StockStatus.inStock),
         rating: 4.7,
       ),
     ];
