@@ -25,6 +25,8 @@ import '../../features/wallet/presentation/screens/wallet_screen.dart';
 import '../../features/onboarding/presentation/screens/onboarding_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/categories/providers/category_provider.dart';
+import '../../features/orders/presentation/screens/order_review_screen.dart';
+import '../../features/payment/presentation/screens/payment_selection_screen.dart';
 
 class AppRoutes {
   static const String splash = '/';
@@ -50,6 +52,8 @@ class AppRoutes {
   static const String onboarding = '/onboarding';
   static const String profile = '/profile';
   static const String editProfile = '/edit-profile';
+  static const String orderReview = '/order-review';
+  static const String paymentSelection = '/payment-selection';
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -215,6 +219,14 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.profile,
         builder: (context, state) => const ProfileScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.orderReview,
+        builder: (context, state) => const OrderReviewScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.paymentSelection,
+        builder: (context, state) => const PaymentSelectionScreen(),
       ),
     ],
   );

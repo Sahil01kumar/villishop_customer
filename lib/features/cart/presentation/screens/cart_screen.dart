@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:villishop_customer/core/constants/app_colors.dart';
 import 'package:villishop_customer/core/constants/app_dimensions.dart';
+import 'package:villishop_customer/core/router/app_router.dart';
 import 'package:villishop_customer/core/widgets/empty_widget.dart';
 import 'package:villishop_customer/core/widgets/loading_widget.dart';
 import 'package:villishop_customer/features/cart/data/models/cart_model.dart';
@@ -333,7 +335,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
           ),
           const Spacer(),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () => context.push(AppRoutes.orderReview),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
               foregroundColor: Colors.white,
@@ -343,7 +345,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
             ),
             child: const Row(
               children: [
-                Text('Place Order', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
+                Text('Next: Review', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
                 SizedBox(width: 8),
                 Icon(Icons.arrow_forward_ios_rounded, size: 14),
               ],
