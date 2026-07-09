@@ -2,12 +2,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:villishop_customer/features/wishlist/domain/repositories/wishlist_repository.dart';
 import 'package:villishop_customer/features/wishlist/data/repositories/wishlist_repository_impl.dart';
 import 'package:villishop_customer/features/wishlist/providers/wishlist_state.dart';
-import '../data/models/wishlist_product_model.dart';
-import '../data/models/favourite_shop_model.dart';
-import '../data/models/wishlist_collection_model.dart';
+import '../../../../core/services/shared_pref_service.dart';
+import '../../home/data/models/product_model.dart';
 
 final wishlistRepositoryProvider = Provider<WishlistRepository>((ref) {
-  return WishlistRepositoryImpl();
+  return WishlistRepositoryImpl(ref.watch(sharedPreferencesServiceProvider));
 });
 
 class WishlistNotifier extends StateNotifier<WishlistState> {
@@ -20,25 +19,32 @@ class WishlistNotifier extends StateNotifier<WishlistState> {
   Future<void> init() async {
     state = state.copyWith(isLoading: true, errorMessage: null);
     try {
-      final results = await Future.wait([
-        _repository.getWishlistProducts(),
-        _repository.getFavouriteShops(),
-        _repository.getCollections(),
-        _repository.getRecentlyViewedProducts(),
-        _repository.getRecentlyVisitedShops(),
-      ]);
+      final products = await _repository.getWishlistProducts();
+      final shops = await _repository.getFavouriteShops();
+      final collections = await _repository.getCollections();
 
       state = state.copyWith(
         isLoading: false,
-        products: (results[0] as List).cast<WishlistProductModel>(),
-        shops: (results[1] as List).cast<FavouriteShopModel>(),
-        collections: (results[2] as List).cast<WishlistCollectionModel>(),
-        recentlyViewedProducts: (results[3] as List).cast<WishlistProductModel>(),
-        recentlyVisitedShops: (results[4] as List).cast<FavouriteShopModel>(),
+        products: products,
+        shops: shops,
+        collections: collections,
       );
     } catch (e) {
       state = state.copyWith(isLoading: false, errorMessage: e.toString());
     }
+  }
+
+  Future<void> toggleProductWishlist(ProductModel product) async {
+    if (_repository is WishlistRepositoryImpl) {
+      await (_repository as WishlistRepositoryImpl).toggleProduct(product);
+    } else {
+      await _repository.addToWishlist(product.id);
+    }
+    await init();
+  }
+
+  bool isProductWishlisted(String productId) {
+    return state.products.any((p) => p.product.id == productId);
   }
 
   Future<void> removeFromWishlist(String productId) async {
@@ -53,10 +59,6 @@ class WishlistNotifier extends StateNotifier<WishlistState> {
 
   void updateProductSearch(String query) {
     state = state.copyWith(productSearchQuery: query);
-  }
-
-  void updateShopSearch(String query) {
-    state = state.copyWith(shopSearchQuery: query);
   }
 
   Future<void> refresh() => init();

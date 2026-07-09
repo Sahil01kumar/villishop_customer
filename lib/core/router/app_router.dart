@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../features/splash/splash_screen.dart';
@@ -11,6 +12,7 @@ import '../../features/main/presentation/screens/main_screen.dart';
 import '../../features/search/presentation/screens/search_screen.dart';
 import '../../features/location/presentation/screens/address_list_screen.dart';
 import '../../features/location/presentation/screens/add_edit_address_screen.dart';
+import '../../features/location/data/models/address_model.dart';
 import '../../features/shops/presentation/screens/shops_screen.dart';
 import '../../features/shops/presentation/screens/shop_details_screen.dart';
 import '../../features/products/presentation/screens/product_catalog_screen.dart';
@@ -20,10 +22,14 @@ import '../../features/reviews/presentation/screens/write_review_screen.dart';
 import '../../features/wishlist/presentation/screens/wishlist_screen.dart';
 import '../../features/offers/presentation/screens/offers_screen.dart';
 import '../../features/wallet/presentation/screens/wallet_screen.dart';
+import '../../features/onboarding/presentation/screens/onboarding_screen.dart';
+import '../../features/profile/presentation/screens/profile_screen.dart';
+import '../../features/categories/providers/category_provider.dart';
 
 class AppRoutes {
   static const String splash = '/';
   static const String home = '/home';
+  static const String categories = '/categories';
   static const String login = '/login';
   static const String register = '/register';
   static const String forgotPassword = '/forgot-password';
@@ -41,6 +47,9 @@ class AppRoutes {
   static const String wishlist = '/wishlist';
   static const String offers = '/offers';
   static const String wallet = '/wallet';
+  static const String onboarding = '/onboarding';
+  static const String profile = '/profile';
+  static const String editProfile = '/edit-profile';
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -50,6 +59,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     initialLocation: AppRoutes.splash,
     redirect: (context, state) {
       final isSplash = state.matchedLocation == AppRoutes.splash;
+      final isOnboarding = state.matchedLocation == AppRoutes.onboarding;
       final isAuthRoute = state.matchedLocation == AppRoutes.login || 
                           state.matchedLocation == AppRoutes.register ||
                           state.matchedLocation == AppRoutes.forgotPassword ||
@@ -60,7 +70,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         initial: () => null,
         loading: () => null,
         authenticated: (user) {
-          if (isSplash || isAuthRoute) return AppRoutes.home;
+          if (!user.isProfileCompleted) {
+            if (isOnboarding) return null;
+            return AppRoutes.onboarding;
+          }
+          if (isSplash || isAuthRoute || isOnboarding) return AppRoutes.home;
           return null;
         },
         unauthenticated: () {
@@ -80,8 +94,24 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const SplashScreen(),
       ),
       GoRoute(
+        path: AppRoutes.onboarding,
+        builder: (context, state) => const OnboardingScreen(),
+      ),
+      GoRoute(
         path: AppRoutes.home,
         builder: (context, state) => const MainScreen(),
+      ),
+      GoRoute(
+        path: '${AppRoutes.categories}/:id',
+        builder: (context, state) {
+          final id = state.pathParameters['id'];
+          if (id != null) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              ref.read(pendingCategoryIdProvider.notifier).state = id;
+            });
+          }
+          return const MainScreen(initialTab: 1);
+        },
       ),
       GoRoute(
         path: AppRoutes.login,
@@ -119,7 +149,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: AppRoutes.addAddress,
-        builder: (context, state) => const AddEditAddressScreen(),
+        builder: (context, state) {
+          final address = state.extra as AddressModel?;
+          return AddEditAddressScreen(address: address);
+        },
       ),
       GoRoute(
         path: AppRoutes.shops,
@@ -178,6 +211,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.wallet,
         builder: (context, state) => const WalletScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.profile,
+        builder: (context, state) => const ProfileScreen(),
       ),
     ],
   );

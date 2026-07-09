@@ -1,32 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
 import '../../../../core/widgets/loading_widget.dart';
 import '../../../../core/widgets/error_widget.dart';
-import '../../../../core/router/app_router.dart';
 import '../../../products/presentation/widgets/product_grid_card.dart';
 import '../widgets/details/shop_info_section.dart';
 import '../widgets/details/offer_section.dart';
 import '../widgets/details/shop_category_tabs.dart';
 import '../../providers/shop_details_provider.dart';
+import '../../providers/current_shop_provider.dart';
+import '../../../main/providers/navigation_provider.dart';
 
-class ShopDetailsScreen extends ConsumerWidget {
+class ShopDetailsScreen extends ConsumerStatefulWidget {
   final String shopId;
 
   const ShopDetailsScreen({super.key, required this.shopId});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(shopDetailsProvider(shopId));
+  ConsumerState<ShopDetailsScreen> createState() => _ShopDetailsScreenState();
+}
+
+class _ShopDetailsScreenState extends ConsumerState<ShopDetailsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      ref.read(currentShopIdProvider.notifier).state = widget.shopId;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final state = ref.watch(shopDetailsProvider(widget.shopId));
 
     if (state.isLoading) return const Scaffold(body: LoadingWidget());
     if (state.errorMessage != null) {
       return Scaffold(
         body: CustomErrorWidget(
           message: state.errorMessage!,
-          onRetry: () => ref.read(shopDetailsProvider(shopId).notifier).fetchShopDetails(),
+          onRetry: () => ref.read(shopDetailsProvider(widget.shopId).notifier).fetchShopDetails(),
         ),
       );
     }
@@ -82,9 +95,9 @@ class ShopDetailsScreen extends ConsumerWidget {
                 categories: const ['All', 'Milk', 'Paneer', 'Ghee', 'Butter'],
                 selectedCategory: state.selectedCategory,
                 onCategorySelected: (cat) {
-                   ref.read(shopDetailsProvider(shopId).notifier).updateCategory(cat);
-                   // Optionally navigate to full catalog
-                   context.push('${AppRoutes.productCatalog}/$shopId', extra: {'shopName': shop.name});
+                   ref.read(shopDetailsProvider(widget.shopId).notifier).updateCategory(cat);
+                   // Navigate to Categories tab with new taxonomy
+                   ref.read(navigationIndexProvider.notifier).state = 1;
                 },
               ),
             ),
@@ -98,7 +111,7 @@ class ShopDetailsScreen extends ConsumerWidget {
                 crossAxisCount: 2,
                 mainAxisSpacing: AppSpacing.m,
                 crossAxisSpacing: AppSpacing.m,
-                childAspectRatio: 0.65,
+                childAspectRatio: 0.60,
               ),
               delegate: SliverChildBuilderDelegate(
                 (context, index) {

@@ -4,6 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import '../domain/repositories/auth_repository.dart';
 import '../repositories/auth_repository_impl.dart';
 import 'auth_state.dart';
+import '../data/models/user_model.dart';
 import '../services/session_manager.dart';
 import '../../../core/utils/logger.dart';
 
@@ -30,7 +31,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
       if (user != null) {
         final userModel = await _repository.getCurrentUser();
         if (userModel != null) {
-          // Check session / restore session logic here
           final token = await user.getIdToken();
           if (token != null) await _sessionManager.saveToken(token);
           
@@ -85,6 +85,36 @@ class AuthNotifier extends StateNotifier<AuthState> {
     state = const AuthState.loading();
     await _repository.signOut();
     await _sessionManager.clearSession();
+  }
+
+  Future<void> updateProfile({
+    required String name,
+    required String email,
+    required String phoneNumber,
+    required Gender gender,
+    DateTime? dob,
+  }) async {
+    state.maybeWhen(
+      authenticated: (user) async {
+        final updatedUser = user.copyWith(
+          name: name,
+          email: email,
+          phoneNumber: phoneNumber,
+          gender: gender,
+          dateOfBirth: dob,
+          isProfileCompleted: true,
+        );
+        
+        state = const AuthState.loading();
+        try {
+          await _repository.updateProfile(updatedUser);
+          state = AuthState.authenticated(updatedUser);
+        } catch (e) {
+          state = AuthState.error(e.toString());
+        }
+      },
+      orElse: () {},
+    );
   }
 }
 

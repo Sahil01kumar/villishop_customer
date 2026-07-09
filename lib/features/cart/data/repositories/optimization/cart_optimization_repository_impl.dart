@@ -3,7 +3,7 @@ import 'package:villishop_customer/features/cart/domain/repositories/optimizatio
 import 'package:villishop_customer/features/cart/data/models/optimization/cart_analytics_model.dart';
 import 'package:villishop_customer/features/cart/data/models/optimization/cart_optimization_model.dart';
 import 'package:villishop_customer/features/cart/data/models/optimization/cart_sync_model.dart';
-import 'package:villishop_customer/features/cart/data/models/multi_shop_cart_model.dart';
+import 'package:villishop_customer/features/cart/data/models/cart_model.dart';
 import 'package:villishop_customer/core/services/shared_pref_service.dart';
 
 class CartOptimizationRepositoryImpl implements CartOptimizationRepository {
@@ -13,7 +13,7 @@ class CartOptimizationRepositoryImpl implements CartOptimizationRepository {
   CartOptimizationRepositoryImpl(this._prefs);
 
   @override
-  Future<CartSyncModel> syncCart(MultiShopCartModel cart) async {
+  Future<CartSyncModel> syncCart(CartModel cart) async {
     await Future.delayed(const Duration(seconds: 1));
     return CartSyncModel(
       status: SyncStatus.success,
@@ -22,17 +22,17 @@ class CartOptimizationRepositoryImpl implements CartOptimizationRepository {
   }
 
   @override
-  Future<void> cacheCartLocally(MultiShopCartModel cart) async {
+  Future<void> cacheCartLocally(CartModel cart) async {
     final jsonString = jsonEncode(cart.toJson());
     await _prefs.setString(_cartCacheKey, jsonString);
   }
 
   @override
-  Future<MultiShopCartModel?> restoreCartFromCache() async {
+  Future<CartModel?> restoreCartFromCache() async {
     final jsonString = _prefs.getString(_cartCacheKey);
     if (jsonString != null) {
       try {
-        return MultiShopCartModel.fromJson(jsonDecode(jsonString));
+        return CartModel.fromJson(jsonDecode(jsonString));
       } catch (e) {
         return null;
       }
@@ -51,7 +51,7 @@ class CartOptimizationRepositoryImpl implements CartOptimizationRepository {
   }
 
   @override
-  Future<CartOptimizationModel> getOptimizationData(MultiShopCartModel cart) async {
+  Future<CartOptimizationModel> getOptimizationData(CartModel cart) async {
     return const CartOptimizationModel();
   }
 
@@ -59,7 +59,7 @@ class CartOptimizationRepositoryImpl implements CartOptimizationRepository {
   Future<void> scheduleAbandonedCartReminder() async {}
 
   @override
-  Future<MultiShopCartModel?> getPreviousSuccessfulCart() async {
+  Future<CartModel?> getPreviousSuccessfulCart() async {
     return null;
   }
 }

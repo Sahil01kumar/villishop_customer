@@ -7,15 +7,26 @@ part 'address_model.g.dart';
 class AddressModel with _$AddressModel {
   const factory AddressModel({
     required String id,
-    required String label, // Home, Office, Other
+    String? customerId,
+    required String label, // Home, Office, Other, etc.
+    String? receiverName,
+    String? phoneNumber,
+    String? alternatePhone,
+    String? houseNumber,
+    String? building,
+    String? floor,
+    String? landmark,
+    String? area,
+    String? city,
+    String? state,
+    String? pincode,
     required String fullAddress,
     required double latitude,
     required double longitude,
+    String? deliveryInstructions,
     @Default(false) bool isDefault,
-    String? houseNumber,
-    String? landmark,
-    String? receiverName,
-    String? phoneNumber,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) = _AddressModel;
 
   factory AddressModel.fromJson(Map<String, dynamic> json) => _$AddressModelFromJson(json);

@@ -1,12 +1,12 @@
 import 'package:villishop_customer/features/cart/domain/repositories/validation/cart_validation_repository.dart';
 import 'package:villishop_customer/features/cart/data/models/validation/cart_validation_model.dart';
 import 'package:villishop_customer/features/cart/data/models/validation/validation_result_model.dart';
-import 'package:villishop_customer/features/cart/data/models/multi_shop_cart_model.dart';
+import 'package:villishop_customer/features/cart/data/models/cart_model.dart';
 import 'package:villishop_customer/features/products/data/models/sub_models/inventory_info.dart';
 
 class CartValidationRepositoryImpl implements CartValidationRepository {
   @override
-  Future<CartValidationModel> validateCart(MultiShopCartModel cart) async {
+  Future<CartValidationModel> validateCart(CartModel cart) async {
     await Future.delayed(const Duration(milliseconds: 600));
     
     List<ValidationResultModel> results = [];

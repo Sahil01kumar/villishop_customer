@@ -10,7 +10,7 @@ _$InventoryInfoImpl _$$InventoryInfoImplFromJson(Map<String, dynamic> json) =>
     _$InventoryInfoImpl(
       stockQuantity: (json['stockQuantity'] as num?)?.toInt() ?? 0,
       reservedQuantity: (json['reservedQuantity'] as num?)?.toInt() ?? 0,
-      availableQuantity: (json['availableQuantity'] as num?)?.toInt() ?? 0,
+      availableQuantity: (json['availableQuantity'] as num?)?.toInt() ?? 100,
       lowStockThreshold: (json['lowStockThreshold'] as num?)?.toInt() ?? 5,
       stockStatus:
           $enumDecodeNullable(_$StockStatusEnumMap, json['stockStatus']) ??

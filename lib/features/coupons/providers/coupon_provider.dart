@@ -1,7 +1,22 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../domain/repositories/coupon_repository.dart';
 import '../data/repositories/coupon_repository_impl.dart';
-import 'coupon_state.dart';
+import '../data/models/coupon_model.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'coupon_provider.freezed.dart';
+
+@freezed
+class CouponState with _$CouponState {
+  const factory CouponState({
+    @Default(false) bool isLoading,
+    @Default([]) List<CouponModel> availableCoupons,
+    CouponModel? appliedCoupon,
+    CouponCalculationResult? calculation,
+    String? errorMessage,
+    @Default(false) bool isValidating,
+  }) = _CouponState;
+}
 
 final couponRepositoryProvider = Provider<CouponRepository>((ref) {
   return CouponRepositoryImpl();
@@ -12,7 +27,7 @@ class CouponNotifier extends StateNotifier<CouponState> {
 
   CouponNotifier(this._repository) : super(const CouponState());
 
-  Future<void> loadCoupons({
+  Future<void> fetchCoupons({
     required double cartValue,
     required List<String> shopIds,
     required List<String> productIds,
@@ -30,48 +45,75 @@ class CouponNotifier extends StateNotifier<CouponState> {
     }
   }
 
-  Future<bool> applyCoupon(String code, {
+  Future<bool> applyCouponCode(String code, {
     required double cartValue,
+    required double deliveryCharge,
     required List<String> shopIds,
     required List<String> productIds,
   }) async {
     state = state.copyWith(isValidating: true, errorMessage: null);
-    final coupon = await _repository.validateCoupon(
+    final coupon = await _repository.validateCouponCode(
       code,
       cartValue: cartValue,
       shopIds: shopIds,
       productIds: productIds,
     );
 
-    if (coupon != null) {
-      state = state.copyWith(isValidating: false, appliedCoupon: coupon);
-      return true;
-    } else {
+    if (coupon == null) {
       state = state.copyWith(
         isValidating: false,
-        errorMessage: 'Invalid coupon code or minimum order not met',
+        errorMessage: 'Invalid coupon code',
       );
       return false;
     }
-  }
 
-  void removeCoupon() {
-    state = state.copyWith(appliedCoupon: null);
-  }
-
-  Future<void> autoApplyBest({
-    required double cartValue,
-    required List<String> shopIds,
-    required List<String> productIds,
-  }) async {
-    final best = await _repository.getBestCoupon(
+    return applyCoupon(
+      coupon,
       cartValue: cartValue,
+      deliveryCharge: deliveryCharge,
       shopIds: shopIds,
       productIds: productIds,
     );
-    if (best != null) {
-      state = state.copyWith(appliedCoupon: best);
+  }
+
+  Future<bool> applyCoupon(CouponModel coupon, {
+    required double cartValue,
+    required double deliveryCharge,
+    required List<String> shopIds,
+    required List<String> productIds,
+  }) async {
+    state = state.copyWith(isValidating: true, errorMessage: null);
+    final result = await _repository.calculateDiscount(
+      coupon,
+      cartValue: cartValue,
+      deliveryCharge: deliveryCharge,
+      shopIds: shopIds,
+      productIds: productIds,
+    );
+
+    if (!result.isValid) {
+      state = state.copyWith(
+        isValidating: false,
+        errorMessage: result.message ?? 'Coupon not applicable',
+      );
+      return false;
     }
+
+    state = state.copyWith(
+      isValidating: false,
+      appliedCoupon: coupon,
+      calculation: result,
+      errorMessage: null,
+    );
+    return true;
+  }
+
+  void removeCoupon() {
+    state = state.copyWith(
+      appliedCoupon: null,
+      calculation: null,
+      errorMessage: null,
+    );
   }
 }
 

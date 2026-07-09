@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../home/data/models/product_model.dart';
 import '../../data/models/sub_models/inventory_info.dart';
+import '../../../../features/cart/providers/cart_provider.dart';
 
-class ProductListTile extends StatelessWidget {
+class ProductListTile extends ConsumerWidget {
   final ProductModel product;
 
   const ProductListTile({super.key, required this.product});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () => context.push('${AppRoutes.productDetails}/${product.id}'),
       child: Container(
@@ -33,7 +35,8 @@ class ProductListTile extends StatelessWidget {
                   _buildBadges(),
                   Text(
                     product.name,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 15),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -48,7 +51,7 @@ class ProductListTile extends StatelessWidget {
                     style: TextStyle(color: Colors.grey[500], fontSize: 13),
                   ),
                   const Spacer(),
-                  _buildPriceSection(),
+                  _buildPriceSection(context, ref),
                 ],
               ),
             ),
@@ -73,7 +76,8 @@ class ProductListTile extends StatelessWidget {
               tag: 'product-${product.id}',
               child: product.imageUrl.isNotEmpty
                   ? Image.network(product.imageUrl, fit: BoxFit.contain)
-                  : Icon(Icons.shopping_bag_outlined, size: 40, color: Colors.grey.withAlpha(100)),
+                  : Icon(Icons.shopping_bag_outlined,
+                      size: 40, color: Colors.grey.withAlpha(100)),
             ),
           ),
         ),
@@ -85,7 +89,11 @@ class ProductListTile extends StatelessWidget {
                 borderRadius: AppRadius.rM,
               ),
               child: const Center(
-                child: Text('OUT OF STOCK', style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
+                child: Text('OUT OF STOCK',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold)),
               ),
             ),
           ),
@@ -102,15 +110,21 @@ class ProductListTile extends StatelessWidget {
           const SizedBox(width: 4),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-            decoration: BoxDecoration(color: Colors.orange[50], borderRadius: BorderRadius.circular(4)),
-            child: const Text('BESTSELLER', style: TextStyle(color: Colors.orange, fontSize: 8, fontWeight: FontWeight.bold)),
+            decoration: BoxDecoration(
+                color: Colors.orange[50],
+                borderRadius: BorderRadius.circular(4)),
+            child: const Text('BESTSELLER',
+                style: TextStyle(
+                    color: Colors.orange,
+                    fontSize: 8,
+                    fontWeight: FontWeight.bold)),
           ),
         ],
       ],
     );
   }
 
-  Widget _buildPriceSection() {
+  Widget _buildPriceSection(BuildContext context, WidgetRef ref) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -120,30 +134,57 @@ class ProductListTile extends StatelessWidget {
             if (product.pricing.mrp > product.pricing.sellingPrice)
               Text(
                 '₹${product.pricing.mrp.toStringAsFixed(0)}',
-                style: const TextStyle(color: Colors.grey, fontSize: 12, decoration: TextDecoration.lineThrough),
+                style: const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 12,
+                    decoration: TextDecoration.lineThrough),
               ),
             Text(
               '₹${product.pricing.sellingPrice.toStringAsFixed(0)}',
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: AppColors.textPrimary),
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17,
+                  color: AppColors.textPrimary),
             ),
           ],
         ),
-        _AddButton(),
+        _AddButton(
+          onTap: () {
+            ref.read(cartProvider.notifier).addToCart(product);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('${product.name} added to cart'),
+                duration: const Duration(seconds: 1),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          },
+        ),
       ],
     );
   }
 }
 
 class _AddButton extends StatelessWidget {
+  final VoidCallback onTap;
+  const _AddButton({required this.onTap});
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: AppColors.primary,
-        borderRadius: AppRadius.rM,
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: AppColors.primary,
+          borderRadius: AppRadius.rM,
+        ),
+        child: const Text('ADD',
+            style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 12)),
       ),
-      child: const Text('ADD', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)),
     );
   }
 }

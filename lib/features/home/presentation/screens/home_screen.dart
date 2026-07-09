@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/constants/app_colors.dart';
-import '../../../../core/constants/app_dimensions.dart';
-import '../../../../core/widgets/search_bar_widget.dart';
-import '../../../../core/widgets/error_widget.dart';
-import '../../../../core/widgets/loading_widget.dart';
-import '../../../../core/widgets/empty_widget.dart';
-import '../../../../core/router/app_router.dart';
-import '../../../location/providers/location_provider.dart';
+import 'package:villishop_customer/core/constants/app_colors.dart';
+import 'package:villishop_customer/core/constants/app_dimensions.dart';
+import 'package:villishop_customer/core/widgets/search_bar_widget.dart';
+import 'package:villishop_customer/core/widgets/error_widget.dart';
+import 'package:villishop_customer/core/widgets/shimmer_widget.dart';
+import 'package:villishop_customer/core/router/app_router.dart';
+import 'package:villishop_customer/features/location/providers/location_provider.dart';
+import 'package:villishop_customer/features/location/presentation/widgets/location_selector_sheet.dart';
 import '../widgets/section_header.dart';
 import '../widgets/category_item.dart';
 import '../widgets/shop_card.dart';
 import '../widgets/product_card.dart';
 import '../widgets/home_banner.dart';
 import '../widgets/address_card.dart';
-import '../widgets/search_suggestions.dart';
 import '../../providers/home_provider.dart';
+import '../../../main/providers/navigation_provider.dart';
+import '../../../authentication/providers/auth_provider.dart';
+import '../../../categories/providers/category_provider.dart';
+import 'package:villishop_customer/features/cart/providers/cart_provider.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -25,274 +28,355 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final homeState = ref.watch(homeProvider);
     final locationState = ref.watch(locationProvider);
+    final cartCount = ref.watch(cartCountProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Colors.white,
       body: homeState.isLoading && homeState.banners.isEmpty
-          ? const LoadingWidget()
+          ? const _HomeSkeleton()
           : homeState.errorMessage != null
               ? CustomErrorWidget(
                   message: homeState.errorMessage!,
                   onRetry: () => ref.read(homeProvider.notifier).refresh(),
                 )
               : RefreshIndicator(
-                  onRefresh: () => ref.read(homeProvider.notifier).refresh(),
+                  onRefresh: () async {
+                    await ref.read(homeProvider.notifier).refresh();
+                    await ref.read(locationProvider.notifier).loadAddresses();
+                  },
                   color: AppColors.primary,
                   child: CustomScrollView(
                     physics: const BouncingScrollPhysics(),
                     slivers: [
-                      // Premium App Bar
-                      SliverAppBar(
-                        floating: true,
-                        pinned: true,
-                        snap: true,
-                        expandedHeight: 140.0,
-                        backgroundColor: AppColors.primary,
-                        elevation: 0,
-                        automaticallyImplyLeading: false,
-                        title: AddressCard(
-                          label: locationState.selectedAddress?.label ?? 'Set Location',
-                          address: locationState.selectedAddress?.fullAddress ?? 'Click to pick village address',
-                          onTap: () => context.push(AppRoutes.addresses),
+                      _buildAppBar(context, ref, locationState),
+                      
+                      if (!locationState.isServiceable)
+                        SliverToBoxAdapter(
+                          child: _buildServiceabilityBanner(context),
                         ),
-                        actions: [
-                          IconButton(
-                            icon: const Icon(Icons.local_offer_outlined, color: Colors.white),
-                            onPressed: () => context.push(AppRoutes.offers),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.favorite_border, color: Colors.white),
-                            onPressed: () => context.push(AppRoutes.wishlist),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.notifications_outlined, color: Colors.white),
-                            onPressed: () {},
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(right: AppSpacing.m),
-                            child: CircleAvatar(
-                              radius: 18,
-                              backgroundColor: Colors.white.withAlpha(50),
-                              child: const Icon(Icons.person_outline, color: Colors.white, size: 20),
-                            ),
-                          ),
-                        ],
-                        bottom: PreferredSize(
-                          preferredSize: const Size.fromHeight(80),
-                          child: Container(
-                            color: AppColors.primary,
-                            padding: const EdgeInsets.fromLTRB(AppSpacing.m, 0, AppSpacing.m, AppSpacing.m),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                CustomSearchBar(
-                                  hint: 'Search "milk"',
-                                  readOnly: true,
-                                  onTap: () => context.push(AppRoutes.search),
-                                  suffixIcon: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Container(
-                                        height: 24,
-                                        width: 1,
-                                        color: Colors.grey[200],
-                                      ),
-                                      IconButton(
-                                        icon: const Icon(Icons.mic_none, color: AppColors.primary),
-                                        onPressed: () {},
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      // Search Suggestions
-                      const SliverToBoxAdapter(
+                      
+                      SliverToBoxAdapter(
                         child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: AppSpacing.s),
-                          child: SearchSuggestions(),
+                          padding: const EdgeInsets.fromLTRB(AppSpacing.m, 0, AppSpacing.m, AppSpacing.m),
+                          child: HomeBanner(banners: homeState.banners),
                         ),
                       ),
 
-                      if (homeState.banners.isEmpty && 
-                          homeState.categories.isEmpty && 
-                          homeState.popularShops.isEmpty)
-                        const SliverFillRemaining(
-                          child: EmptyWidget(message: 'No data available'),
-                        )
-                      else ...[
-                        // Premium Banner
+                      SliverToBoxAdapter(
+                        child: _buildCategorySection(context, ref, homeState),
+                      ),
+
+                      if (homeState.todayDeals.isNotEmpty)
                         SliverToBoxAdapter(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
-                            child: HomeBanner(banners: homeState.banners),
+                          child: _buildProductSection(
+                            context,
+                            title: "Village Best Deals",
+                            subtitle: 'Freshly harvested, pocket-friendly',
+                            products: homeState.todayDeals.map((d) => d.product).toList(),
                           ),
                         ),
 
-                        // Categories Section
-                        SliverToBoxAdapter(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SectionHeader(title: 'Shop by Category', subtitle: 'Fresh from local sources'),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-                                child: GridView.builder(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 4,
-                                    mainAxisSpacing: 16,
-                                    crossAxisSpacing: 12,
-                                    childAspectRatio: 0.75,
-                                  ),
-                                  itemCount: homeState.categories.length,
-                                  itemBuilder: (context, index) {
-                                    return TweenAnimationBuilder<double>(
-                                      tween: Tween(begin: 0.0, end: 1.0),
-                                      duration: Duration(milliseconds: 400 + (index * 100)),
-                                      child: CategoryItem(
-                                        category: homeState.categories[index],
-                                        onTap: () {},
-                                      ),
-                                      builder: (context, value, child) {
-                                        return Opacity(
-                                          opacity: value,
-                                          child: Transform.translate(
-                                            offset: Offset(0, 20 * (1 - value)),
-                                            child: child,
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        // Today's Deals
-                        SliverToBoxAdapter(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SectionHeader(title: "Today's Best Deals", subtitle: 'Pocket-friendly prices', onSeeAll: () {}),
-                              SizedBox(
-                                height: 260,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  physics: const BouncingScrollPhysics(),
-                                  padding: const EdgeInsets.only(right: AppSpacing.m),
-                                  itemCount: homeState.todayDeals.length,
-                                  itemBuilder: (context, index) {
-                                    return ProductCard(product: homeState.todayDeals[index].product);
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        // Popular Shops Section
-                        SliverToBoxAdapter(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SectionHeader(
-                                title: 'Popular Shops',
-                                subtitle: 'Trusted stores in your village',
-                                onSeeAll: () => context.push(AppRoutes.shops),
-                              ),
-                              SizedBox(
-                                height: 260,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  physics: const BouncingScrollPhysics(),
-                                  padding: const EdgeInsets.only(right: AppSpacing.m),
-                                  itemCount: homeState.popularShops.length,
-                                  itemBuilder: (context, index) {
-                                    return ShopCard(shop: homeState.popularShops[index]);
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        // Featured Products
-                        SliverToBoxAdapter(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SectionHeader(title: 'Featured Products', subtitle: 'Handpicked for you'),
-                              SizedBox(
-                                height: 260,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  physics: const BouncingScrollPhysics(),
-                                  padding: const EdgeInsets.only(right: AppSpacing.m),
-                                  itemCount: homeState.featuredProducts.length,
-                                  itemBuilder: (context, index) {
-                                    return ProductCard(product: homeState.featuredProducts[index]);
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        // Recommended Products
-                        const SliverToBoxAdapter(
-                          child: SectionHeader(title: 'Recommended', subtitle: 'Based on your needs'),
-                        ),
-                        SliverPadding(
-                          padding: const EdgeInsets.fromLTRB(0, 0, 0, AppSpacing.m),
-                          sliver: SliverToBoxAdapter(
-                            child: SizedBox(
-                              height: 260,
+                      SliverToBoxAdapter(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SectionHeader(
+                              title: 'Trusted Local Shops',
+                              subtitle: 'Support your village entrepreneurs',
+                              onSeeAll: () => context.push(AppRoutes.shops),
+                            ),
+                            SizedBox(
+                              height: 250,
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
                                 physics: const BouncingScrollPhysics(),
-                                padding: const EdgeInsets.only(right: AppSpacing.m),
-                                itemCount: homeState.featuredProducts.length,
+                                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+                                itemCount: homeState.popularShops.length,
                                 itemBuilder: (context, index) {
-                                  return ProductCard(product: homeState.featuredProducts[index]);
+                                  return Padding(
+                                    padding: const EdgeInsets.only(right: AppSpacing.m),
+                                    child: ShopCard(shop: homeState.popularShops[index]),
+                                  );
                                 },
                               ),
                             ),
-                          ),
+                          ],
                         ),
+                      ),
 
-                        const SliverToBoxAdapter(child: SizedBox(height: 100)),
-                      ],
+                      SliverToBoxAdapter(
+                        child: _buildProductSection(
+                          context,
+                          title: 'Recommended for You',
+                          subtitle: 'Handpicked items based on your needs',
+                          products: homeState.featuredProducts,
+                        ),
+                      ),
+
+                      const SliverToBoxAdapter(child: SizedBox(height: 120)),
                     ],
                   ),
                 ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
-        backgroundColor: AppColors.primary,
-        elevation: 6,
-        icon: Stack(
+      floatingActionButton: cartCount > 0 ? _buildFloatingCart(context, ref, cartCount) : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
+  }
+
+  Widget _buildAppBar(BuildContext context, WidgetRef ref, LocationState locationState) {
+    return SliverAppBar(
+      floating: true,
+      pinned: true,
+      snap: true,
+      expandedHeight: 160.0,
+      backgroundColor: Colors.white,
+      elevation: 0,
+      scrolledUnderElevation: 0,
+      surfaceTintColor: Colors.white,
+      automaticallyImplyLeading: false,
+      flexibleSpace: FlexibleSpaceBar(
+        background: Column(
           children: [
-            const Icon(Icons.shopping_cart_outlined, color: Colors.white, size: 24),
-            Positioned(
-              right: 0,
-              top: 0,
-              child: Container(
-                padding: const EdgeInsets.all(2),
-                decoration: const BoxDecoration(color: AppColors.secondary, shape: BoxShape.circle),
-                constraints: const BoxConstraints(minWidth: 12, minHeight: 12),
-                child: const Text('2', style: TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+            const SizedBox(height: 54),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: AddressCard(
+                      label: locationState.selectedAddress?.label ?? 'Set Location',
+                      address: locationState.selectedAddress?.fullAddress ?? 'Click to pick village address',
+                      onTap: () => _showLocationSelector(context),
+                    ),
+                  ),
+                  _buildNotificationBadge(),
+                  AppSpacing.hS,
+                  _buildProfileAvatar(context, ref),
+                ],
               ),
             ),
           ],
         ),
-        label: const Text('VIEW CART', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 13, letterSpacing: 1.1)),
+      ),
+      bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(74),
+        child: Container(
+          color: Colors.white,
+          padding: const EdgeInsets.fromLTRB(AppSpacing.m, 0, AppSpacing.m, AppSpacing.m),
+          child: CustomSearchBar(
+            hint: 'Search milk, eggs, or fresh vegetables...',
+            readOnly: true,
+            onTap: () => context.push(AppRoutes.search),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildServiceabilityBanner(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(AppSpacing.m, 0, AppSpacing.m, AppSpacing.m),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.red[50],
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.red[100]!),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.error_outline_rounded, color: Colors.red, size: 20),
+          const SizedBox(width: 12),
+          const Expanded(
+            child: Text(
+              'Oh no! We don\'t deliver to this village yet. Try another location.',
+              style: TextStyle(color: Colors.red, fontSize: 13, fontWeight: FontWeight.bold),
+            ),
+          ),
+          TextButton(
+            onPressed: () => _showLocationSelector(context),
+            child: const Text('CHANGE', style: TextStyle(color: Colors.red, fontWeight: FontWeight.w900, fontSize: 12)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNotificationBadge() {
+    return Container(
+      decoration: BoxDecoration(color: const Color(0xFFF8F9FB), shape: BoxShape.circle, border: Border.all(color: Colors.grey.withAlpha(20))),
+      child: IconButton(
+        icon: const Icon(Icons.notifications_none_rounded, color: Colors.black, size: 24),
+        onPressed: () {},
+      ),
+    );
+  }
+
+  Widget _buildProfileAvatar(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(authProvider).maybeWhen(authenticated: (u) => u, orElse: () => null);
+    return GestureDetector(
+      onTap: () => context.push(AppRoutes.profile),
+      child: Container(
+        padding: const EdgeInsets.all(2),
+        decoration: BoxDecoration(color: AppColors.primary.withAlpha(20), shape: BoxShape.circle),
+        child: CircleAvatar(
+          radius: 20,
+          backgroundColor: Colors.white,
+          backgroundImage: user?.profilePicture != null ? NetworkImage(user!.profilePicture!) : null,
+          child: user?.profilePicture == null ? const Icon(Icons.person_outline, color: AppColors.primary) : null,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCategorySection(BuildContext context, WidgetRef ref, HomeState homeState) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SectionHeader(
+          title: 'Shop by Category', 
+          subtitle: 'Pure & fresh from village',
+          onSeeAll: () => ref.read(navigationIndexProvider.notifier).state = 1,
+        ),
+        SizedBox(
+          height: 240,
+          child: GridView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+            scrollDirection: Axis.horizontal,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: 12,
+              crossAxisSpacing: 16,
+              childAspectRatio: 1.2,
+            ),
+            itemCount: homeState.categories.length,
+            itemBuilder: (context, index) {
+              final category = homeState.categories[index];
+              return CategoryItem(
+                category: category,
+                onTap: () {
+                   ref.read(pendingCategoryIdProvider.notifier).state = category.id;
+                   ref.read(navigationIndexProvider.notifier).state = 1;
+                },
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildProductSection(BuildContext context, {required String title, required String subtitle, required List<dynamic> products}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SectionHeader(title: title, subtitle: subtitle, onSeeAll: () {}),
+        SizedBox(
+          height: 280,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+            itemCount: products.length,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.only(right: AppSpacing.m),
+                child: ProductCard(product: products[index]),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFloatingCart(BuildContext context, WidgetRef ref, int count) {
+    final cart = ref.watch(cartProvider).cart;
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      height: 60,
+      decoration: BoxDecoration(
+        color: AppColors.primary,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(color: AppColors.primary.withAlpha(80), blurRadius: 15, offset: const Offset(0, 8)),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () => ref.read(navigationIndexProvider.notifier).state = 2,
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('$count ITEMS', style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.bold, fontSize: 10)),
+                    Text('₹${cart.overallSummary.grandTotal.toStringAsFixed(0)}', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 18, letterSpacing: -0.5)),
+                  ],
+                ),
+                const Spacer(),
+                const Text('VIEW CART', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 14, letterSpacing: 1.1)),
+                const SizedBox(width: 8),
+                const Icon(Icons.shopping_bag_outlined, color: Colors.white, size: 22),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showLocationSelector(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => const LocationSelectorSheet(),
+    );
+  }
+}
+
+class _HomeSkeleton extends StatelessWidget {
+  const _HomeSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          const SizedBox(height: 60),
+          const Padding(
+            padding: EdgeInsets.all(AppSpacing.m),
+            child: Row(
+              children: [
+                ShimmerWidget.circular(width: 40, height: 40),
+                AppSpacing.hM,
+                Expanded(child: ShimmerWidget.rectangular(height: 20)),
+              ],
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.all(AppSpacing.m),
+            child: ShimmerWidget.rounded(width: double.infinity, height: 50),
+          ),
+          const Padding(
+            padding: EdgeInsets.all(AppSpacing.m),
+            child: ShimmerWidget.rounded(width: double.infinity, height: 150),
+          ),
+          ...List.generate(3, (index) => const Padding(
+            padding: EdgeInsets.all(AppSpacing.m),
+            child: Row(
+              children: [
+                ShimmerWidget.rounded(width: 140, height: 200),
+                SizedBox(width: 16),
+                ShimmerWidget.rounded(width: 140, height: 200),
+              ],
+            ),
+          )),
+        ],
       ),
     );
   }

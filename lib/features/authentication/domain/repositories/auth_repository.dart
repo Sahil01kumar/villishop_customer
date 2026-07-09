@@ -24,4 +24,5 @@ abstract class AuthRepository {
   Future<void> signOut();
   Future<UserModel?> getCurrentUser();
   Future<void> updateDisplayName(String name);
+  Future<void> updateProfile(UserModel user);
 }

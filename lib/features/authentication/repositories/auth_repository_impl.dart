@@ -112,6 +112,7 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<UserModel?> getCurrentUser() async {
     final user = _firebaseAuth.currentUser;
     if (user != null) {
+      // In a real app, fetch these from Firestore
       return UserModel(
         id: user.uid,
         phoneNumber: user.phoneNumber ?? '',
@@ -119,6 +120,7 @@ class AuthRepositoryImpl implements AuthRepository {
         email: user.email,
         profilePicture: user.photoURL,
         isProfileCompleted: user.displayName != null && user.displayName!.isNotEmpty,
+        joinedAt: user.metadata.creationTime,
       );
     }
     return null;
@@ -130,6 +132,23 @@ class AuthRepositoryImpl implements AuthRepository {
       await _firebaseAuth.currentUser?.updateDisplayName(name);
     } on FirebaseAuthException catch (e) {
       throw AuthFailure(e.message ?? 'Failed to update name');
+    }
+  }
+
+  @override
+  Future<void> updateProfile(UserModel userModel) async {
+    try {
+      final user = _firebaseAuth.currentUser;
+      if (user != null) {
+        await user.updateDisplayName(userModel.name);
+        if (userModel.email != null && userModel.email != user.email) {
+          // Note: updateEmail requires recent login
+          // await user.updateEmail(userModel.email!);
+        }
+        // Save other fields to Firestore in production
+      }
+    } on FirebaseAuthException catch (e) {
+      throw AuthFailure(e.message ?? 'Failed to update profile');
     }
   }
 }

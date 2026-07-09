@@ -3,10 +3,13 @@ import 'package:villishop_customer/features/home/data/models/product_model.dart'
 
 abstract class CartRepository {
   Future<CartModel> getCart();
-  Future<void> addToCart(ProductModel product, {int quantity = 1});
-  Future<void> removeFromCart(String productId);
-  Future<void> updateQuantity(String productId, int quantity);
-  Future<void> clearCart();
+  Future<void> addItem(ProductModel product, int quantity);
+  Future<void> removeItem(String shopId, String productId);
+  Future<void> updateQuantity(String shopId, String productId, int quantity);
+  Future<void> clearShopCart(String shopId);
+  Future<void> clearAll();
+  Future<void> toggleShopSelection(String shopId, bool isSelected);
+  Future<void> toggleShopExpansion(String shopId, bool isExpanded);
   Future<void> saveForLater(String productId);
   Future<void> moveToWishlist(String productId);
   Future<void> syncCartWithServer();

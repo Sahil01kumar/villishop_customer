@@ -80,7 +80,6 @@ class _WishlistScreenState extends ConsumerState<WishlistScreen> with SingleTick
         return WishlistProductCard(
           item: item,
           onRemove: () => ref.read(wishlistProvider.notifier).removeFromWishlist(item.product.id),
-          onAddToCart: () {},
         );
       },
     );

@@ -25,8 +25,14 @@ mixin _$ProductModel {
   String get name => throw _privateConstructorUsedError;
   String get imageUrl => throw _privateConstructorUsedError;
   List<String> get imageUrls => throw _privateConstructorUsedError;
-  String? get videoUrl => throw _privateConstructorUsedError;
-  String get category => throw _privateConstructorUsedError;
+  String? get videoUrl =>
+      throw _privateConstructorUsedError; // Taxonomy Engine Fields
+  String get category => throw _privateConstructorUsedError; // Legacy support
+  String? get departmentId => throw _privateConstructorUsedError;
+  String? get categoryId => throw _privateConstructorUsedError;
+  String? get subCategoryId => throw _privateConstructorUsedError;
+  String? get productGroupId => throw _privateConstructorUsedError;
+  String? get variantGroupId => throw _privateConstructorUsedError;
   String? get subCategory => throw _privateConstructorUsedError;
   String? get brand => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
@@ -54,7 +60,9 @@ mixin _$ProductModel {
   int get quantityInCart => throw _privateConstructorUsedError;
   String? get shopId => throw _privateConstructorUsedError;
   String? get shopName => throw _privateConstructorUsedError;
-  List<ProductModel> get relatedProducts => throw _privateConstructorUsedError;
+  List<ProductModel> get relatedProducts =>
+      throw _privateConstructorUsedError; // Attributes for Enterprise Taxonomy
+  Map<String, dynamic> get attributes => throw _privateConstructorUsedError;
 
   /// Serializes this ProductModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -79,6 +87,11 @@ abstract class $ProductModelCopyWith<$Res> {
       List<String> imageUrls,
       String? videoUrl,
       String category,
+      String? departmentId,
+      String? categoryId,
+      String? subCategoryId,
+      String? productGroupId,
+      String? variantGroupId,
       String? subCategory,
       String? brand,
       String? description,
@@ -104,7 +117,8 @@ abstract class $ProductModelCopyWith<$Res> {
       int quantityInCart,
       String? shopId,
       String? shopName,
-      List<ProductModel> relatedProducts});
+      List<ProductModel> relatedProducts,
+      Map<String, dynamic> attributes});
 
   $PackagingInfoCopyWith<$Res> get packaging;
   $ManufacturingInfoCopyWith<$Res> get manufacturing;
@@ -140,6 +154,11 @@ class _$ProductModelCopyWithImpl<$Res, $Val extends ProductModel>
     Object? imageUrls = null,
     Object? videoUrl = freezed,
     Object? category = null,
+    Object? departmentId = freezed,
+    Object? categoryId = freezed,
+    Object? subCategoryId = freezed,
+    Object? productGroupId = freezed,
+    Object? variantGroupId = freezed,
     Object? subCategory = freezed,
     Object? brand = freezed,
     Object? description = freezed,
@@ -166,6 +185,7 @@ class _$ProductModelCopyWithImpl<$Res, $Val extends ProductModel>
     Object? shopId = freezed,
     Object? shopName = freezed,
     Object? relatedProducts = null,
+    Object? attributes = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -192,6 +212,26 @@ class _$ProductModelCopyWithImpl<$Res, $Val extends ProductModel>
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
               as String,
+      departmentId: freezed == departmentId
+          ? _value.departmentId
+          : departmentId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      categoryId: freezed == categoryId
+          ? _value.categoryId
+          : categoryId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      subCategoryId: freezed == subCategoryId
+          ? _value.subCategoryId
+          : subCategoryId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      productGroupId: freezed == productGroupId
+          ? _value.productGroupId
+          : productGroupId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      variantGroupId: freezed == variantGroupId
+          ? _value.variantGroupId
+          : variantGroupId // ignore: cast_nullable_to_non_nullable
+              as String?,
       subCategory: freezed == subCategory
           ? _value.subCategory
           : subCategory // ignore: cast_nullable_to_non_nullable
@@ -296,6 +336,10 @@ class _$ProductModelCopyWithImpl<$Res, $Val extends ProductModel>
           ? _value.relatedProducts
           : relatedProducts // ignore: cast_nullable_to_non_nullable
               as List<ProductModel>,
+      attributes: null == attributes
+          ? _value.attributes
+          : attributes // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
     ) as $Val);
   }
 
@@ -425,6 +469,11 @@ abstract class _$$ProductModelImplCopyWith<$Res>
       List<String> imageUrls,
       String? videoUrl,
       String category,
+      String? departmentId,
+      String? categoryId,
+      String? subCategoryId,
+      String? productGroupId,
+      String? variantGroupId,
       String? subCategory,
       String? brand,
       String? description,
@@ -450,7 +499,8 @@ abstract class _$$ProductModelImplCopyWith<$Res>
       int quantityInCart,
       String? shopId,
       String? shopName,
-      List<ProductModel> relatedProducts});
+      List<ProductModel> relatedProducts,
+      Map<String, dynamic> attributes});
 
   @override
   $PackagingInfoCopyWith<$Res> get packaging;
@@ -495,6 +545,11 @@ class __$$ProductModelImplCopyWithImpl<$Res>
     Object? imageUrls = null,
     Object? videoUrl = freezed,
     Object? category = null,
+    Object? departmentId = freezed,
+    Object? categoryId = freezed,
+    Object? subCategoryId = freezed,
+    Object? productGroupId = freezed,
+    Object? variantGroupId = freezed,
     Object? subCategory = freezed,
     Object? brand = freezed,
     Object? description = freezed,
@@ -521,6 +576,7 @@ class __$$ProductModelImplCopyWithImpl<$Res>
     Object? shopId = freezed,
     Object? shopName = freezed,
     Object? relatedProducts = null,
+    Object? attributes = null,
   }) {
     return _then(_$ProductModelImpl(
       id: null == id
@@ -547,6 +603,26 @@ class __$$ProductModelImplCopyWithImpl<$Res>
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
               as String,
+      departmentId: freezed == departmentId
+          ? _value.departmentId
+          : departmentId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      categoryId: freezed == categoryId
+          ? _value.categoryId
+          : categoryId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      subCategoryId: freezed == subCategoryId
+          ? _value.subCategoryId
+          : subCategoryId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      productGroupId: freezed == productGroupId
+          ? _value.productGroupId
+          : productGroupId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      variantGroupId: freezed == variantGroupId
+          ? _value.variantGroupId
+          : variantGroupId // ignore: cast_nullable_to_non_nullable
+              as String?,
       subCategory: freezed == subCategory
           ? _value.subCategory
           : subCategory // ignore: cast_nullable_to_non_nullable
@@ -651,6 +727,10 @@ class __$$ProductModelImplCopyWithImpl<$Res>
           ? _value._relatedProducts
           : relatedProducts // ignore: cast_nullable_to_non_nullable
               as List<ProductModel>,
+      attributes: null == attributes
+          ? _value._attributes
+          : attributes // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
     ));
   }
 }
@@ -665,6 +745,11 @@ class _$ProductModelImpl implements _ProductModel {
       final List<String> imageUrls = const [],
       this.videoUrl,
       required this.category,
+      this.departmentId,
+      this.categoryId,
+      this.subCategoryId,
+      this.productGroupId,
+      this.variantGroupId,
       this.subCategory,
       this.brand,
       this.description,
@@ -690,9 +775,11 @@ class _$ProductModelImpl implements _ProductModel {
       this.quantityInCart = 0,
       this.shopId,
       this.shopName,
-      final List<ProductModel> relatedProducts = const []})
+      final List<ProductModel> relatedProducts = const [],
+      final Map<String, dynamic> attributes = const {}})
       : _imageUrls = imageUrls,
-        _relatedProducts = relatedProducts;
+        _relatedProducts = relatedProducts,
+        _attributes = attributes;
 
   factory _$ProductModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProductModelImplFromJson(json);
@@ -715,8 +802,20 @@ class _$ProductModelImpl implements _ProductModel {
 
   @override
   final String? videoUrl;
+// Taxonomy Engine Fields
   @override
   final String category;
+// Legacy support
+  @override
+  final String? departmentId;
+  @override
+  final String? categoryId;
+  @override
+  final String? subCategoryId;
+  @override
+  final String? productGroupId;
+  @override
+  final String? variantGroupId;
   @override
   final String? subCategory;
   @override
@@ -790,9 +889,20 @@ class _$ProductModelImpl implements _ProductModel {
     return EqualUnmodifiableListView(_relatedProducts);
   }
 
+// Attributes for Enterprise Taxonomy
+  final Map<String, dynamic> _attributes;
+// Attributes for Enterprise Taxonomy
+  @override
+  @JsonKey()
+  Map<String, dynamic> get attributes {
+    if (_attributes is EqualUnmodifiableMapView) return _attributes;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_attributes);
+  }
+
   @override
   String toString() {
-    return 'ProductModel(id: $id, name: $name, imageUrl: $imageUrl, imageUrls: $imageUrls, videoUrl: $videoUrl, category: $category, subCategory: $subCategory, brand: $brand, description: $description, shortDescription: $shortDescription, sku: $sku, barcode: $barcode, usageInstructions: $usageInstructions, safetyWarning: $safetyWarning, careInstructions: $careInstructions, packaging: $packaging, manufacturing: $manufacturing, storage: $storage, nutrition: $nutrition, healthLabels: $healthLabels, inventory: $inventory, pricing: $pricing, subscription: $subscription, delivery: $delivery, ai: $ai, discovery: $discovery, rating: $rating, totalReviews: $totalReviews, quantityInCart: $quantityInCart, shopId: $shopId, shopName: $shopName, relatedProducts: $relatedProducts)';
+    return 'ProductModel(id: $id, name: $name, imageUrl: $imageUrl, imageUrls: $imageUrls, videoUrl: $videoUrl, category: $category, departmentId: $departmentId, categoryId: $categoryId, subCategoryId: $subCategoryId, productGroupId: $productGroupId, variantGroupId: $variantGroupId, subCategory: $subCategory, brand: $brand, description: $description, shortDescription: $shortDescription, sku: $sku, barcode: $barcode, usageInstructions: $usageInstructions, safetyWarning: $safetyWarning, careInstructions: $careInstructions, packaging: $packaging, manufacturing: $manufacturing, storage: $storage, nutrition: $nutrition, healthLabels: $healthLabels, inventory: $inventory, pricing: $pricing, subscription: $subscription, delivery: $delivery, ai: $ai, discovery: $discovery, rating: $rating, totalReviews: $totalReviews, quantityInCart: $quantityInCart, shopId: $shopId, shopName: $shopName, relatedProducts: $relatedProducts, attributes: $attributes)';
   }
 
   @override
@@ -810,6 +920,16 @@ class _$ProductModelImpl implements _ProductModel {
                 other.videoUrl == videoUrl) &&
             (identical(other.category, category) ||
                 other.category == category) &&
+            (identical(other.departmentId, departmentId) ||
+                other.departmentId == departmentId) &&
+            (identical(other.categoryId, categoryId) ||
+                other.categoryId == categoryId) &&
+            (identical(other.subCategoryId, subCategoryId) ||
+                other.subCategoryId == subCategoryId) &&
+            (identical(other.productGroupId, productGroupId) ||
+                other.productGroupId == productGroupId) &&
+            (identical(other.variantGroupId, variantGroupId) ||
+                other.variantGroupId == variantGroupId) &&
             (identical(other.subCategory, subCategory) ||
                 other.subCategory == subCategory) &&
             (identical(other.brand, brand) || other.brand == brand) &&
@@ -853,7 +973,9 @@ class _$ProductModelImpl implements _ProductModel {
             (identical(other.shopName, shopName) ||
                 other.shopName == shopName) &&
             const DeepCollectionEquality()
-                .equals(other._relatedProducts, _relatedProducts));
+                .equals(other._relatedProducts, _relatedProducts) &&
+            const DeepCollectionEquality()
+                .equals(other._attributes, _attributes));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -866,6 +988,11 @@ class _$ProductModelImpl implements _ProductModel {
         const DeepCollectionEquality().hash(_imageUrls),
         videoUrl,
         category,
+        departmentId,
+        categoryId,
+        subCategoryId,
+        productGroupId,
+        variantGroupId,
         subCategory,
         brand,
         description,
@@ -891,7 +1018,8 @@ class _$ProductModelImpl implements _ProductModel {
         quantityInCart,
         shopId,
         shopName,
-        const DeepCollectionEquality().hash(_relatedProducts)
+        const DeepCollectionEquality().hash(_relatedProducts),
+        const DeepCollectionEquality().hash(_attributes)
       ]);
 
   /// Create a copy of ProductModel
@@ -918,6 +1046,11 @@ abstract class _ProductModel implements ProductModel {
       final List<String> imageUrls,
       final String? videoUrl,
       required final String category,
+      final String? departmentId,
+      final String? categoryId,
+      final String? subCategoryId,
+      final String? productGroupId,
+      final String? variantGroupId,
       final String? subCategory,
       final String? brand,
       final String? description,
@@ -943,7 +1076,8 @@ abstract class _ProductModel implements ProductModel {
       final int quantityInCart,
       final String? shopId,
       final String? shopName,
-      final List<ProductModel> relatedProducts}) = _$ProductModelImpl;
+      final List<ProductModel> relatedProducts,
+      final Map<String, dynamic> attributes}) = _$ProductModelImpl;
 
   factory _ProductModel.fromJson(Map<String, dynamic> json) =
       _$ProductModelImpl.fromJson;
@@ -958,9 +1092,19 @@ abstract class _ProductModel implements ProductModel {
   @override
   List<String> get imageUrls;
   @override
-  String? get videoUrl;
+  String? get videoUrl; // Taxonomy Engine Fields
   @override
-  String get category;
+  String get category; // Legacy support
+  @override
+  String? get departmentId;
+  @override
+  String? get categoryId;
+  @override
+  String? get subCategoryId;
+  @override
+  String? get productGroupId;
+  @override
+  String? get variantGroupId;
   @override
   String? get subCategory;
   @override
@@ -1012,7 +1156,9 @@ abstract class _ProductModel implements ProductModel {
   @override
   String? get shopName;
   @override
-  List<ProductModel> get relatedProducts;
+  List<ProductModel> get relatedProducts; // Attributes for Enterprise Taxonomy
+  @override
+  Map<String, dynamic> get attributes;
 
   /// Create a copy of ProductModel
   /// with the given fields replaced by the non-null parameter values.

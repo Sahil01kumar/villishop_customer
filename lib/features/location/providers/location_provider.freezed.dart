@@ -18,8 +18,10 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$LocationState {
   bool get isLoading => throw _privateConstructorUsedError;
   List<AddressModel> get addresses => throw _privateConstructorUsedError;
+  List<AddressModel> get recentAddresses => throw _privateConstructorUsedError;
   AddressModel? get selectedAddress => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
+  bool get isServiceable => throw _privateConstructorUsedError;
 
   /// Create a copy of LocationState
   /// with the given fields replaced by the non-null parameter values.
@@ -37,8 +39,10 @@ abstract class $LocationStateCopyWith<$Res> {
   $Res call(
       {bool isLoading,
       List<AddressModel> addresses,
+      List<AddressModel> recentAddresses,
       AddressModel? selectedAddress,
-      String? errorMessage});
+      String? errorMessage,
+      bool isServiceable});
 
   $AddressModelCopyWith<$Res>? get selectedAddress;
 }
@@ -60,8 +64,10 @@ class _$LocationStateCopyWithImpl<$Res, $Val extends LocationState>
   $Res call({
     Object? isLoading = null,
     Object? addresses = null,
+    Object? recentAddresses = null,
     Object? selectedAddress = freezed,
     Object? errorMessage = freezed,
+    Object? isServiceable = null,
   }) {
     return _then(_value.copyWith(
       isLoading: null == isLoading
@@ -72,6 +78,10 @@ class _$LocationStateCopyWithImpl<$Res, $Val extends LocationState>
           ? _value.addresses
           : addresses // ignore: cast_nullable_to_non_nullable
               as List<AddressModel>,
+      recentAddresses: null == recentAddresses
+          ? _value.recentAddresses
+          : recentAddresses // ignore: cast_nullable_to_non_nullable
+              as List<AddressModel>,
       selectedAddress: freezed == selectedAddress
           ? _value.selectedAddress
           : selectedAddress // ignore: cast_nullable_to_non_nullable
@@ -80,6 +90,10 @@ class _$LocationStateCopyWithImpl<$Res, $Val extends LocationState>
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
               as String?,
+      isServiceable: null == isServiceable
+          ? _value.isServiceable
+          : isServiceable // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 
@@ -109,8 +123,10 @@ abstract class _$$LocationStateImplCopyWith<$Res>
   $Res call(
       {bool isLoading,
       List<AddressModel> addresses,
+      List<AddressModel> recentAddresses,
       AddressModel? selectedAddress,
-      String? errorMessage});
+      String? errorMessage,
+      bool isServiceable});
 
   @override
   $AddressModelCopyWith<$Res>? get selectedAddress;
@@ -131,8 +147,10 @@ class __$$LocationStateImplCopyWithImpl<$Res>
   $Res call({
     Object? isLoading = null,
     Object? addresses = null,
+    Object? recentAddresses = null,
     Object? selectedAddress = freezed,
     Object? errorMessage = freezed,
+    Object? isServiceable = null,
   }) {
     return _then(_$LocationStateImpl(
       isLoading: null == isLoading
@@ -143,6 +161,10 @@ class __$$LocationStateImplCopyWithImpl<$Res>
           ? _value._addresses
           : addresses // ignore: cast_nullable_to_non_nullable
               as List<AddressModel>,
+      recentAddresses: null == recentAddresses
+          ? _value._recentAddresses
+          : recentAddresses // ignore: cast_nullable_to_non_nullable
+              as List<AddressModel>,
       selectedAddress: freezed == selectedAddress
           ? _value.selectedAddress
           : selectedAddress // ignore: cast_nullable_to_non_nullable
@@ -151,6 +173,10 @@ class __$$LocationStateImplCopyWithImpl<$Res>
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
               as String?,
+      isServiceable: null == isServiceable
+          ? _value.isServiceable
+          : isServiceable // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -161,9 +187,12 @@ class _$LocationStateImpl implements _LocationState {
   const _$LocationStateImpl(
       {this.isLoading = false,
       final List<AddressModel> addresses = const [],
+      final List<AddressModel> recentAddresses = const [],
       this.selectedAddress,
-      this.errorMessage})
-      : _addresses = addresses;
+      this.errorMessage,
+      this.isServiceable = true})
+      : _addresses = addresses,
+        _recentAddresses = recentAddresses;
 
   @override
   @JsonKey()
@@ -177,14 +206,26 @@ class _$LocationStateImpl implements _LocationState {
     return EqualUnmodifiableListView(_addresses);
   }
 
+  final List<AddressModel> _recentAddresses;
+  @override
+  @JsonKey()
+  List<AddressModel> get recentAddresses {
+    if (_recentAddresses is EqualUnmodifiableListView) return _recentAddresses;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_recentAddresses);
+  }
+
   @override
   final AddressModel? selectedAddress;
   @override
   final String? errorMessage;
+  @override
+  @JsonKey()
+  final bool isServiceable;
 
   @override
   String toString() {
-    return 'LocationState(isLoading: $isLoading, addresses: $addresses, selectedAddress: $selectedAddress, errorMessage: $errorMessage)';
+    return 'LocationState(isLoading: $isLoading, addresses: $addresses, recentAddresses: $recentAddresses, selectedAddress: $selectedAddress, errorMessage: $errorMessage, isServiceable: $isServiceable)';
   }
 
   @override
@@ -196,10 +237,14 @@ class _$LocationStateImpl implements _LocationState {
                 other.isLoading == isLoading) &&
             const DeepCollectionEquality()
                 .equals(other._addresses, _addresses) &&
+            const DeepCollectionEquality()
+                .equals(other._recentAddresses, _recentAddresses) &&
             (identical(other.selectedAddress, selectedAddress) ||
                 other.selectedAddress == selectedAddress) &&
             (identical(other.errorMessage, errorMessage) ||
-                other.errorMessage == errorMessage));
+                other.errorMessage == errorMessage) &&
+            (identical(other.isServiceable, isServiceable) ||
+                other.isServiceable == isServiceable));
   }
 
   @override
@@ -207,8 +252,10 @@ class _$LocationStateImpl implements _LocationState {
       runtimeType,
       isLoading,
       const DeepCollectionEquality().hash(_addresses),
+      const DeepCollectionEquality().hash(_recentAddresses),
       selectedAddress,
-      errorMessage);
+      errorMessage,
+      isServiceable);
 
   /// Create a copy of LocationState
   /// with the given fields replaced by the non-null parameter values.
@@ -223,17 +270,23 @@ abstract class _LocationState implements LocationState {
   const factory _LocationState(
       {final bool isLoading,
       final List<AddressModel> addresses,
+      final List<AddressModel> recentAddresses,
       final AddressModel? selectedAddress,
-      final String? errorMessage}) = _$LocationStateImpl;
+      final String? errorMessage,
+      final bool isServiceable}) = _$LocationStateImpl;
 
   @override
   bool get isLoading;
   @override
   List<AddressModel> get addresses;
   @override
+  List<AddressModel> get recentAddresses;
+  @override
   AddressModel? get selectedAddress;
   @override
   String? get errorMessage;
+  @override
+  bool get isServiceable;
 
   /// Create a copy of LocationState
   /// with the given fields replaced by the non-null parameter values.

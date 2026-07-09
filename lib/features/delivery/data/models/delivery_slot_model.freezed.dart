@@ -20,14 +20,22 @@ DeliverySlotModel _$DeliverySlotModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$DeliverySlotModel {
-  String get id => throw _privateConstructorUsedError;
-  SlotType get type => throw _privateConstructorUsedError;
-  String get label => throw _privateConstructorUsedError;
+  String get slotId => throw _privateConstructorUsedError;
+  DeliveryType get deliveryType => throw _privateConstructorUsedError;
   DateTime get startTime => throw _privateConstructorUsedError;
   DateTime get endTime => throw _privateConstructorUsedError;
+  int get estimatedMinutes => throw _privateConstructorUsedError;
+  double get deliveryCharge => throw _privateConstructorUsedError;
+  double get originalCharge => throw _privateConstructorUsedError;
+  bool get isFree => throw _privateConstructorUsedError;
   bool get isAvailable => throw _privateConstructorUsedError;
-  double get additionalCharge => throw _privateConstructorUsedError;
-  String? get eta => throw _privateConstructorUsedError;
+  int get priority => throw _privateConstructorUsedError;
+  int get capacity => throw _privateConstructorUsedError;
+  int get remainingCapacity => throw _privateConstructorUsedError;
+  String? get offerTag => throw _privateConstructorUsedError;
+  String? get badge => throw _privateConstructorUsedError;
+  String? get unavailableReason => throw _privateConstructorUsedError;
+  String? get label => throw _privateConstructorUsedError;
 
   /// Serializes this DeliverySlotModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -46,14 +54,22 @@ abstract class $DeliverySlotModelCopyWith<$Res> {
       _$DeliverySlotModelCopyWithImpl<$Res, DeliverySlotModel>;
   @useResult
   $Res call(
-      {String id,
-      SlotType type,
-      String label,
+      {String slotId,
+      DeliveryType deliveryType,
       DateTime startTime,
       DateTime endTime,
+      int estimatedMinutes,
+      double deliveryCharge,
+      double originalCharge,
+      bool isFree,
       bool isAvailable,
-      double additionalCharge,
-      String? eta});
+      int priority,
+      int capacity,
+      int remainingCapacity,
+      String? offerTag,
+      String? badge,
+      String? unavailableReason,
+      String? label});
 }
 
 /// @nodoc
@@ -71,28 +87,32 @@ class _$DeliverySlotModelCopyWithImpl<$Res, $Val extends DeliverySlotModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
-    Object? type = null,
-    Object? label = null,
+    Object? slotId = null,
+    Object? deliveryType = null,
     Object? startTime = null,
     Object? endTime = null,
+    Object? estimatedMinutes = null,
+    Object? deliveryCharge = null,
+    Object? originalCharge = null,
+    Object? isFree = null,
     Object? isAvailable = null,
-    Object? additionalCharge = null,
-    Object? eta = freezed,
+    Object? priority = null,
+    Object? capacity = null,
+    Object? remainingCapacity = null,
+    Object? offerTag = freezed,
+    Object? badge = freezed,
+    Object? unavailableReason = freezed,
+    Object? label = freezed,
   }) {
     return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
+      slotId: null == slotId
+          ? _value.slotId
+          : slotId // ignore: cast_nullable_to_non_nullable
               as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as SlotType,
-      label: null == label
-          ? _value.label
-          : label // ignore: cast_nullable_to_non_nullable
-              as String,
+      deliveryType: null == deliveryType
+          ? _value.deliveryType
+          : deliveryType // ignore: cast_nullable_to_non_nullable
+              as DeliveryType,
       startTime: null == startTime
           ? _value.startTime
           : startTime // ignore: cast_nullable_to_non_nullable
@@ -101,17 +121,53 @@ class _$DeliverySlotModelCopyWithImpl<$Res, $Val extends DeliverySlotModel>
           ? _value.endTime
           : endTime // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      estimatedMinutes: null == estimatedMinutes
+          ? _value.estimatedMinutes
+          : estimatedMinutes // ignore: cast_nullable_to_non_nullable
+              as int,
+      deliveryCharge: null == deliveryCharge
+          ? _value.deliveryCharge
+          : deliveryCharge // ignore: cast_nullable_to_non_nullable
+              as double,
+      originalCharge: null == originalCharge
+          ? _value.originalCharge
+          : originalCharge // ignore: cast_nullable_to_non_nullable
+              as double,
+      isFree: null == isFree
+          ? _value.isFree
+          : isFree // ignore: cast_nullable_to_non_nullable
+              as bool,
       isAvailable: null == isAvailable
           ? _value.isAvailable
           : isAvailable // ignore: cast_nullable_to_non_nullable
               as bool,
-      additionalCharge: null == additionalCharge
-          ? _value.additionalCharge
-          : additionalCharge // ignore: cast_nullable_to_non_nullable
-              as double,
-      eta: freezed == eta
-          ? _value.eta
-          : eta // ignore: cast_nullable_to_non_nullable
+      priority: null == priority
+          ? _value.priority
+          : priority // ignore: cast_nullable_to_non_nullable
+              as int,
+      capacity: null == capacity
+          ? _value.capacity
+          : capacity // ignore: cast_nullable_to_non_nullable
+              as int,
+      remainingCapacity: null == remainingCapacity
+          ? _value.remainingCapacity
+          : remainingCapacity // ignore: cast_nullable_to_non_nullable
+              as int,
+      offerTag: freezed == offerTag
+          ? _value.offerTag
+          : offerTag // ignore: cast_nullable_to_non_nullable
+              as String?,
+      badge: freezed == badge
+          ? _value.badge
+          : badge // ignore: cast_nullable_to_non_nullable
+              as String?,
+      unavailableReason: freezed == unavailableReason
+          ? _value.unavailableReason
+          : unavailableReason // ignore: cast_nullable_to_non_nullable
+              as String?,
+      label: freezed == label
+          ? _value.label
+          : label // ignore: cast_nullable_to_non_nullable
               as String?,
     ) as $Val);
   }
@@ -126,14 +182,22 @@ abstract class _$$DeliverySlotModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String id,
-      SlotType type,
-      String label,
+      {String slotId,
+      DeliveryType deliveryType,
       DateTime startTime,
       DateTime endTime,
+      int estimatedMinutes,
+      double deliveryCharge,
+      double originalCharge,
+      bool isFree,
       bool isAvailable,
-      double additionalCharge,
-      String? eta});
+      int priority,
+      int capacity,
+      int remainingCapacity,
+      String? offerTag,
+      String? badge,
+      String? unavailableReason,
+      String? label});
 }
 
 /// @nodoc
@@ -149,28 +213,32 @@ class __$$DeliverySlotModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
-    Object? type = null,
-    Object? label = null,
+    Object? slotId = null,
+    Object? deliveryType = null,
     Object? startTime = null,
     Object? endTime = null,
+    Object? estimatedMinutes = null,
+    Object? deliveryCharge = null,
+    Object? originalCharge = null,
+    Object? isFree = null,
     Object? isAvailable = null,
-    Object? additionalCharge = null,
-    Object? eta = freezed,
+    Object? priority = null,
+    Object? capacity = null,
+    Object? remainingCapacity = null,
+    Object? offerTag = freezed,
+    Object? badge = freezed,
+    Object? unavailableReason = freezed,
+    Object? label = freezed,
   }) {
     return _then(_$DeliverySlotModelImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
+      slotId: null == slotId
+          ? _value.slotId
+          : slotId // ignore: cast_nullable_to_non_nullable
               as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as SlotType,
-      label: null == label
-          ? _value.label
-          : label // ignore: cast_nullable_to_non_nullable
-              as String,
+      deliveryType: null == deliveryType
+          ? _value.deliveryType
+          : deliveryType // ignore: cast_nullable_to_non_nullable
+              as DeliveryType,
       startTime: null == startTime
           ? _value.startTime
           : startTime // ignore: cast_nullable_to_non_nullable
@@ -179,17 +247,53 @@ class __$$DeliverySlotModelImplCopyWithImpl<$Res>
           ? _value.endTime
           : endTime // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      estimatedMinutes: null == estimatedMinutes
+          ? _value.estimatedMinutes
+          : estimatedMinutes // ignore: cast_nullable_to_non_nullable
+              as int,
+      deliveryCharge: null == deliveryCharge
+          ? _value.deliveryCharge
+          : deliveryCharge // ignore: cast_nullable_to_non_nullable
+              as double,
+      originalCharge: null == originalCharge
+          ? _value.originalCharge
+          : originalCharge // ignore: cast_nullable_to_non_nullable
+              as double,
+      isFree: null == isFree
+          ? _value.isFree
+          : isFree // ignore: cast_nullable_to_non_nullable
+              as bool,
       isAvailable: null == isAvailable
           ? _value.isAvailable
           : isAvailable // ignore: cast_nullable_to_non_nullable
               as bool,
-      additionalCharge: null == additionalCharge
-          ? _value.additionalCharge
-          : additionalCharge // ignore: cast_nullable_to_non_nullable
-              as double,
-      eta: freezed == eta
-          ? _value.eta
-          : eta // ignore: cast_nullable_to_non_nullable
+      priority: null == priority
+          ? _value.priority
+          : priority // ignore: cast_nullable_to_non_nullable
+              as int,
+      capacity: null == capacity
+          ? _value.capacity
+          : capacity // ignore: cast_nullable_to_non_nullable
+              as int,
+      remainingCapacity: null == remainingCapacity
+          ? _value.remainingCapacity
+          : remainingCapacity // ignore: cast_nullable_to_non_nullable
+              as int,
+      offerTag: freezed == offerTag
+          ? _value.offerTag
+          : offerTag // ignore: cast_nullable_to_non_nullable
+              as String?,
+      badge: freezed == badge
+          ? _value.badge
+          : badge // ignore: cast_nullable_to_non_nullable
+              as String?,
+      unavailableReason: freezed == unavailableReason
+          ? _value.unavailableReason
+          : unavailableReason // ignore: cast_nullable_to_non_nullable
+              as String?,
+      label: freezed == label
+          ? _value.label
+          : label // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
   }
@@ -199,40 +303,70 @@ class __$$DeliverySlotModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$DeliverySlotModelImpl implements _DeliverySlotModel {
   const _$DeliverySlotModelImpl(
-      {required this.id,
-      required this.type,
-      required this.label,
+      {required this.slotId,
+      required this.deliveryType,
       required this.startTime,
       required this.endTime,
+      this.estimatedMinutes = 0,
+      this.deliveryCharge = 0.0,
+      this.originalCharge = 0.0,
+      this.isFree = false,
       this.isAvailable = true,
-      this.additionalCharge = 0.0,
-      this.eta});
+      this.priority = 0,
+      this.capacity = 0,
+      this.remainingCapacity = 0,
+      this.offerTag,
+      this.badge,
+      this.unavailableReason,
+      this.label});
 
   factory _$DeliverySlotModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$DeliverySlotModelImplFromJson(json);
 
   @override
-  final String id;
+  final String slotId;
   @override
-  final SlotType type;
-  @override
-  final String label;
+  final DeliveryType deliveryType;
   @override
   final DateTime startTime;
   @override
   final DateTime endTime;
   @override
   @JsonKey()
+  final int estimatedMinutes;
+  @override
+  @JsonKey()
+  final double deliveryCharge;
+  @override
+  @JsonKey()
+  final double originalCharge;
+  @override
+  @JsonKey()
+  final bool isFree;
+  @override
+  @JsonKey()
   final bool isAvailable;
   @override
   @JsonKey()
-  final double additionalCharge;
+  final int priority;
   @override
-  final String? eta;
+  @JsonKey()
+  final int capacity;
+  @override
+  @JsonKey()
+  final int remainingCapacity;
+  @override
+  final String? offerTag;
+  @override
+  final String? badge;
+  @override
+  final String? unavailableReason;
+  @override
+  final String? label;
 
   @override
   String toString() {
-    return 'DeliverySlotModel(id: $id, type: $type, label: $label, startTime: $startTime, endTime: $endTime, isAvailable: $isAvailable, additionalCharge: $additionalCharge, eta: $eta)';
+    return 'DeliverySlotModel(slotId: $slotId, deliveryType: $deliveryType, startTime: $startTime, endTime: $endTime, estimatedMinutes: $estimatedMinutes, deliveryCharge: $deliveryCharge, originalCharge: $originalCharge, isFree: $isFree, isAvailable: $isAvailable, priority: $priority, capacity: $capacity, remainingCapacity: $remainingCapacity, offerTag: $offerTag, badge: $badge, unavailableReason: $unavailableReason, label: $label)';
   }
 
   @override
@@ -240,23 +374,55 @@ class _$DeliverySlotModelImpl implements _DeliverySlotModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$DeliverySlotModelImpl &&
-            (identical(other.id, id) || other.id == id) &&
-            (identical(other.type, type) || other.type == type) &&
-            (identical(other.label, label) || other.label == label) &&
+            (identical(other.slotId, slotId) || other.slotId == slotId) &&
+            (identical(other.deliveryType, deliveryType) ||
+                other.deliveryType == deliveryType) &&
             (identical(other.startTime, startTime) ||
                 other.startTime == startTime) &&
             (identical(other.endTime, endTime) || other.endTime == endTime) &&
+            (identical(other.estimatedMinutes, estimatedMinutes) ||
+                other.estimatedMinutes == estimatedMinutes) &&
+            (identical(other.deliveryCharge, deliveryCharge) ||
+                other.deliveryCharge == deliveryCharge) &&
+            (identical(other.originalCharge, originalCharge) ||
+                other.originalCharge == originalCharge) &&
+            (identical(other.isFree, isFree) || other.isFree == isFree) &&
             (identical(other.isAvailable, isAvailable) ||
                 other.isAvailable == isAvailable) &&
-            (identical(other.additionalCharge, additionalCharge) ||
-                other.additionalCharge == additionalCharge) &&
-            (identical(other.eta, eta) || other.eta == eta));
+            (identical(other.priority, priority) ||
+                other.priority == priority) &&
+            (identical(other.capacity, capacity) ||
+                other.capacity == capacity) &&
+            (identical(other.remainingCapacity, remainingCapacity) ||
+                other.remainingCapacity == remainingCapacity) &&
+            (identical(other.offerTag, offerTag) ||
+                other.offerTag == offerTag) &&
+            (identical(other.badge, badge) || other.badge == badge) &&
+            (identical(other.unavailableReason, unavailableReason) ||
+                other.unavailableReason == unavailableReason) &&
+            (identical(other.label, label) || other.label == label));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, type, label, startTime,
-      endTime, isAvailable, additionalCharge, eta);
+  int get hashCode => Object.hash(
+      runtimeType,
+      slotId,
+      deliveryType,
+      startTime,
+      endTime,
+      estimatedMinutes,
+      deliveryCharge,
+      originalCharge,
+      isFree,
+      isAvailable,
+      priority,
+      capacity,
+      remainingCapacity,
+      offerTag,
+      badge,
+      unavailableReason,
+      label);
 
   /// Create a copy of DeliverySlotModel
   /// with the given fields replaced by the non-null parameter values.
@@ -277,34 +443,58 @@ class _$DeliverySlotModelImpl implements _DeliverySlotModel {
 
 abstract class _DeliverySlotModel implements DeliverySlotModel {
   const factory _DeliverySlotModel(
-      {required final String id,
-      required final SlotType type,
-      required final String label,
+      {required final String slotId,
+      required final DeliveryType deliveryType,
       required final DateTime startTime,
       required final DateTime endTime,
+      final int estimatedMinutes,
+      final double deliveryCharge,
+      final double originalCharge,
+      final bool isFree,
       final bool isAvailable,
-      final double additionalCharge,
-      final String? eta}) = _$DeliverySlotModelImpl;
+      final int priority,
+      final int capacity,
+      final int remainingCapacity,
+      final String? offerTag,
+      final String? badge,
+      final String? unavailableReason,
+      final String? label}) = _$DeliverySlotModelImpl;
 
   factory _DeliverySlotModel.fromJson(Map<String, dynamic> json) =
       _$DeliverySlotModelImpl.fromJson;
 
   @override
-  String get id;
+  String get slotId;
   @override
-  SlotType get type;
-  @override
-  String get label;
+  DeliveryType get deliveryType;
   @override
   DateTime get startTime;
   @override
   DateTime get endTime;
   @override
+  int get estimatedMinutes;
+  @override
+  double get deliveryCharge;
+  @override
+  double get originalCharge;
+  @override
+  bool get isFree;
+  @override
   bool get isAvailable;
   @override
-  double get additionalCharge;
+  int get priority;
   @override
-  String? get eta;
+  int get capacity;
+  @override
+  int get remainingCapacity;
+  @override
+  String? get offerTag;
+  @override
+  String? get badge;
+  @override
+  String? get unavailableReason;
+  @override
+  String? get label;
 
   /// Create a copy of DeliverySlotModel
   /// with the given fields replaced by the non-null parameter values.

@@ -7,14 +7,15 @@ abstract class CouponRepository {
     required List<String> productIds,
   });
 
-  Future<CouponModel?> validateCoupon(String code, {
+  Future<CouponModel?> validateCouponCode(String code, {
     required double cartValue,
     required List<String> shopIds,
     required List<String> productIds,
   });
 
-  Future<CouponModel?> getBestCoupon({
+  Future<CouponCalculationResult> calculateDiscount(CouponModel coupon, {
     required double cartValue,
+    required double deliveryCharge,
     required List<String> shopIds,
     required List<String> productIds,
   });

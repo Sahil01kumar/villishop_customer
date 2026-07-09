@@ -9,10 +9,16 @@ abstract class DeliveryRepository {
     required String customerAddressId,
   });
 
-  Future<List<DeliverySlotModel>> getAvailableSlots(String shopId);
+  Future<List<DeliverySlotModel>> getAvailableSlots({
+    required String shopId,
+    required double cartValue,
+    required String customerAddressId,
+  });
   
   Future<List<DeliverySummaryModel>> getConsolidatedDeliverySummary({
     required Map<String, double> shopWiseCartValues,
     required String customerAddressId,
   });
+
+  Future<bool> validateSlotAvailability(String slotId);
 }

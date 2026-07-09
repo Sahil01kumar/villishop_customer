@@ -8,31 +8,22 @@ part of 'cart_model.dart';
 
 _$CartModelImpl _$$CartModelImplFromJson(Map<String, dynamic> json) =>
     _$CartModelImpl(
-      items: (json['items'] as List<dynamic>?)
-              ?.map((e) => CartItemModel.fromJson(e as Map<String, dynamic>))
+      shopCarts: (json['shopCarts'] as List<dynamic>?)
+              ?.map((e) => ShopCartModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
-      summary: json['summary'] == null
+      overallSummary: json['overallSummary'] == null
           ? const CartSummaryModel()
-          : CartSummaryModel.fromJson(json['summary'] as Map<String, dynamic>),
+          : CartSummaryModel.fromJson(
+              json['overallSummary'] as Map<String, dynamic>),
       appliedCouponCode: json['appliedCouponCode'] as String?,
-      deliveryInstruction: json['deliveryInstruction'] as String?,
-      itemsByShop: (json['itemsByShop'] as Map<String, dynamic>?)?.map(
-            (k, e) => MapEntry(
-                k,
-                (e as List<dynamic>)
-                    .map((e) =>
-                        CartItemModel.fromJson(e as Map<String, dynamic>))
-                    .toList()),
-          ) ??
-          const {},
+      isSyncing: json['isSyncing'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$CartModelImplToJson(_$CartModelImpl instance) =>
     <String, dynamic>{
-      'items': instance.items,
-      'summary': instance.summary,
+      'shopCarts': instance.shopCarts,
+      'overallSummary': instance.overallSummary,
       'appliedCouponCode': instance.appliedCouponCode,
-      'deliveryInstruction': instance.deliveryInstruction,
-      'itemsByShop': instance.itemsByShop,
+      'isSyncing': instance.isSyncing,
     };

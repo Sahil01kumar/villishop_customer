@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/constants/app_dimensions.dart';
+import '../../../../core/constants/app_colors.dart';
 
 class AddressCard extends StatelessWidget {
   final String label;
@@ -17,21 +17,15 @@ class AddressCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: AppRadius.rM,
+      borderRadius: BorderRadius.circular(12),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 4.0),
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white.withAlpha(40),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.location_on, color: Colors.white, size: 24),
-            ),
-            AppSpacing.hS,
-            Expanded(
+            const Icon(Icons.location_on, color: AppColors.primary, size: 30),
+            const SizedBox(width: 8),
+            Flexible(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -42,21 +36,22 @@ class AddressCard extends StatelessWidget {
                       Text(
                         label,
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: Colors.black,
                           fontWeight: FontWeight.w900,
-                          fontSize: 16,
+                          fontSize: 18,
                           letterSpacing: -0.5,
                         ),
                       ),
-                      const Icon(Icons.keyboard_arrow_down, color: Colors.white, size: 18),
+                      const SizedBox(width: 2),
+                      const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.black, size: 22),
                     ],
                   ),
                   Text(
                     address,
                     style: TextStyle(
-                      color: Colors.white.withAlpha(180),
+                      color: Colors.grey[600],
                       fontSize: 12,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w600,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

@@ -9,34 +9,48 @@ part of 'delivery_slot_model.dart';
 _$DeliverySlotModelImpl _$$DeliverySlotModelImplFromJson(
         Map<String, dynamic> json) =>
     _$DeliverySlotModelImpl(
-      id: json['id'] as String,
-      type: $enumDecode(_$SlotTypeEnumMap, json['type']),
-      label: json['label'] as String,
+      slotId: json['slotId'] as String,
+      deliveryType: $enumDecode(_$DeliveryTypeEnumMap, json['deliveryType']),
       startTime: DateTime.parse(json['startTime'] as String),
       endTime: DateTime.parse(json['endTime'] as String),
+      estimatedMinutes: (json['estimatedMinutes'] as num?)?.toInt() ?? 0,
+      deliveryCharge: (json['deliveryCharge'] as num?)?.toDouble() ?? 0.0,
+      originalCharge: (json['originalCharge'] as num?)?.toDouble() ?? 0.0,
+      isFree: json['isFree'] as bool? ?? false,
       isAvailable: json['isAvailable'] as bool? ?? true,
-      additionalCharge: (json['additionalCharge'] as num?)?.toDouble() ?? 0.0,
-      eta: json['eta'] as String?,
+      priority: (json['priority'] as num?)?.toInt() ?? 0,
+      capacity: (json['capacity'] as num?)?.toInt() ?? 0,
+      remainingCapacity: (json['remainingCapacity'] as num?)?.toInt() ?? 0,
+      offerTag: json['offerTag'] as String?,
+      badge: json['badge'] as String?,
+      unavailableReason: json['unavailableReason'] as String?,
+      label: json['label'] as String?,
     );
 
 Map<String, dynamic> _$$DeliverySlotModelImplToJson(
         _$DeliverySlotModelImpl instance) =>
     <String, dynamic>{
-      'id': instance.id,
-      'type': _$SlotTypeEnumMap[instance.type]!,
-      'label': instance.label,
+      'slotId': instance.slotId,
+      'deliveryType': _$DeliveryTypeEnumMap[instance.deliveryType]!,
       'startTime': instance.startTime.toIso8601String(),
       'endTime': instance.endTime.toIso8601String(),
+      'estimatedMinutes': instance.estimatedMinutes,
+      'deliveryCharge': instance.deliveryCharge,
+      'originalCharge': instance.originalCharge,
+      'isFree': instance.isFree,
       'isAvailable': instance.isAvailable,
-      'additionalCharge': instance.additionalCharge,
-      'eta': instance.eta,
+      'priority': instance.priority,
+      'capacity': instance.capacity,
+      'remainingCapacity': instance.remainingCapacity,
+      'offerTag': instance.offerTag,
+      'badge': instance.badge,
+      'unavailableReason': instance.unavailableReason,
+      'label': instance.label,
     };
 
-const _$SlotTypeEnumMap = {
-  SlotType.instant: 'instant',
-  SlotType.morning: 'morning',
-  SlotType.afternoon: 'afternoon',
-  SlotType.evening: 'evening',
-  SlotType.night: 'night',
-  SlotType.scheduled: 'scheduled',
+const _$DeliveryTypeEnumMap = {
+  DeliveryType.instant: 'instant',
+  DeliveryType.express: 'express',
+  DeliveryType.scheduled: 'scheduled',
+  DeliveryType.standard: 'standard',
 };

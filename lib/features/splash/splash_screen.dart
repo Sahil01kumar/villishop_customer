@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_strings.dart';
-import '../../core/constants/app_dimensions.dart';
 import '../authentication/providers/auth_provider.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -12,46 +12,21 @@ class SplashScreen extends ConsumerStatefulWidget {
   ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _fadeAnimation;
-  late Animation<double> _scaleAnimation;
+class _SplashScreenState extends ConsumerState<SplashScreen> {
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1500),
-    );
+    _initApp();
+  }
 
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeIn),
-    );
-
-    _scaleAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.elasticOut),
-    );
-
-    _controller.forward();
+  Future<void> _initApp() async {
+    // Wait for 2.5 seconds to show brand identity
+    await Future.delayed(const Duration(milliseconds: 2500));
     
-    // We don't need context.go here anymore because GoRouter redirect
-    // will watch authProvider and navigate automatically.
-    // We just need to make sure authProvider is initialized.
-    _initAuth();
-  }
-
-  void _initAuth() async {
-    // Wait for animation and auth check
-    await Future.delayed(const Duration(seconds: 2));
-    // Triggering authProvider if not already
+    // Auth check is handled by GoRouter's redirect logic which watches authProvider
+    // But we trigger the provider here just in case.
     ref.read(authProvider);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 
   @override
@@ -60,47 +35,53 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
       body: Container(
         width: double.infinity,
         decoration: const BoxDecoration(
-          gradient: AppColors.primaryGradient,
+          color: Colors.white,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ScaleTransition(
-              scale: _scaleAnimation,
-              child: FadeTransition(
-                opacity: _fadeAnimation,
-                child: const Icon(
-                  Icons.shopping_bag,
-                  size: 100,
-                  color: Colors.white,
+            Container(
+              height: 120, width: 120,
+              decoration: BoxDecoration(
+                color: AppColors.primary.withAlpha(20),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.shopping_basket_rounded, size: 60, color: AppColors.primary),
+            ).animate()
+             .scale(duration: 800.ms, curve: Curves.elasticOut)
+             .fadeIn(duration: 600.ms),
+             
+            const SizedBox(height: 24),
+            
+            Column(
+              children: [
+                Text(
+                  AppStrings.appName.toUpperCase(),
+                  style: const TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.black,
+                    letterSpacing: 2,
+                  ),
                 ),
-              ),
-            ),
-            AppSpacing.vL,
-            FadeTransition(
-              opacity: _fadeAnimation,
-              child: const Column(
-                children: [
-                  Text(
-                    AppStrings.appName,
-                    style: TextStyle(
-                      fontSize: 42,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      letterSpacing: 1.5,
-                    ),
+                Text(
+                  AppStrings.appTagline,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey[600],
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1,
                   ),
-                  Text(
-                    AppStrings.appTagline,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white70,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+                ),
+              ],
+            ).animate().slideY(begin: 0.2, end: 0, duration: 600.ms, curve: Curves.easeOut).fadeIn(),
+            
+            const SizedBox(height: 100),
+            
+            const CircularProgressIndicator(
+              strokeWidth: 3,
+              valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+            ).animate().fadeIn(delay: 1000.ms),
           ],
         ),
       ),

@@ -1,12 +1,10 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'offer_rule_model.dart';
-import 'discount_model.dart';
-import 'cashback_model.dart';
 
 part 'coupon_model.freezed.dart';
 part 'coupon_model.g.dart';
 
-enum DiscountPayer { platform, shop, shared }
+enum CouponType { flat, percentage, freeDelivery, bogo, buyXGetY, cashback }
+enum CouponSource { platform, shop, brand, referral, festival }
 
 @freezed
 class CouponModel with _$CouponModel {
@@ -15,15 +13,32 @@ class CouponModel with _$CouponModel {
     required String code,
     required String title,
     required String description,
-    required DiscountModel discount,
-    required OfferRuleModel rules,
-    CashbackModel? cashback,
-    @Default(DiscountPayer.shop) DiscountPayer payer,
-    @Default(0.5) double platformShareRatio, // If shared
-    @Default(true) bool isCommissionBeforeDiscount,
-    @Default(false) bool isActive,
-    String? bannerUrl,
+    required CouponType type,
+    required CouponSource source,
+    @Default(0.0) double value,
+    @Default(0.0) double minOrderValue,
+    @Default(double.infinity) double maxDiscountAmount,
+    required DateTime expiryDate,
+    @Default(1) int usageLimitPerCustomer,
+    @Default(true) bool isActive,
+    String? shopId,
+    @Default([]) List<String> eligibleCategoryIds,
+    @Default([]) List<String> eligibleProductIds,
+    @Default(false) bool isFirstOrderOnly,
+    @Default(false) bool isMembershipOnly,
   }) = _CouponModel;
 
   factory CouponModel.fromJson(Map<String, dynamic> json) => _$CouponModelFromJson(json);
+}
+
+@freezed
+class CouponCalculationResult with _$CouponCalculationResult {
+  const factory CouponCalculationResult({
+    required double discountAmount,
+    required double deliveryDiscount,
+    required double cashbackAmount,
+    required bool isFreeDelivery,
+    String? message,
+    @Default(true) bool isValid,
+  }) = _CouponCalculationResult;
 }

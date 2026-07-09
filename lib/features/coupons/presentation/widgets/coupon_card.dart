@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../../core/constants/app_dimensions.dart';
-import '../../../../core/constants/app_colors.dart';
+import 'package:villishop_customer/core/constants/app_dimensions.dart';
+import 'package:villishop_customer/core/constants/app_colors.dart';
 import '../../data/models/coupon_model.dart';
-import '../../data/models/discount_model.dart';
 
 class PremiumCouponCard extends StatelessWidget {
   final CouponModel coupon;
@@ -100,12 +99,12 @@ class PremiumCouponCard extends StatelessWidget {
     IconData icon;
     Color color;
     
-    switch (coupon.discount.type) {
-      case DiscountType.freeDelivery:
+    switch (coupon.type) {
+      case CouponType.freeDelivery:
         icon = Icons.delivery_dining_outlined;
         color = Colors.blue;
         break;
-      case DiscountType.bogo:
+      case CouponType.bogo:
         icon = Icons.filter_2_outlined;
         color = Colors.orange;
         break;

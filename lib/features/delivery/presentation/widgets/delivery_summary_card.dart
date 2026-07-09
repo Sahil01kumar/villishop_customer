@@ -29,36 +29,52 @@ class DeliverySummaryCard extends StatelessWidget {
                 summary.shopName,
                 style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 14),
               ),
-              if (summary.isFreeDelivery)
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                  decoration: BoxDecoration(color: Colors.green.withAlpha(20), borderRadius: BorderRadius.circular(4)),
-                  child: const Text('FREE', style: TextStyle(color: Colors.green, fontSize: 10, fontWeight: FontWeight.bold)),
-                ),
+              const Icon(Icons.delivery_dining_outlined, size: 18, color: Colors.blue),
             ],
           ),
           AppSpacing.vS,
-          _chargeRow('Base Delivery', charges.baseCharge),
-          _chargeRow('Distance & Surge', charges.distanceCharge + charges.surgeCharge),
-          if (charges.weightCharge > 0) _chargeRow('Heavy Item Handling', charges.weightCharge),
-          const Divider(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Delivery Total', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-              Text(
-                '₹${charges.totalCharge.toStringAsFixed(0)}',
-                style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 14),
-              ),
+              Text('Delivery Charge', style: TextStyle(color: Colors.grey[600], fontSize: 13)),
+              if (summary.isFreeDelivery)
+                Row(
+                  children: [
+                    Text(
+                      '₹${charges.baseCharge.toStringAsFixed(0)}',
+                      style: const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 12,
+                        decoration: TextDecoration.lineThrough,
+                      ),
+                    ),
+                    AppSpacing.hS,
+                    const Text(
+                      'FREE',
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ],
+                )
+              else
+                Text(
+                  '₹${charges.totalCharge.toStringAsFixed(0)}',
+                  style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 14),
+                ),
             ],
           ),
+          if (charges.surgeCharge > 0)
+            _chargeRow('Surge Fee (Rain/Night)', charges.surgeCharge, color: Colors.orange),
           AppSpacing.vS,
           Row(
             children: [
               const Icon(Icons.timer_outlined, size: 14, color: AppColors.primary),
               const SizedBox(width: 4),
               Text(
-                'Expected ETA: ${summary.estimatedEta}',
+                'Delivery in ${summary.estimatedEta}',
                 style: const TextStyle(color: AppColors.primary, fontSize: 11, fontWeight: FontWeight.bold),
               ),
             ],
@@ -68,14 +84,21 @@ class DeliverySummaryCard extends StatelessWidget {
     );
   }
 
-  Widget _chargeRow(String label, double value) {
+  Widget _chargeRow(String label, double value, {Color? color}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
-          Text('₹${value.toStringAsFixed(0)}', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
+          Text(
+            '₹${value.toStringAsFixed(0)}',
+            style: TextStyle(
+              fontSize: 12, 
+              fontWeight: FontWeight.w600,
+              color: color,
+            ),
+          ),
         ],
       ),
     );

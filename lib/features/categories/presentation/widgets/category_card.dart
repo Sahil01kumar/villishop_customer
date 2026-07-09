@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
-import '../../data/models/category_model.dart';
+import '../../../../core/constants/app_colors.dart';
+import '../../../home/data/models/category_model.dart';
 
 class CategoryCard extends StatelessWidget {
   final CategoryModel category;
@@ -15,22 +15,31 @@ class CategoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: AppRadius.rL,
-        side: BorderSide(color: Colors.grey.withAlpha(51)),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withAlpha(5),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
               flex: 3,
               child: Container(
-                color: AppColors.primary.withAlpha(13),
+                width: double.infinity,
+                padding: const EdgeInsets.all(AppSpacing.m),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withAlpha(5),
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                ),
                 child: Center(
                   child: Text(
                     category.image,
@@ -40,31 +49,20 @@ class CategoryCard extends StatelessWidget {
               ),
             ),
             Expanded(
-              flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(AppSpacing.s),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      category.name,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    AppSpacing.vXS,
-                    Text(
-                      '${category.subCategories.length} Items',
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ],
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                alignment: Alignment.center,
+                child: Text(
+                  category.name,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w900,
+                    fontSize: 14,
+                    color: Colors.black,
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ),

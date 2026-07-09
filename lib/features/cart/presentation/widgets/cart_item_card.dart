@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/constants/app_dimensions.dart';
-import '../../../../core/constants/app_colors.dart';
-import '../../data/models/cart_item_model.dart';
-import '../../providers/cart_provider.dart';
+import 'package:villishop_customer/core/constants/app_dimensions.dart';
+import 'package:villishop_customer/features/cart/data/models/cart_item_model.dart';
+import 'package:villishop_customer/features/cart/providers/cart_provider.dart';
+import 'quantity_stepper.dart';
 
 class CartItemCard extends ConsumerWidget {
   final CartItemModel item;
@@ -12,171 +12,94 @@ class CartItemCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final product = item.product;
-    final savings = (product.pricing.mrp - product.pricing.sellingPrice) * item.quantity;
 
     return Dismissible(
       key: Key('cart-item-${product.id}'),
       direction: DismissDirection.endToStart,
-      onDismissed: (_) {
-        ref.read(cartProvider.notifier).removeFromCart(product.id);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${product.name} removed'),
-            action: SnackBarAction(
-              label: 'UNDO',
-              onPressed: () => ref.read(cartProvider.notifier).undoRemove(),
+      onDismissed: (_) async {
+        await ref.read(cartProvider.notifier).removeFromCart(
+            product.shopId ?? 'local_shop', product.id);
+        
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('${product.name} removed from cart'),
+              action: SnackBarAction(
+                label: 'UNDO',
+                onPressed: () => ref.read(cartProvider.notifier).undoRemove(),
+              ),
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
-          ),
-        );
+          );
+        }
       },
       background: Container(
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 20),
-        color: Colors.red,
-        child: const Icon(Icons.delete_outline, color: Colors.white),
+        decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(12)),
+        child: const Icon(Icons.delete_sweep_rounded, color: Colors.white, size: 28),
       ),
       child: Container(
         padding: const EdgeInsets.all(AppSpacing.m),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          border: Border(bottom: BorderSide(color: Color(0xFFF5F5F5))),
-        ),
+        decoration: const BoxDecoration(color: Colors.white),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Product Image
+            // Image
             Container(
-              height: 80,
-              width: 80,
+              height: 70,
+              width: 70,
               decoration: BoxDecoration(
-                color: Colors.grey[50],
-                borderRadius: AppRadius.rM,
-                border: Border.all(color: Colors.grey.withAlpha(30)),
+                color: const Color(0xFFF8F9FB),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey.withAlpha(20)),
               ),
               child: product.imageUrl.isNotEmpty
                   ? Image.network(product.imageUrl, fit: BoxFit.contain)
                   : const Icon(Icons.shopping_bag_outlined, size: 30, color: Colors.grey),
             ),
-            AppSpacing.hM,
-            // Product Info
+            const SizedBox(width: 16),
+            
+            // Info
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     product.name,
-                    style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 15, height: 1.2),
+                    style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 14, height: 1.1),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
                     '${product.packaging.weight} ${product.packaging.unit}',
-                    style: TextStyle(color: Colors.grey[600], fontSize: 12, fontWeight: FontWeight.w600),
+                    style: TextStyle(color: Colors.grey[600], fontSize: 12, fontWeight: FontWeight.bold),
                   ),
-                  AppSpacing.vS,
+                  const SizedBox(height: 8),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                '₹${product.pricing.sellingPrice.toStringAsFixed(0)}',
-                                style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
-                              ),
-                              if (product.pricing.mrp > product.pricing.sellingPrice) ...[
-                                AppSpacing.hS,
-                                Text(
-                                  '₹${product.pricing.mrp.toStringAsFixed(0)}',
-                                  style: const TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 12,
-                                    decoration: TextDecoration.lineThrough,
-                                  ),
-                                ),
-                              ],
-                            ],
-                          ),
-                          if (savings > 0)
-                            Text(
-                              'Saved ₹${savings.toStringAsFixed(0)}',
-                              style: const TextStyle(color: Colors.green, fontSize: 11, fontWeight: FontWeight.bold),
-                            ),
-                        ],
+                      Text(
+                        '₹${product.pricing.sellingPrice.toStringAsFixed(0)}',
+                        style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
                       ),
-                      _QuantitySelector(
-                        quantity: item.quantity,
-                        onIncrement: () => ref.read(cartProvider.notifier).incrementQuantity(product.id),
-                        onDecrement: () => ref.read(cartProvider.notifier).decrementQuantity(product.id),
-                      ),
-                    ],
-                  ),
-                  AppSpacing.vS,
-                  const Row(
-                    children: [
-                      Icon(Icons.timer_outlined, size: 12, color: Colors.grey),
-                      SizedBox(width: 4),
-                      Text('Delivery in 8-10 mins', style: TextStyle(color: Colors.grey, fontSize: 11, fontWeight: FontWeight.bold)),
+                      if (product.pricing.mrp > product.pricing.sellingPrice) ...[
+                        const SizedBox(width: 6),
+                        Text(
+                          '₹${product.pricing.mrp.toStringAsFixed(0)}',
+                          style: const TextStyle(color: Colors.grey, fontSize: 12, decoration: TextDecoration.lineThrough, fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ],
                   ),
                 ],
               ),
             ),
+            
+            // Action
+            QuantityStepper(product: product),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _QuantitySelector extends StatelessWidget {
-  final int quantity;
-  final VoidCallback onIncrement;
-  final VoidCallback onDecrement;
-
-  const _QuantitySelector({
-    required this.quantity,
-    required this.onIncrement,
-    required this.onDecrement,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: AppColors.primary, width: 1),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IconButton(
-            onPressed: onDecrement,
-            icon: const Icon(Icons.remove, color: AppColors.primary, size: 16),
-            constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-            padding: EdgeInsets.zero,
-          ),
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 200),
-            transitionBuilder: (Widget child, Animation<double> animation) {
-              return ScaleTransition(scale: animation, child: child);
-            },
-            child: Text(
-              quantity.toString(),
-              key: ValueKey<int>(quantity),
-              style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w900, fontSize: 14),
-            ),
-          ),
-          IconButton(
-            onPressed: onIncrement,
-            icon: const Icon(Icons.add, color: AppColors.primary, size: 16),
-            constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-            padding: EdgeInsets.zero,
-          ),
-        ],
       ),
     );
   }

@@ -7,107 +7,63 @@ import '../models/reward_point_model.dart';
 class WalletRepositoryImpl implements WalletRepository {
   @override
   Future<WalletModel> getWallet() async {
-    await Future.delayed(const Duration(milliseconds: 600));
-    return WalletModel(
+    await Future.delayed(const Duration(milliseconds: 300));
+    return const WalletModel(
       id: 'w1',
       userId: 'u1',
       balance: 450.0,
+      loyaltyPoints: 120,
       pendingCashback: 50.0,
-      loyaltyPoints: 1200,
-      recentTransactions: _dummyTransactions,
-      activeCashbacks: _dummyCashbacks,
     );
   }
 
   @override
   Future<List<WalletTransactionModel>> getTransactionHistory({int page = 1, int limit = 20}) async {
-    return _dummyTransactions;
-  }
-
-  @override
-  Future<List<WalletCashbackModel>> getCashbackHistory() async {
-    return _dummyCashbacks;
-  }
-
-  @override
-  Future<List<RewardPointModel>> getRewardHistory() async {
     return [
-      RewardPointModel(
-        id: 'r1',
-        points: 500,
-        source: RewardSource.signup,
-        earnedAt: DateTime.now().subtract(const Duration(days: 10)),
-        description: 'Welcome Bonus',
+      WalletTransactionModel(
+        id: 't1',
+        amount: -250.0,
+        type: TransactionType.debit,
+        status: TransactionStatus.completed,
+        category: TransactionCategory.order,
+        createdAt: DateTime.now().subtract(const Duration(days: 1)),
+        description: 'Paid for Order #1234',
       ),
-      RewardPointModel(
-        id: 'r2',
-        points: 200,
-        source: RewardSource.referral,
-        earnedAt: DateTime.now().subtract(const Duration(days: 5)),
-        description: 'Referred Rahul',
+      WalletTransactionModel(
+        id: 't2',
+        amount: 50.0,
+        type: TransactionType.credit,
+        status: TransactionStatus.completed,
+        category: TransactionCategory.cashback,
+        createdAt: DateTime.now().subtract(const Duration(days: 2)),
+        description: 'Cashback Received',
       ),
     ];
   }
 
   @override
-  Future<void> useWalletBalance(double amount, String orderId) async {
-    await Future.delayed(const Duration(milliseconds: 800));
+  Future<List<WalletCashbackModel>> getCashbackHistory() async {
+    return [
+      WalletCashbackModel(
+        id: 'c1',
+        amount: 25.0,
+        status: CashbackStatus.available,
+        earnedAt: DateTime.now().subtract(const Duration(days: 5)),
+        expiryDate: DateTime.now().add(const Duration(days: 5)),
+        description: 'Dairy Festival Cashback',
+      ),
+    ];
   }
+
+  @override
+  Future<List<RewardPointModel>> getRewardHistory() async => [];
+
+  @override
+  Future<void> useWalletBalance(double amount, String orderId) async {}
 
   @override
   Future<void> claimReward(String rewardId) async {}
 
   @override
   Future<void> syncWallet() async {}
-
-  final List<WalletTransactionModel> _dummyTransactions = [
-    WalletTransactionModel(
-      id: 't1',
-      amount: 150.0,
-      type: TransactionType.debit,
-      status: TransactionStatus.completed,
-      category: TransactionCategory.order,
-      createdAt: DateTime.now().subtract(const Duration(hours: 2)),
-      description: 'Paid for Order #ORD123',
-      balanceAfter: 450.0,
-    ),
-    WalletTransactionModel(
-      id: 't2',
-      amount: 50.0,
-      type: TransactionType.credit,
-      status: TransactionStatus.completed,
-      category: TransactionCategory.cashback,
-      createdAt: DateTime.now().subtract(const Duration(days: 1)),
-      description: 'Cashback for Order #ORD120',
-      balanceAfter: 600.0,
-    ),
-    WalletTransactionModel(
-      id: 't3',
-      amount: 1000.0,
-      type: TransactionType.credit,
-      status: TransactionStatus.completed,
-      category: TransactionCategory.manual,
-      createdAt: DateTime.now().subtract(const Duration(days: 5)),
-      description: 'Added money to wallet',
-      balanceAfter: 550.0,
-    ),
-  ];
-
-  final List<WalletCashbackModel> _dummyCashbacks = [
-    WalletCashbackModel(
-      id: 'cb1',
-      amount: 50.0,
-      status: CashbackStatus.pending,
-      earnedAt: DateTime.now().subtract(const Duration(hours: 2)),
-      availableAt: DateTime.now().add(const Duration(days: 1)),
-      description: 'Order #ORD123 Cashback',
-    ),
-    WalletCashbackModel(
-      id: 'cb2',
-      amount: 25.0,
-      status: CashbackStatus.available,
-      earnedAt: DateTime.now().subtract(const Duration(days: 3)),
-      description: 'Referral Bonus',
-    ),
-  ];
 }

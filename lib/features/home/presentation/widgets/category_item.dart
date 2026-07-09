@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../core/constants/app_dimensions.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../data/models/category_model.dart';
 
@@ -19,29 +18,43 @@ class CategoryItem extends StatelessWidget {
       onTap: onTap,
       child: Column(
         children: [
-          Container(
-            height: 70,
-            width: 70,
-            decoration: BoxDecoration(
-              color: AppColors.primary.withAlpha(20),
-              borderRadius: AppRadius.rL,
-            ),
-            child: Center(
-              child: Text(
-                category.image,
-                style: const TextStyle(fontSize: 32),
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    AppColors.primary.withAlpha(15),
+                    AppColors.primary.withAlpha(5),
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: AppColors.primary.withAlpha(20)),
+              ),
+              child: Center(
+                child: Hero(
+                  tag: 'cat-${category.id}',
+                  child: Text(
+                    category.image,
+                    style: const TextStyle(fontSize: 34),
+                  ),
+                ),
               ),
             ),
           ),
-          AppSpacing.vXS,
+          const SizedBox(height: 6),
           Text(
             category.name,
             style: const TextStyle(
               fontSize: 12,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w900,
+              color: Colors.black87,
+              height: 1.1,
             ),
             textAlign: TextAlign.center,
-            maxLines: 1,
+            maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
         ],

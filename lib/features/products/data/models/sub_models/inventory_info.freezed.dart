@@ -240,7 +240,7 @@ class _$InventoryInfoImpl implements _InventoryInfo {
   const _$InventoryInfoImpl(
       {this.stockQuantity = 0,
       this.reservedQuantity = 0,
-      this.availableQuantity = 0,
+      this.availableQuantity = 100,
       this.lowStockThreshold = 5,
       this.stockStatus = StockStatus.inStock,
       this.isTrending = false,

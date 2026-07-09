@@ -20,12 +20,10 @@ CartModel _$CartModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$CartModel {
-  List<CartItemModel> get items => throw _privateConstructorUsedError;
-  CartSummaryModel get summary => throw _privateConstructorUsedError;
+  List<ShopCartModel> get shopCarts => throw _privateConstructorUsedError;
+  CartSummaryModel get overallSummary => throw _privateConstructorUsedError;
   String? get appliedCouponCode => throw _privateConstructorUsedError;
-  String? get deliveryInstruction => throw _privateConstructorUsedError;
-  Map<String, List<CartItemModel>> get itemsByShop =>
-      throw _privateConstructorUsedError;
+  bool get isSyncing => throw _privateConstructorUsedError;
 
   /// Serializes this CartModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -43,13 +41,12 @@ abstract class $CartModelCopyWith<$Res> {
       _$CartModelCopyWithImpl<$Res, CartModel>;
   @useResult
   $Res call(
-      {List<CartItemModel> items,
-      CartSummaryModel summary,
+      {List<ShopCartModel> shopCarts,
+      CartSummaryModel overallSummary,
       String? appliedCouponCode,
-      String? deliveryInstruction,
-      Map<String, List<CartItemModel>> itemsByShop});
+      bool isSyncing});
 
-  $CartSummaryModelCopyWith<$Res> get summary;
+  $CartSummaryModelCopyWith<$Res> get overallSummary;
 }
 
 /// @nodoc
@@ -67,33 +64,28 @@ class _$CartModelCopyWithImpl<$Res, $Val extends CartModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? items = null,
-    Object? summary = null,
+    Object? shopCarts = null,
+    Object? overallSummary = null,
     Object? appliedCouponCode = freezed,
-    Object? deliveryInstruction = freezed,
-    Object? itemsByShop = null,
+    Object? isSyncing = null,
   }) {
     return _then(_value.copyWith(
-      items: null == items
-          ? _value.items
-          : items // ignore: cast_nullable_to_non_nullable
-              as List<CartItemModel>,
-      summary: null == summary
-          ? _value.summary
-          : summary // ignore: cast_nullable_to_non_nullable
+      shopCarts: null == shopCarts
+          ? _value.shopCarts
+          : shopCarts // ignore: cast_nullable_to_non_nullable
+              as List<ShopCartModel>,
+      overallSummary: null == overallSummary
+          ? _value.overallSummary
+          : overallSummary // ignore: cast_nullable_to_non_nullable
               as CartSummaryModel,
       appliedCouponCode: freezed == appliedCouponCode
           ? _value.appliedCouponCode
           : appliedCouponCode // ignore: cast_nullable_to_non_nullable
               as String?,
-      deliveryInstruction: freezed == deliveryInstruction
-          ? _value.deliveryInstruction
-          : deliveryInstruction // ignore: cast_nullable_to_non_nullable
-              as String?,
-      itemsByShop: null == itemsByShop
-          ? _value.itemsByShop
-          : itemsByShop // ignore: cast_nullable_to_non_nullable
-              as Map<String, List<CartItemModel>>,
+      isSyncing: null == isSyncing
+          ? _value.isSyncing
+          : isSyncing // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 
@@ -101,9 +93,9 @@ class _$CartModelCopyWithImpl<$Res, $Val extends CartModel>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $CartSummaryModelCopyWith<$Res> get summary {
-    return $CartSummaryModelCopyWith<$Res>(_value.summary, (value) {
-      return _then(_value.copyWith(summary: value) as $Val);
+  $CartSummaryModelCopyWith<$Res> get overallSummary {
+    return $CartSummaryModelCopyWith<$Res>(_value.overallSummary, (value) {
+      return _then(_value.copyWith(overallSummary: value) as $Val);
     });
   }
 }
@@ -117,14 +109,13 @@ abstract class _$$CartModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {List<CartItemModel> items,
-      CartSummaryModel summary,
+      {List<ShopCartModel> shopCarts,
+      CartSummaryModel overallSummary,
       String? appliedCouponCode,
-      String? deliveryInstruction,
-      Map<String, List<CartItemModel>> itemsByShop});
+      bool isSyncing});
 
   @override
-  $CartSummaryModelCopyWith<$Res> get summary;
+  $CartSummaryModelCopyWith<$Res> get overallSummary;
 }
 
 /// @nodoc
@@ -140,33 +131,28 @@ class __$$CartModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? items = null,
-    Object? summary = null,
+    Object? shopCarts = null,
+    Object? overallSummary = null,
     Object? appliedCouponCode = freezed,
-    Object? deliveryInstruction = freezed,
-    Object? itemsByShop = null,
+    Object? isSyncing = null,
   }) {
     return _then(_$CartModelImpl(
-      items: null == items
-          ? _value._items
-          : items // ignore: cast_nullable_to_non_nullable
-              as List<CartItemModel>,
-      summary: null == summary
-          ? _value.summary
-          : summary // ignore: cast_nullable_to_non_nullable
+      shopCarts: null == shopCarts
+          ? _value._shopCarts
+          : shopCarts // ignore: cast_nullable_to_non_nullable
+              as List<ShopCartModel>,
+      overallSummary: null == overallSummary
+          ? _value.overallSummary
+          : overallSummary // ignore: cast_nullable_to_non_nullable
               as CartSummaryModel,
       appliedCouponCode: freezed == appliedCouponCode
           ? _value.appliedCouponCode
           : appliedCouponCode // ignore: cast_nullable_to_non_nullable
               as String?,
-      deliveryInstruction: freezed == deliveryInstruction
-          ? _value.deliveryInstruction
-          : deliveryInstruction // ignore: cast_nullable_to_non_nullable
-              as String?,
-      itemsByShop: null == itemsByShop
-          ? _value._itemsByShop
-          : itemsByShop // ignore: cast_nullable_to_non_nullable
-              as Map<String, List<CartItemModel>>,
+      isSyncing: null == isSyncing
+          ? _value.isSyncing
+          : isSyncing // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -175,45 +161,36 @@ class __$$CartModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$CartModelImpl implements _CartModel {
   const _$CartModelImpl(
-      {final List<CartItemModel> items = const [],
-      this.summary = const CartSummaryModel(),
+      {final List<ShopCartModel> shopCarts = const [],
+      this.overallSummary = const CartSummaryModel(),
       this.appliedCouponCode,
-      this.deliveryInstruction,
-      final Map<String, List<CartItemModel>> itemsByShop = const {}})
-      : _items = items,
-        _itemsByShop = itemsByShop;
+      this.isSyncing = false})
+      : _shopCarts = shopCarts;
 
   factory _$CartModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$CartModelImplFromJson(json);
 
-  final List<CartItemModel> _items;
+  final List<ShopCartModel> _shopCarts;
   @override
   @JsonKey()
-  List<CartItemModel> get items {
-    if (_items is EqualUnmodifiableListView) return _items;
+  List<ShopCartModel> get shopCarts {
+    if (_shopCarts is EqualUnmodifiableListView) return _shopCarts;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_items);
+    return EqualUnmodifiableListView(_shopCarts);
   }
 
   @override
   @JsonKey()
-  final CartSummaryModel summary;
+  final CartSummaryModel overallSummary;
   @override
   final String? appliedCouponCode;
   @override
-  final String? deliveryInstruction;
-  final Map<String, List<CartItemModel>> _itemsByShop;
-  @override
   @JsonKey()
-  Map<String, List<CartItemModel>> get itemsByShop {
-    if (_itemsByShop is EqualUnmodifiableMapView) return _itemsByShop;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_itemsByShop);
-  }
+  final bool isSyncing;
 
   @override
   String toString() {
-    return 'CartModel(items: $items, summary: $summary, appliedCouponCode: $appliedCouponCode, deliveryInstruction: $deliveryInstruction, itemsByShop: $itemsByShop)';
+    return 'CartModel(shopCarts: $shopCarts, overallSummary: $overallSummary, appliedCouponCode: $appliedCouponCode, isSyncing: $isSyncing)';
   }
 
   @override
@@ -221,25 +198,24 @@ class _$CartModelImpl implements _CartModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CartModelImpl &&
-            const DeepCollectionEquality().equals(other._items, _items) &&
-            (identical(other.summary, summary) || other.summary == summary) &&
+            const DeepCollectionEquality()
+                .equals(other._shopCarts, _shopCarts) &&
+            (identical(other.overallSummary, overallSummary) ||
+                other.overallSummary == overallSummary) &&
             (identical(other.appliedCouponCode, appliedCouponCode) ||
                 other.appliedCouponCode == appliedCouponCode) &&
-            (identical(other.deliveryInstruction, deliveryInstruction) ||
-                other.deliveryInstruction == deliveryInstruction) &&
-            const DeepCollectionEquality()
-                .equals(other._itemsByShop, _itemsByShop));
+            (identical(other.isSyncing, isSyncing) ||
+                other.isSyncing == isSyncing));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(_items),
-      summary,
+      const DeepCollectionEquality().hash(_shopCarts),
+      overallSummary,
       appliedCouponCode,
-      deliveryInstruction,
-      const DeepCollectionEquality().hash(_itemsByShop));
+      isSyncing);
 
   /// Create a copy of CartModel
   /// with the given fields replaced by the non-null parameter values.
@@ -259,25 +235,22 @@ class _$CartModelImpl implements _CartModel {
 
 abstract class _CartModel implements CartModel {
   const factory _CartModel(
-      {final List<CartItemModel> items,
-      final CartSummaryModel summary,
+      {final List<ShopCartModel> shopCarts,
+      final CartSummaryModel overallSummary,
       final String? appliedCouponCode,
-      final String? deliveryInstruction,
-      final Map<String, List<CartItemModel>> itemsByShop}) = _$CartModelImpl;
+      final bool isSyncing}) = _$CartModelImpl;
 
   factory _CartModel.fromJson(Map<String, dynamic> json) =
       _$CartModelImpl.fromJson;
 
   @override
-  List<CartItemModel> get items;
+  List<ShopCartModel> get shopCarts;
   @override
-  CartSummaryModel get summary;
+  CartSummaryModel get overallSummary;
   @override
   String? get appliedCouponCode;
   @override
-  String? get deliveryInstruction;
-  @override
-  Map<String, List<CartItemModel>> get itemsByShop;
+  bool get isSyncing;
 
   /// Create a copy of CartModel
   /// with the given fields replaced by the non-null parameter values.

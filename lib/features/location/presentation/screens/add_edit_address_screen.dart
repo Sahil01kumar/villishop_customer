@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
+import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
 import '../../../../core/widgets/primary_button.dart';
 import '../../../../core/widgets/custom_text_field.dart';
@@ -17,26 +18,43 @@ class AddEditAddressScreen extends ConsumerStatefulWidget {
 
 class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
   final _formKey = GlobalKey<FormState>();
-  late TextEditingController _labelController;
-  late TextEditingController _addressController;
+  
   late TextEditingController _receiverController;
   late TextEditingController _phoneController;
+  late TextEditingController _altPhoneController;
+  late TextEditingController _houseController;
+  late TextEditingController _buildingController;
+  late TextEditingController _landmarkController;
+  late TextEditingController _instructionsController;
+  
+  String _selectedLabel = 'Home';
+  bool _isDefault = false;
 
   @override
   void initState() {
     super.initState();
-    _labelController = TextEditingController(text: widget.address?.label ?? 'Home');
-    _addressController = TextEditingController(text: widget.address?.fullAddress ?? '');
-    _receiverController = TextEditingController(text: widget.address?.receiverName ?? '');
-    _phoneController = TextEditingController(text: widget.address?.phoneNumber ?? '');
+    final a = widget.address;
+    _receiverController = TextEditingController(text: a?.receiverName ?? '');
+    _phoneController = TextEditingController(text: a?.phoneNumber ?? '');
+    _altPhoneController = TextEditingController(text: a?.alternatePhone ?? '');
+    _houseController = TextEditingController(text: a?.houseNumber ?? '');
+    _buildingController = TextEditingController(text: a?.building ?? '');
+    _landmarkController = TextEditingController(text: a?.landmark ?? '');
+    _instructionsController = TextEditingController(text: a?.deliveryInstructions ?? '');
+    
+    _selectedLabel = a?.label ?? 'Home';
+    _isDefault = a?.isDefault ?? false;
   }
 
   @override
   void dispose() {
-    _labelController.dispose();
-    _addressController.dispose();
     _receiverController.dispose();
     _phoneController.dispose();
+    _altPhoneController.dispose();
+    _houseController.dispose();
+    _buildingController.dispose();
+    _landmarkController.dispose();
+    _instructionsController.dispose();
     super.dispose();
   }
 
@@ -44,15 +62,25 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
     if (_formKey.currentState!.validate()) {
       final newAddress = AddressModel(
         id: widget.address?.id ?? const Uuid().v4(),
-        label: _labelController.text,
-        fullAddress: _addressController.text,
-        latitude: widget.address?.latitude ?? 0.0,
-        longitude: widget.address?.longitude ?? 0.0,
+        label: _selectedLabel,
         receiverName: _receiverController.text,
         phoneNumber: _phoneController.text,
-        isDefault: widget.address?.isDefault ?? false,
+        alternatePhone: _altPhoneController.text,
+        houseNumber: _houseController.text,
+        building: _buildingController.text,
+        landmark: _landmarkController.text,
+        deliveryInstructions: _instructionsController.text,
+        fullAddress: "${_houseController.text}, ${_buildingController.text}, ${_landmarkController.text}", // Simplified for demo
+        latitude: widget.address?.latitude ?? 26.9124, // Default to center for mock
+        longitude: widget.address?.longitude ?? 75.7873,
+        isDefault: _isDefault,
       );
-      ref.read(locationProvider.notifier).saveNewAddress(newAddress);
+
+      if (widget.address == null) {
+        ref.read(locationProvider.notifier).saveNewAddress(newAddress);
+      } else {
+        ref.read(locationProvider.notifier).updateAddress(newAddress);
+      }
       Navigator.pop(context);
     }
   }
@@ -60,47 +88,135 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.address == null ? 'Add Address' : 'Edit Address')),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text(widget.address == null ? 'Add New Address' : 'Edit Address', style: const TextStyle(fontWeight: FontWeight.w900)),
+        centerTitle: false,
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(AppSpacing.m),
         child: Form(
           key: _formKey,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CustomTextField(
-                label: 'Address Label',
-                hintText: 'e.g. Home, Office, Parents House',
-                controller: _labelController,
-              ),
+              const Text('RECEIVER DETAILS', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.grey, fontSize: 12, letterSpacing: 1)),
               AppSpacing.vM,
               CustomTextField(
-                label: 'Full Address',
-                hintText: 'House no, Street, Village name',
-                controller: _addressController,
-                keyboardType: TextInputType.multiline,
-              ),
-              AppSpacing.vM,
-              CustomTextField(
-                label: 'Receiver Name',
-                hintText: 'Who will receive the delivery?',
+                label: 'Name',
+                hintText: 'Enter receiver name',
                 controller: _receiverController,
+                prefixIcon: const Icon(Icons.person_outline),
+              ),
+              AppSpacing.vM,
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: CustomTextField(
+                      label: 'Phone Number',
+                      hintText: 'Mobile number',
+                      controller: _phoneController,
+                      keyboardType: TextInputType.phone,
+                      prefixIcon: const Icon(Icons.phone_outlined),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: CustomTextField(
+                      label: 'Alt. Phone',
+                      hintText: 'Optional',
+                      controller: _altPhoneController,
+                      keyboardType: TextInputType.phone,
+                    ),
+                  ),
+                ],
+              ),
+              AppSpacing.vL,
+              const Text('ADDRESS DETAILS', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.grey, fontSize: 12, letterSpacing: 1)),
+              AppSpacing.vM,
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: CustomTextField(
+                      label: 'House / Flat',
+                      hintText: '123, Block C',
+                      controller: _houseController,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: CustomTextField(
+                      label: 'Building / Apartment',
+                      hintText: 'Royal residency',
+                      controller: _buildingController,
+                    ),
+                  ),
+                ],
               ),
               AppSpacing.vM,
               CustomTextField(
-                label: 'Phone Number',
-                hintText: 'Receiver contact number',
-                controller: _phoneController,
-                keyboardType: TextInputType.phone,
+                label: 'Landmark',
+                hintText: 'e.g. Near Shiv Mandir',
+                controller: _landmarkController,
+              ),
+              AppSpacing.vM,
+              CustomTextField(
+                label: 'Delivery Instructions',
+                hintText: 'e.g. Please leave at gate, Don\'t ring bell',
+                controller: _instructionsController,
+                maxLines: 2,
+              ),
+              AppSpacing.vL,
+              const Text('SAVE ADDRESS AS', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.grey, fontSize: 12, letterSpacing: 1)),
+              AppSpacing.vM,
+              _buildLabelChips(),
+              AppSpacing.vL,
+              SwitchListTile(
+                title: const Text('Set as Default Address', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                subtitle: const Text('Using this for all upcoming orders', style: TextStyle(fontSize: 12)),
+                value: _isDefault,
+                onChanged: (val) => setState(() => _isDefault = val),
+                activeThumbColor: AppColors.primary,
+                contentPadding: EdgeInsets.zero,
               ),
               AppSpacing.vXL,
               PrimaryButton(
-                text: 'Save Address',
+                text: 'SAVE ADDRESS',
                 onPressed: _onSave,
+                height: 56,
               ),
+              const SizedBox(height: 40),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildLabelChips() {
+    return Row(
+      children: ['Home', 'Work', 'Other'].map((label) {
+        final isSelected = _selectedLabel == label;
+        return Padding(
+          padding: const EdgeInsets.only(right: 12),
+          child: ChoiceChip(
+            label: Text(label),
+            selected: isSelected,
+            onSelected: (val) => setState(() => _selectedLabel = label),
+            selectedColor: AppColors.primary.withAlpha(20),
+            labelStyle: TextStyle(
+              fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
+              color: isSelected ? AppColors.primary : Colors.black87,
+            ),
+            backgroundColor: Colors.grey[100],
+            side: BorderSide(color: isSelected ? AppColors.primary : Colors.transparent),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            showCheckmark: false,
+          ),
+        );
+      }).toList(),
     );
   }
 }

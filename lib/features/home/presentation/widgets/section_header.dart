@@ -4,22 +4,21 @@ import '../../../../core/constants/app_colors.dart';
 
 class SectionHeader extends StatelessWidget {
   final String title;
+  final String? subtitle;
   final VoidCallback? onSeeAll;
-  final String subtitle;
 
   const SectionHeader({
     super.key,
     required this.title,
+    this.subtitle,
     this.onSeeAll,
-    this.subtitle = '',
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.m, AppSpacing.m, AppSpacing.s),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.l, AppSpacing.m, AppSpacing.m),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Expanded(
@@ -28,20 +27,24 @@ class SectionHeader extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: -0.8,
-                        fontSize: 20,
-                      ),
-                ),
-                if (subtitle.isNotEmpty)
-                  Text(
-                    subtitle,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey[600],
-                          fontWeight: FontWeight.w500,
-                        ),
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: -0.5,
+                    color: Colors.black,
                   ),
+                ),
+                if (subtitle != null) ...[
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle!,
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.grey[600],
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
               ],
             ),
           ),
@@ -51,20 +54,20 @@ class SectionHeader extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withAlpha(20),
+                  color: AppColors.primary.withAlpha(10),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: const Row(
                   children: [
                     Text(
-                      'View all',
+                      'See all',
                       style: TextStyle(
                         color: AppColors.primary,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w900,
                         fontSize: 12,
                       ),
                     ),
-                    Icon(Icons.chevron_right, color: AppColors.primary, size: 16),
+                    Icon(Icons.chevron_right_rounded, size: 16, color: AppColors.primary),
                   ],
                 ),
               ),

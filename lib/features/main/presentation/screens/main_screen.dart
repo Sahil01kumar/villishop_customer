@@ -8,10 +8,19 @@ import '../../../orders/presentation/screens/orders_screen.dart';
 import '../../../profile/presentation/screens/profile_screen.dart';
 
 class MainScreen extends ConsumerWidget {
-  const MainScreen({super.key});
+  final int? initialTab;
+
+  const MainScreen({super.key, this.initialTab});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Sync initialTab with provider once
+    if (initialTab != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(navigationIndexProvider.notifier).state = initialTab!;
+      });
+    }
+
     final currentIndex = ref.watch(navigationIndexProvider);
 
     final List<Widget> screens = [

@@ -17,6 +17,11 @@ _$ProductModelImpl _$$ProductModelImplFromJson(Map<String, dynamic> json) =>
           const [],
       videoUrl: json['videoUrl'] as String?,
       category: json['category'] as String,
+      departmentId: json['departmentId'] as String?,
+      categoryId: json['categoryId'] as String?,
+      subCategoryId: json['subCategoryId'] as String?,
+      productGroupId: json['productGroupId'] as String?,
+      variantGroupId: json['variantGroupId'] as String?,
       subCategory: json['subCategory'] as String?,
       brand: json['brand'] as String?,
       description: json['description'] as String?,
@@ -66,6 +71,7 @@ _$ProductModelImpl _$$ProductModelImplFromJson(Map<String, dynamic> json) =>
               ?.map((e) => ProductModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
+      attributes: json['attributes'] as Map<String, dynamic>? ?? const {},
     );
 
 Map<String, dynamic> _$$ProductModelImplToJson(_$ProductModelImpl instance) =>
@@ -76,6 +82,11 @@ Map<String, dynamic> _$$ProductModelImplToJson(_$ProductModelImpl instance) =>
       'imageUrls': instance.imageUrls,
       'videoUrl': instance.videoUrl,
       'category': instance.category,
+      'departmentId': instance.departmentId,
+      'categoryId': instance.categoryId,
+      'subCategoryId': instance.subCategoryId,
+      'productGroupId': instance.productGroupId,
+      'variantGroupId': instance.variantGroupId,
       'subCategory': instance.subCategory,
       'brand': instance.brand,
       'description': instance.description,
@@ -102,4 +113,5 @@ Map<String, dynamic> _$$ProductModelImplToJson(_$ProductModelImpl instance) =>
       'shopId': instance.shopId,
       'shopName': instance.shopName,
       'relatedProducts': instance.relatedProducts,
+      'attributes': instance.attributes,
     };

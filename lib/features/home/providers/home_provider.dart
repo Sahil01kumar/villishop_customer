@@ -8,6 +8,7 @@ import '../data/models/deal_model.dart';
 import '../domain/repositories/home_repository.dart';
 import '../data/repositories/home_repository_impl.dart';
 import '../data/data_sources/dummy_home_data_source.dart';
+import '../../categories/providers/category_provider.dart';
 
 part 'home_provider.freezed.dart';
 
@@ -27,7 +28,10 @@ class HomeState with _$HomeState {
 final homeDataSourceProvider = Provider((ref) => DummyHomeDataSource());
 
 final homeRepositoryProvider = Provider<HomeRepository>((ref) {
-  return HomeRepositoryImpl(ref.watch(homeDataSourceProvider));
+  return HomeRepositoryImpl(
+    ref.watch(homeDataSourceProvider),
+    ref.watch(categoryRepositoryProvider),
+  );
 });
 
 class HomeController extends StateNotifier<HomeState> {

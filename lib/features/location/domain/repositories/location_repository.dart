@@ -9,4 +9,7 @@ abstract class LocationRepository {
   Future<void> deleteAddress(String id);
   Future<void> setDefaultAddress(String id);
   Future<String> getAddressFromLatLng(double lat, double lng);
+  
+  /// Checks if the given coordinates are within the delivery radius of VilliShop
+  Future<bool> checkServiceability(double lat, double lng);
 }

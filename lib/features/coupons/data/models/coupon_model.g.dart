@@ -12,20 +12,27 @@ _$CouponModelImpl _$$CouponModelImplFromJson(Map<String, dynamic> json) =>
       code: json['code'] as String,
       title: json['title'] as String,
       description: json['description'] as String,
-      discount:
-          DiscountModel.fromJson(json['discount'] as Map<String, dynamic>),
-      rules: OfferRuleModel.fromJson(json['rules'] as Map<String, dynamic>),
-      cashback: json['cashback'] == null
-          ? null
-          : CashbackModel.fromJson(json['cashback'] as Map<String, dynamic>),
-      payer: $enumDecodeNullable(_$DiscountPayerEnumMap, json['payer']) ??
-          DiscountPayer.shop,
-      platformShareRatio:
-          (json['platformShareRatio'] as num?)?.toDouble() ?? 0.5,
-      isCommissionBeforeDiscount:
-          json['isCommissionBeforeDiscount'] as bool? ?? true,
-      isActive: json['isActive'] as bool? ?? false,
-      bannerUrl: json['bannerUrl'] as String?,
+      type: $enumDecode(_$CouponTypeEnumMap, json['type']),
+      source: $enumDecode(_$CouponSourceEnumMap, json['source']),
+      value: (json['value'] as num?)?.toDouble() ?? 0.0,
+      minOrderValue: (json['minOrderValue'] as num?)?.toDouble() ?? 0.0,
+      maxDiscountAmount:
+          (json['maxDiscountAmount'] as num?)?.toDouble() ?? double.infinity,
+      expiryDate: DateTime.parse(json['expiryDate'] as String),
+      usageLimitPerCustomer:
+          (json['usageLimitPerCustomer'] as num?)?.toInt() ?? 1,
+      isActive: json['isActive'] as bool? ?? true,
+      shopId: json['shopId'] as String?,
+      eligibleCategoryIds: (json['eligibleCategoryIds'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      eligibleProductIds: (json['eligibleProductIds'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      isFirstOrderOnly: json['isFirstOrderOnly'] as bool? ?? false,
+      isMembershipOnly: json['isMembershipOnly'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$CouponModelImplToJson(_$CouponModelImpl instance) =>
@@ -34,18 +41,34 @@ Map<String, dynamic> _$$CouponModelImplToJson(_$CouponModelImpl instance) =>
       'code': instance.code,
       'title': instance.title,
       'description': instance.description,
-      'discount': instance.discount,
-      'rules': instance.rules,
-      'cashback': instance.cashback,
-      'payer': _$DiscountPayerEnumMap[instance.payer]!,
-      'platformShareRatio': instance.platformShareRatio,
-      'isCommissionBeforeDiscount': instance.isCommissionBeforeDiscount,
+      'type': _$CouponTypeEnumMap[instance.type]!,
+      'source': _$CouponSourceEnumMap[instance.source]!,
+      'value': instance.value,
+      'minOrderValue': instance.minOrderValue,
+      'maxDiscountAmount': instance.maxDiscountAmount,
+      'expiryDate': instance.expiryDate.toIso8601String(),
+      'usageLimitPerCustomer': instance.usageLimitPerCustomer,
       'isActive': instance.isActive,
-      'bannerUrl': instance.bannerUrl,
+      'shopId': instance.shopId,
+      'eligibleCategoryIds': instance.eligibleCategoryIds,
+      'eligibleProductIds': instance.eligibleProductIds,
+      'isFirstOrderOnly': instance.isFirstOrderOnly,
+      'isMembershipOnly': instance.isMembershipOnly,
     };
 
-const _$DiscountPayerEnumMap = {
-  DiscountPayer.platform: 'platform',
-  DiscountPayer.shop: 'shop',
-  DiscountPayer.shared: 'shared',
+const _$CouponTypeEnumMap = {
+  CouponType.flat: 'flat',
+  CouponType.percentage: 'percentage',
+  CouponType.freeDelivery: 'freeDelivery',
+  CouponType.bogo: 'bogo',
+  CouponType.buyXGetY: 'buyXGetY',
+  CouponType.cashback: 'cashback',
+};
+
+const _$CouponSourceEnumMap = {
+  CouponSource.platform: 'platform',
+  CouponSource.shop: 'shop',
+  CouponSource.brand: 'brand',
+  CouponSource.referral: 'referral',
+  CouponSource.festival: 'festival',
 };
