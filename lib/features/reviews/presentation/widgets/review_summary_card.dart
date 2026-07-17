@@ -25,20 +25,28 @@ class ReviewSummaryCard extends StatelessWidget {
               children: [
                 Text(
                   summary.averageRating.toStringAsFixed(1),
-                  style: const TextStyle(fontSize: 48, fontWeight: FontWeight.w900),
+                  style: const TextStyle(
+                      fontSize: 48, fontWeight: FontWeight.w900),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(5, (index) => Icon(
-                    index < summary.averageRating.floor() ? Icons.star : Icons.star_border,
-                    color: AppColors.secondary,
-                    size: 16,
-                  )),
+                  children: List.generate(
+                      5,
+                      (index) => Icon(
+                            index < summary.averageRating.floor()
+                                ? Icons.star
+                                : Icons.star_border,
+                            color: AppColors.secondary,
+                            size: 16,
+                          )),
                 ),
                 AppSpacing.vXS,
                 Text(
                   '${summary.totalRatings} Ratings',
-                  style: TextStyle(color: Colors.grey[600], fontSize: 12, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: Colors.grey[600],
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -68,7 +76,9 @@ class ReviewSummaryCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 1.0),
       child: Row(
         children: [
-          Text(label, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+          Text(label,
+              style:
+                  const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
           AppSpacing.hS,
           Expanded(
             child: ClipRRect(
@@ -76,7 +86,8 @@ class ReviewSummaryCard extends StatelessWidget {
               child: LinearProgressIndicator(
                 value: percent,
                 backgroundColor: Colors.grey[100],
-                valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
+                valueColor:
+                    const AlwaysStoppedAnimation<Color>(AppColors.primary),
                 minHeight: 6,
               ),
             ),

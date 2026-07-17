@@ -31,12 +31,14 @@ class OfferCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.l)),
+              borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(AppRadius.l)),
               child: Container(
                 height: 120,
                 width: double.infinity,
                 color: AppColors.primary.withAlpha(20),
-                child: const Icon(Icons.local_offer_outlined, size: 50, color: AppColors.primary),
+                child: const Icon(Icons.local_offer_outlined,
+                    size: 50, color: AppColors.primary),
               ),
             ),
             Padding(
@@ -46,7 +48,8 @@ class OfferCard extends StatelessWidget {
                 children: [
                   Text(
                     offer.title,
-                    style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w900, fontSize: 16),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),

@@ -15,5 +15,6 @@ class CartAnalyticsModel with _$CartAnalyticsModel {
     @Default([]) List<String> frequentlyPurchasedProductIds,
   }) = _CartAnalyticsModel;
 
-  factory CartAnalyticsModel.fromJson(Map<String, dynamic> json) => _$CartAnalyticsModelFromJson(json);
+  factory CartAnalyticsModel.fromJson(Map<String, dynamic> json) =>
+      _$CartAnalyticsModelFromJson(json);
 }

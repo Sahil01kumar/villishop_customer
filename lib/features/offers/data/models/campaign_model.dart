@@ -17,5 +17,6 @@ class CampaignModel with _$CampaignModel {
     @Default(false) bool isActive,
   }) = _CampaignModel;
 
-  factory CampaignModel.fromJson(Map<String, dynamic> json) => _$CampaignModelFromJson(json);
+  factory CampaignModel.fromJson(Map<String, dynamic> json) =>
+      _$CampaignModelFromJson(json);
 }

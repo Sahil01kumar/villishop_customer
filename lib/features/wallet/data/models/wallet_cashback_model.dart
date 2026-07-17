@@ -18,5 +18,6 @@ class WalletCashbackModel with _$WalletCashbackModel {
     String? description,
   }) = _WalletCashbackModel;
 
-  factory WalletCashbackModel.fromJson(Map<String, dynamic> json) => _$WalletCashbackModelFromJson(json);
+  factory WalletCashbackModel.fromJson(Map<String, dynamic> json) =>
+      _$WalletCashbackModelFromJson(json);
 }

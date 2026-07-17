@@ -7,7 +7,8 @@ class ShopDetailsNotifier extends StateNotifier<ShopDetailsState> {
   final ShopRepository _repository;
   final String shopId;
 
-  ShopDetailsNotifier(this._repository, this.shopId) : super(const ShopDetailsState()) {
+  ShopDetailsNotifier(this._repository, this.shopId)
+      : super(const ShopDetailsState()) {
     fetchShopDetails();
   }
 
@@ -31,6 +32,8 @@ class ShopDetailsNotifier extends StateNotifier<ShopDetailsState> {
   }
 }
 
-final shopDetailsProvider = StateNotifierProvider.family<ShopDetailsNotifier, ShopDetailsState, String>((ref, shopId) {
+final shopDetailsProvider =
+    StateNotifierProvider.family<ShopDetailsNotifier, ShopDetailsState, String>(
+        (ref, shopId) {
   return ShopDetailsNotifier(ref.watch(shopRepositoryProvider), shopId);
 });

@@ -27,16 +27,19 @@ class DeliverySummaryCard extends StatelessWidget {
             children: [
               Text(
                 summary.shopName,
-                style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 14),
+                style:
+                    const TextStyle(fontWeight: FontWeight.w900, fontSize: 14),
               ),
-              const Icon(Icons.delivery_dining_outlined, size: 18, color: Colors.blue),
+              const Icon(Icons.delivery_dining_outlined,
+                  size: 18, color: Colors.blue),
             ],
           ),
           AppSpacing.vS,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Delivery Charge', style: TextStyle(color: Colors.grey[600], fontSize: 13)),
+              Text('Delivery Charge',
+                  style: TextStyle(color: Colors.grey[600], fontSize: 13)),
               if (summary.isFreeDelivery)
                 Row(
                   children: [
@@ -62,20 +65,26 @@ class DeliverySummaryCard extends StatelessWidget {
               else
                 Text(
                   '₹${charges.totalCharge.toStringAsFixed(0)}',
-                  style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 14),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w900, fontSize: 14),
                 ),
             ],
           ),
           if (charges.surgeCharge > 0)
-            _chargeRow('Surge Fee (Rain/Night)', charges.surgeCharge, color: Colors.orange),
+            _chargeRow('Surge Fee (Rain/Night)', charges.surgeCharge,
+                color: Colors.orange),
           AppSpacing.vS,
           Row(
             children: [
-              const Icon(Icons.timer_outlined, size: 14, color: AppColors.primary),
+              const Icon(Icons.timer_outlined,
+                  size: 14, color: AppColors.primary),
               const SizedBox(width: 4),
               Text(
                 'Delivery in ${summary.estimatedEta}',
-                style: const TextStyle(color: AppColors.primary, fontSize: 11, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                    color: AppColors.primary,
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -94,7 +103,7 @@ class DeliverySummaryCard extends StatelessWidget {
           Text(
             '₹${value.toStringAsFixed(0)}',
             style: TextStyle(
-              fontSize: 12, 
+              fontSize: 12,
               fontWeight: FontWeight.w600,
               color: color,
             ),

@@ -75,11 +75,15 @@ class _HomeBannerState extends State<HomeBanner> {
                       decoration: BoxDecoration(
                         color: Colors.grey[200],
                         image: banner.imageUrl.isNotEmpty
-                            ? DecorationImage(image: NetworkImage(banner.imageUrl), fit: BoxFit.cover)
+                            ? DecorationImage(
+                                image: NetworkImage(banner.imageUrl),
+                                fit: BoxFit.cover)
                             : null,
                       ),
                       child: banner.imageUrl.isEmpty
-                          ? const Center(child: Icon(Icons.image, size: 50, color: Colors.grey))
+                          ? const Center(
+                              child: Icon(Icons.image,
+                                  size: 50, color: Colors.grey))
                           : null,
                     ),
                   ),
@@ -99,7 +103,9 @@ class _HomeBannerState extends State<HomeBanner> {
               width: _currentPage == index ? 24 : 6,
               height: 6,
               decoration: BoxDecoration(
-                color: _currentPage == index ? Theme.of(context).primaryColor : Colors.grey[300],
+                color: _currentPage == index
+                    ? Theme.of(context).primaryColor
+                    : Colors.grey[300],
                 borderRadius: BorderRadius.circular(3),
               ),
             ),

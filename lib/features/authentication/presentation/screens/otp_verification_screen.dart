@@ -20,7 +20,8 @@ class OTPVerificationScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<OTPVerificationScreen> createState() => _OTPVerificationScreenState();
+  ConsumerState<OTPVerificationScreen> createState() =>
+      _OTPVerificationScreenState();
 }
 
 class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {

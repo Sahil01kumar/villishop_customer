@@ -44,7 +44,7 @@ class SearchRepositoryImpl implements SearchRepository {
   Future<List<ProductModel>> searchProducts(String query) async {
     await Future.delayed(const Duration(milliseconds: 500));
     if (query.isEmpty) return [];
-    
+
     return [
       const ProductModel(
         id: '1',
@@ -52,7 +52,10 @@ class SearchRepositoryImpl implements SearchRepository {
         imageUrl: '',
         category: 'Milk & Dairy',
         packaging: PackagingInfo(weight: 500, unit: 'ml'),
-        manufacturing: ManufacturingInfo(manufacturer: 'Yadav Dairy', packedBy: 'Yadav Dairy', countryOfOrigin: 'India'),
+        manufacturing: ManufacturingInfo(
+            manufacturer: 'Yadav Dairy',
+            packedBy: 'Yadav Dairy',
+            countryOfOrigin: 'India'),
         pricing: PricingInfo(mrp: 32, sellingPrice: 28, discountPercentage: 12),
         rating: 4.5,
       ),
@@ -62,8 +65,12 @@ class SearchRepositoryImpl implements SearchRepository {
         imageUrl: '',
         category: 'Atta & Dal',
         packaging: PackagingInfo(weight: 5, unit: 'kg'),
-        manufacturing: ManufacturingInfo(manufacturer: 'Village Fresh', packedBy: 'Village Fresh', countryOfOrigin: 'India'),
-        pricing: PricingInfo(mrp: 210, sellingPrice: 180, discountPercentage: 14),
+        manufacturing: ManufacturingInfo(
+            manufacturer: 'Village Fresh',
+            packedBy: 'Village Fresh',
+            countryOfOrigin: 'India'),
+        pricing:
+            PricingInfo(mrp: 210, sellingPrice: 180, discountPercentage: 14),
         rating: 4.8,
       ),
     ].where((p) => p.name.toLowerCase().contains(query.toLowerCase())).toList();

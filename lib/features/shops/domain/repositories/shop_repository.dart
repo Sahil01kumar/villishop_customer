@@ -6,5 +6,6 @@ abstract class ShopRepository {
   Future<List<ShopModel>> getShopsByCategory(String categoryId);
   Future<ShopModel?> getShopDetails(String shopId);
   Future<void> toggleFavourite(String shopId);
-  Future<List<ProductModel>> getShopProducts(String shopId, {String? categoryId});
+  Future<List<ProductModel>> getShopProducts(String shopId,
+      {String? categoryId});
 }

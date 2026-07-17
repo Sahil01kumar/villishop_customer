@@ -28,5 +28,6 @@ class ShopModel with _$ShopModel {
     @Default([]) List<String> policies,
   }) = _ShopModel;
 
-  factory ShopModel.fromJson(Map<String, dynamic> json) => _$ShopModelFromJson(json);
+  factory ShopModel.fromJson(Map<String, dynamic> json) =>
+      _$ShopModelFromJson(json);
 }

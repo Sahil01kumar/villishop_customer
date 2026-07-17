@@ -14,5 +14,6 @@ class TaxModel with _$TaxModel {
     @Default('GST_INVOICE_READY') String taxLabel,
   }) = _TaxModel;
 
-  factory TaxModel.fromJson(Map<String, dynamic> json) => _$TaxModelFromJson(json);
+  factory TaxModel.fromJson(Map<String, dynamic> json) =>
+      _$TaxModelFromJson(json);
 }

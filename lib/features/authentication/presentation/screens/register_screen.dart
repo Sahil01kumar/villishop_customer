@@ -52,7 +52,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     });
 
     final authState = ref.watch(authProvider);
-    final isLoading = authState.maybeWhen(loading: () => true, orElse: () => false);
+    final isLoading =
+        authState.maybeWhen(loading: () => true, orElse: () => false);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Create Account')),
@@ -80,7 +81,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   label: 'Full Name',
                   hintText: 'Enter your name',
                   controller: _nameController,
-                  validator: (val) => AppValidators.validateRequired(val, 'Name'),
+                  validator: (val) =>
+                      AppValidators.validateRequired(val, 'Name'),
                   prefixIcon: const Icon(Icons.person_outline),
                 ),
                 AppSpacing.vM,

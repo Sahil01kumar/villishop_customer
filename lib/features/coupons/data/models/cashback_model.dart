@@ -14,5 +14,6 @@ class CashbackModel with _$CashbackModel {
     DateTime? expiryDate,
   }) = _CashbackModel;
 
-  factory CashbackModel.fromJson(Map<String, dynamic> json) => _$CashbackModelFromJson(json);
+  factory CashbackModel.fromJson(Map<String, dynamic> json) =>
+      _$CashbackModelFromJson(json);
 }

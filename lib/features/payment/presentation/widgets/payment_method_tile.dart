@@ -47,19 +47,24 @@ class PaymentMethodTile extends StatelessWidget {
                           children: [
                             Text(
                               method.name,
-                              style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 15),
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w900, fontSize: 15),
                             ),
                             if (method.recommended) ...[
                               const SizedBox(width: 8),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 6, vertical: 2),
                                 decoration: BoxDecoration(
                                   color: Colors.orange.withAlpha(20),
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                                 child: const Text(
                                   'RECOMMENDED',
-                                  style: TextStyle(color: Colors.orange, fontSize: 8, fontWeight: FontWeight.w900),
+                                  style: TextStyle(
+                                      color: Colors.orange,
+                                      fontSize: 8,
+                                      fontWeight: FontWeight.w900),
                                 ),
                               ),
                             ],
@@ -68,18 +73,27 @@ class PaymentMethodTile extends StatelessWidget {
                         if (method.unavailableReason != null)
                           Text(
                             method.unavailableReason!,
-                            style: const TextStyle(color: Colors.red, fontSize: 11, fontWeight: FontWeight.bold),
+                            style: const TextStyle(
+                                color: Colors.red,
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold),
                           )
                         else
                           Text(
-                            method.processingTime == 'Instant' ? 'Instant Payment' : 'Takes ${method.processingTime}',
-                            style: TextStyle(color: Colors.grey[600], fontSize: 12, fontWeight: FontWeight.w500),
+                            method.processingTime == 'Instant'
+                                ? 'Instant Payment'
+                                : 'Takes ${method.processingTime}',
+                            style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500),
                           ),
                       ],
                     ),
                   ),
                   if (isSelected)
-                    const Icon(Icons.check_circle_rounded, color: AppColors.primary, size: 24)
+                    const Icon(Icons.check_circle_rounded,
+                        color: AppColors.primary, size: 24)
                   else
                     Container(
                       height: 20,
@@ -99,7 +113,8 @@ class PaymentMethodTile extends StatelessWidget {
   }
 
   Widget _buildIcon() {
-    if (method.icon.startsWith('http')) {
+    // Check if it's a local asset path
+    if (method.icon.startsWith('assets/')) {
       return Container(
         height: 32,
         width: 32,
@@ -109,9 +124,17 @@ class PaymentMethodTile extends StatelessWidget {
           border: Border.all(color: Colors.grey[100]!),
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Image.network(method.icon, fit: BoxFit.contain),
+        child: Image.asset(
+          method.icon,
+          fit: BoxFit.contain,
+          errorBuilder: (context, error, stackTrace) => const Icon(
+              Icons.account_balance_wallet_outlined,
+              color: Colors.grey),
+        ),
       );
     }
+
+    // Fallback to emoji or placeholder
     return Container(
       height: 32,
       width: 32,
@@ -120,7 +143,10 @@ class PaymentMethodTile extends StatelessWidget {
         color: const Color(0xFFF3F4F6),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Text(method.icon, style: const TextStyle(fontSize: 18)),
+      child: Text(
+        method.icon.length <= 2 ? method.icon : '💳',
+        style: const TextStyle(fontSize: 18),
+      ),
     );
   }
 }

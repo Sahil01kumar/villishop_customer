@@ -11,5 +11,6 @@ class BannerModel with _$BannerModel {
     String? deepLink,
   }) = _BannerModel;
 
-  factory BannerModel.fromJson(Map<String, dynamic> json) => _$BannerModelFromJson(json);
+  factory BannerModel.fromJson(Map<String, dynamic> json) =>
+      _$BannerModelFromJson(json);
 }

@@ -12,9 +12,18 @@ class DummyHomeDataSource {
   Future<List<BannerModel>> getBanners() async {
     await Future.delayed(const Duration(milliseconds: 500));
     return [
-      const BannerModel(id: '1', imageUrl: 'https://img.freepik.com/free-vector/grocery-delivery-service-banner-template_23-2148781585.jpg'),
-      const BannerModel(id: '2', imageUrl: 'https://img.freepik.com/free-vector/flat-grocery-delivery-service-horizontal-banner_23-2148818816.jpg'),
-      const BannerModel(id: '3', imageUrl: 'https://img.freepik.com/free-vector/fresh-food-delivery-service-banner_23-2148818815.jpg'),
+      const BannerModel(
+          id: '1',
+          imageUrl:
+              'https://img.freepik.com/free-vector/grocery-delivery-service-banner-template_23-2148781585.jpg'),
+      const BannerModel(
+          id: '2',
+          imageUrl:
+              'https://img.freepik.com/free-vector/flat-grocery-delivery-service-horizontal-banner_23-2148818816.jpg'),
+      const BannerModel(
+          id: '3',
+          imageUrl:
+              'https://img.freepik.com/free-vector/fresh-food-delivery-service-banner_23-2148818815.jpg'),
     ];
   }
 
@@ -74,7 +83,10 @@ class DummyHomeDataSource {
         imageUrl: '',
         category: 'Milk & Dairy',
         packaging: PackagingInfo(weight: 500, unit: 'ml'),
-        manufacturing: ManufacturingInfo(manufacturer: 'Yadav Dairy', packedBy: 'Yadav Dairy', countryOfOrigin: 'India'),
+        manufacturing: ManufacturingInfo(
+            manufacturer: 'Yadav Dairy',
+            packedBy: 'Yadav Dairy',
+            countryOfOrigin: 'India'),
         pricing: PricingInfo(mrp: 32, sellingPrice: 28, discountPercentage: 12),
         inventory: InventoryInfo(isBestseller: true),
         rating: 4.5,
@@ -85,8 +97,12 @@ class DummyHomeDataSource {
         imageUrl: '',
         category: 'Atta & Dal',
         packaging: PackagingInfo(weight: 5, unit: 'kg'),
-        manufacturing: ManufacturingInfo(manufacturer: 'Village Fresh', packedBy: 'Village Fresh', countryOfOrigin: 'India'),
-        pricing: PricingInfo(mrp: 210, sellingPrice: 180, discountPercentage: 14),
+        manufacturing: ManufacturingInfo(
+            manufacturer: 'Village Fresh',
+            packedBy: 'Village Fresh',
+            countryOfOrigin: 'India'),
+        pricing:
+            PricingInfo(mrp: 210, sellingPrice: 180, discountPercentage: 14),
         inventory: InventoryInfo(isNewArrival: true),
         rating: 4.8,
       ),
@@ -96,8 +112,12 @@ class DummyHomeDataSource {
         imageUrl: '',
         category: 'Atta & Dal',
         packaging: PackagingInfo(weight: 5, unit: 'kg'),
-        manufacturing: ManufacturingInfo(manufacturer: 'Organic Farms', packedBy: 'Organic Farms', countryOfOrigin: 'India'),
-        pricing: PricingInfo(mrp: 500, sellingPrice: 450, discountPercentage: 10),
+        manufacturing: ManufacturingInfo(
+            manufacturer: 'Organic Farms',
+            packedBy: 'Organic Farms',
+            countryOfOrigin: 'India'),
+        pricing:
+            PricingInfo(mrp: 500, sellingPrice: 450, discountPercentage: 10),
         rating: 4.6,
       ),
     ];

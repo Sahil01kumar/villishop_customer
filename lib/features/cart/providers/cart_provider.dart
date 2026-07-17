@@ -7,9 +7,11 @@ import 'package:villishop_customer/features/products/data/models/sub_models/inve
 import 'package:villishop_customer/features/cart/providers/cart_state.dart';
 import '../../coupons/data/models/coupon_model.dart';
 import '../../delivery/data/models/delivery_slot_model.dart';
+import '../../delivery/providers/delivery_state.dart';
+import '../../../core/services/shared_pref_service.dart';
 
 final cartRepositoryProvider = Provider<CartRepository>((ref) {
-  return CartRepositoryImpl();
+  return CartRepositoryImpl(ref.watch(sharedPreferencesServiceProvider));
 });
 
 class CartNotifier extends StateNotifier<CartState> {
@@ -39,20 +41,22 @@ class CartNotifier extends StateNotifier<CartState> {
   Future<void> removeFromCart(String shopId, String productId) async {
     try {
       final shopCart = state.cart.shopCarts.firstWhere(
-        (s) => s.shopId == shopId || s.items.any((i) => i.product.id == productId),
+        (s) =>
+            s.shopId == shopId || s.items.any((i) => i.product.id == productId),
         orElse: () => throw Exception('Shop not found'),
       );
       final item = shopCart.items.firstWhere((i) => i.product.id == productId);
       _lastRemovedItem = item;
     } catch (_) {}
-    
+
     await _repository.removeItem(shopId, productId);
     await loadCart();
   }
 
   Future<void> undoRemove() async {
     if (_lastRemovedItem != null) {
-      await _repository.addItem(_lastRemovedItem!.product, _lastRemovedItem!.quantity);
+      await _repository.addItem(
+          _lastRemovedItem!.product, _lastRemovedItem!.quantity);
       _lastRemovedItem = null;
       await loadCart();
     }
@@ -60,7 +64,8 @@ class CartNotifier extends StateNotifier<CartState> {
 
   Future<void> incrementQuantity(String shopId, String productId) async {
     final shopCart = state.cart.shopCarts.firstWhere(
-      (s) => s.shopId == shopId || s.items.any((i) => i.product.id == productId),
+      (s) =>
+          s.shopId == shopId || s.items.any((i) => i.product.id == productId),
       orElse: () => throw Exception('Shop not found'),
     );
     final item = shopCart.items.firstWhere((i) => i.product.id == productId);
@@ -76,7 +81,8 @@ class CartNotifier extends StateNotifier<CartState> {
 
   Future<void> decrementQuantity(String shopId, String productId) async {
     final shopCart = state.cart.shopCarts.firstWhere(
-      (s) => s.shopId == shopId || s.items.any((i) => i.product.id == productId),
+      (s) =>
+          s.shopId == shopId || s.items.any((i) => i.product.id == productId),
       orElse: () => throw Exception('Shop not found'),
     );
     final item = shopCart.items.firstWhere((i) => i.product.id == productId);
@@ -103,7 +109,7 @@ class CartNotifier extends StateNotifier<CartState> {
     await _repository.clearAll();
     await loadCart();
   }
-  
+
   void updateWithCoupon(CouponCalculationResult? result, String? code) {
     final summary = state.cart.overallSummary;
     if (result == null) {
@@ -112,7 +118,10 @@ class CartNotifier extends StateNotifier<CartState> {
           appliedCouponCode: null,
           overallSummary: summary.copyWith(
             couponDiscount: 0,
-            grandTotal: (summary.subTotal - summary.totalDiscount) + summary.deliveryCharge + summary.packagingCharge + summary.totalTax,
+            grandTotal: (summary.subTotal - summary.totalDiscount) +
+                summary.deliveryCharge +
+                summary.packagingCharge +
+                summary.totalTax,
           ),
         ),
       );
@@ -122,25 +131,43 @@ class CartNotifier extends StateNotifier<CartState> {
           appliedCouponCode: code,
           overallSummary: summary.copyWith(
             couponDiscount: result.discountAmount,
-            grandTotal: (summary.subTotal - summary.totalDiscount - result.discountAmount) + 
-                       (summary.deliveryCharge - result.deliveryDiscount) + 
-                       summary.packagingCharge + summary.totalTax,
+            grandTotal: (summary.subTotal -
+                    summary.totalDiscount -
+                    result.discountAmount) +
+                (summary.deliveryCharge - result.deliveryDiscount) +
+                summary.packagingCharge +
+                summary.totalTax,
           ),
         ),
       );
     }
   }
 
-  void updateDeliverySlot(DeliverySlotModel? slot) {
-    if (slot == null) return;
-    
+  void syncWithDelivery(DeliveryState deliveryState) {
     final summary = state.cart.overallSummary;
+    double fee = 19.0;
+
+    // Enterprise 199 Rule
+    if ((summary.subTotal - summary.totalDiscount) >= 199) {
+      fee = 0.0;
+    }
+
+    // Override with slot charge if scheduled and slot selected
+    if (deliveryState.deliveryMode == DeliveryMode.scheduled &&
+        deliveryState.selectedSlot != null) {
+      fee = deliveryState.selectedSlot!.deliveryCharge;
+    }
+
     state = state.copyWith(
       cart: state.cart.copyWith(
         overallSummary: summary.copyWith(
-          deliveryCharge: slot.deliveryCharge,
-          grandTotal: (summary.subTotal - summary.totalDiscount - summary.couponDiscount) + 
-                       slot.deliveryCharge + summary.packagingCharge + summary.totalTax,
+          deliveryCharge: fee,
+          grandTotal: (summary.subTotal -
+                  summary.totalDiscount -
+                  summary.couponDiscount) +
+              fee +
+              summary.packagingCharge +
+              summary.totalTax,
         ),
       ),
     );

@@ -22,16 +22,21 @@ class ShopInfoSection extends StatelessWidget {
                 children: [
                   Text(
                     shop.name,
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900),
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineSmall
+                        ?.copyWith(fontWeight: FontWeight.w900),
                   ),
                   Text(
                     shop.category,
-                    style: TextStyle(color: Colors.grey[600], fontWeight: FontWeight.w500),
+                    style: TextStyle(
+                        color: Colors.grey[600], fontWeight: FontWeight.w500),
                   ),
                 ],
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
                   color: Colors.green[50],
                   borderRadius: AppRadius.rM,
@@ -40,11 +45,17 @@ class ShopInfoSection extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Text(shop.rating.toString(), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.green)),
+                        Text(shop.rating.toString(),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                                color: Colors.green)),
                         const Icon(Icons.star, size: 18, color: Colors.green),
                       ],
                     ),
-                    Text('${shop.totalReviews} reviews', style: const TextStyle(fontSize: 10, color: Colors.green)),
+                    Text('${shop.totalReviews} reviews',
+                        style:
+                            const TextStyle(fontSize: 10, color: Colors.green)),
                   ],
                 ),
               ),
@@ -57,7 +68,8 @@ class ShopInfoSection extends StatelessWidget {
               _buildDivider(),
               _buildInfoItem(Icons.location_on_outlined, shop.distance),
               _buildDivider(),
-              _buildInfoItem(Icons.shopping_bag_outlined, 'Min ${shop.minOrder}'),
+              _buildInfoItem(
+                  Icons.shopping_bag_outlined, 'Min ${shop.minOrder}'),
             ],
           ),
           if (shop.description != null) ...[
@@ -77,7 +89,8 @@ class ShopInfoSection extends StatelessWidget {
       children: [
         Icon(icon, size: 16, color: Colors.grey[600]),
         const SizedBox(width: 4),
-        Text(text, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+        Text(text,
+            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
       ],
     );
   }

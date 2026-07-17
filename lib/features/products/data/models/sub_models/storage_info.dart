@@ -14,5 +14,6 @@ class StorageInfo with _$StorageInfo {
     @Default(false) bool isFragile,
   }) = _StorageInfo;
 
-  factory StorageInfo.fromJson(Map<String, dynamic> json) => _$StorageInfoFromJson(json);
+  factory StorageInfo.fromJson(Map<String, dynamic> json) =>
+      _$StorageInfoFromJson(json);
 }

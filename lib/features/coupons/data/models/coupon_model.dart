@@ -4,6 +4,7 @@ part 'coupon_model.freezed.dart';
 part 'coupon_model.g.dart';
 
 enum CouponType { flat, percentage, freeDelivery, bogo, buyXGetY, cashback }
+
 enum CouponSource { platform, shop, brand, referral, festival }
 
 @freezed
@@ -28,7 +29,8 @@ class CouponModel with _$CouponModel {
     @Default(false) bool isMembershipOnly,
   }) = _CouponModel;
 
-  factory CouponModel.fromJson(Map<String, dynamic> json) => _$CouponModelFromJson(json);
+  factory CouponModel.fromJson(Map<String, dynamic> json) =>
+      _$CouponModelFromJson(json);
 }
 
 @freezed

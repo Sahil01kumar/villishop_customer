@@ -17,5 +17,6 @@ class DeliverySummaryModel with _$DeliverySummaryModel {
     @Default(false) bool isFreeDelivery,
   }) = _DeliverySummaryModel;
 
-  factory DeliverySummaryModel.fromJson(Map<String, dynamic> json) => _$DeliverySummaryModelFromJson(json);
+  factory DeliverySummaryModel.fromJson(Map<String, dynamic> json) =>
+      _$DeliverySummaryModelFromJson(json);
 }

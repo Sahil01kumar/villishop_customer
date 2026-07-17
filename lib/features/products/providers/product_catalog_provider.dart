@@ -11,7 +11,8 @@ class ProductCatalogNotifier extends StateNotifier<ProductCatalogState> {
   final ProductRepository _repository;
   final String shopId;
 
-  ProductCatalogNotifier(this._repository, this.shopId) : super(const ProductCatalogState()) {
+  ProductCatalogNotifier(this._repository, this.shopId)
+      : super(const ProductCatalogState()) {
     _init();
   }
 
@@ -21,7 +22,7 @@ class ProductCatalogNotifier extends StateNotifier<ProductCatalogState> {
       final categories = await _repository.getProductCategories(shopId);
       final brands = await _repository.getProductBrands(shopId);
       final products = await _repository.getProducts(shopId: shopId);
-      
+
       state = state.copyWith(
         isLoading: false,
         categories: categories,
@@ -35,7 +36,8 @@ class ProductCatalogNotifier extends StateNotifier<ProductCatalogState> {
 
   Future<void> updateCategory(String category) async {
     state = state.copyWith(selectedCategory: category, isLoading: true);
-    final products = await _repository.getProducts(shopId: shopId, categoryId: category);
+    final products =
+        await _repository.getProducts(shopId: shopId, categoryId: category);
     state = state.copyWith(isLoading: false, products: products);
   }
 
@@ -60,6 +62,7 @@ class ProductCatalogNotifier extends StateNotifier<ProductCatalogState> {
   Future<void> refresh() => _init();
 }
 
-final productCatalogProvider = StateNotifierProvider.family<ProductCatalogNotifier, ProductCatalogState, String>((ref, shopId) {
+final productCatalogProvider = StateNotifierProvider.family<
+    ProductCatalogNotifier, ProductCatalogState, String>((ref, shopId) {
   return ProductCatalogNotifier(ref.watch(productRepositoryProvider), shopId);
 });

@@ -42,9 +42,9 @@ class SearchNotifier extends StateNotifier<SearchState> {
 
   void onQueryChanged(String query) {
     state = state.copyWith(query: query);
-    
+
     if (_debounce?.isActive ?? false) _debounce?.cancel();
-    
+
     if (query.isEmpty) {
       state = state.copyWith(products: [], shops: [], isLoading: false);
       return;
@@ -62,13 +62,13 @@ class SearchNotifier extends StateNotifier<SearchState> {
         _repository.searchProducts(query),
         _repository.searchShops(query),
       ]);
-      
+
       state = state.copyWith(
         isLoading: false,
         products: results[0] as List<ProductModel>,
         shops: results[1] as List<ShopModel>,
       );
-      
+
       if (state.products.isNotEmpty || state.shops.isNotEmpty) {
         await _repository.saveSearch(query);
         _loadInitialData();
@@ -90,6 +90,7 @@ class SearchNotifier extends StateNotifier<SearchState> {
   }
 }
 
-final searchProvider = StateNotifierProvider<SearchNotifier, SearchState>((ref) {
+final searchProvider =
+    StateNotifierProvider<SearchNotifier, SearchState>((ref) {
   return SearchNotifier(ref.watch(searchRepositoryProvider));
 });

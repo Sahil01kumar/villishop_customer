@@ -30,7 +30,8 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
     // Auto-scroll logic when a category is selected from Home
     ref.listen<CategoryState>(categoryProvider, (previous, next) {
       if (next.selectedParent != null && next.parentCategories.isNotEmpty) {
-        final index = next.parentCategories.indexWhere((c) => c.id == next.selectedParent!.id);
+        final index = next.parentCategories
+            .indexWhere((c) => c.id == next.selectedParent!.id);
         if (index != -1 && _sidebarController.hasClients) {
           // Approximate height of each sidebar item is 14 vertical padding * 2 + icon 46 + gap 6 + text 10 ~ 90px
           _sidebarController.animateTo(
@@ -47,7 +48,8 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
       appBar: AppBar(
         title: Text(
           state.selectedParent?.name ?? 'Categories',
-          style: const TextStyle(fontWeight: FontWeight.w900, color: Colors.black),
+          style:
+              const TextStyle(fontWeight: FontWeight.w900, color: Colors.black),
         ),
         backgroundColor: Colors.white,
         elevation: 0,
@@ -72,7 +74,8 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
     );
   }
 
-  Widget _buildSidebar(BuildContext context, WidgetRef ref, CategoryState state) {
+  Widget _buildSidebar(
+      BuildContext context, WidgetRef ref, CategoryState state) {
     return Container(
       width: 95,
       decoration: BoxDecoration(
@@ -85,9 +88,11 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
         itemBuilder: (context, index) {
           final category = state.parentCategories[index];
           final isSelected = state.selectedParent?.id == category.id;
-          
+
           return GestureDetector(
-            onTap: () => ref.read(categoryProvider.notifier).selectParent(category),
+            onTap: () {
+              ref.read(categoryProvider.notifier).selectParent(category);
+            },
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               curve: Curves.easeInOut,
@@ -107,18 +112,22 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
                     width: 46,
                     height: 46,
                     decoration: BoxDecoration(
-                      color: isSelected ? AppColors.primary.withAlpha(10) : Colors.transparent,
+                      color: isSelected
+                          ? AppColors.primary.withAlpha(10)
+                          : Colors.transparent,
                       shape: BoxShape.circle,
                     ),
                     alignment: Alignment.center,
-                    child: Text(category.image, style: const TextStyle(fontSize: 26)),
+                    child: Text(category.image,
+                        style: const TextStyle(fontSize: 26)),
                   ),
                   const SizedBox(height: 6),
                   Text(
                     category.name,
                     style: TextStyle(
                       fontSize: 10,
-                      fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
+                      fontWeight:
+                          isSelected ? FontWeight.w900 : FontWeight.w600,
                       color: isSelected ? AppColors.primary : Colors.black54,
                     ),
                     textAlign: TextAlign.center,
@@ -134,7 +143,8 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
     );
   }
 
-  Widget _buildMainContent(BuildContext context, WidgetRef ref, CategoryState state) {
+  Widget _buildMainContent(
+      BuildContext context, WidgetRef ref, CategoryState state) {
     if (state.selectedParent == null) return const SizedBox.shrink();
 
     return Column(
@@ -151,31 +161,37 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
               itemBuilder: (context, index) {
                 final sub = state.selectedParent!.subCategories[index];
                 final isSelected = state.selectedSub?.id == sub.id;
-                
+
                 return Padding(
                   padding: const EdgeInsets.only(right: 8),
                   child: ChoiceChip(
                     label: Text(sub.name),
                     selected: isSelected,
                     onSelected: (val) {
-                      if (val) ref.read(categoryProvider.notifier).selectSub(sub);
+                      if (val) {
+                        ref.read(categoryProvider.notifier).selectSub(sub);
+                      }
                     },
                     selectedColor: AppColors.primary.withAlpha(15),
                     labelStyle: TextStyle(
                       fontSize: 12,
-                      fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
+                      fontWeight:
+                          isSelected ? FontWeight.w900 : FontWeight.w600,
                       color: isSelected ? AppColors.primary : Colors.black87,
                     ),
                     backgroundColor: Colors.grey[100],
-                    side: BorderSide(color: isSelected ? AppColors.primary : Colors.transparent),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    side: BorderSide(
+                        color: isSelected
+                            ? AppColors.primary
+                            : Colors.transparent),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
                     showCheckmark: false,
                   ),
                 );
               },
             ),
           ),
-
         Expanded(
           child: state.isLoading && state.products.isEmpty
               ? const _ProductsSkeleton()
@@ -184,29 +200,33 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.shopping_basket_outlined, size: 64, color: Colors.grey[200]),
+                          Icon(Icons.shopping_basket_outlined,
+                              size: 64, color: Colors.grey[200]),
                           const SizedBox(height: 16),
-                          const Text('No products available', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
+                          const Text('No products available',
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.bold)),
                         ],
                       ),
                     )
-                  : LayoutBuilder(
-                      builder: (context, constraints) {
-                        return GridView.builder(
-                          padding: const EdgeInsets.all(12),
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 12,
-                            crossAxisSpacing: 12,
-                            childAspectRatio: 0.54,
-                          ),
-                          itemCount: state.products.length,
-                          itemBuilder: (context, index) {
-                            return ProductGridCard(product: state.products[index]);
-                          },
-                        );
-                      }
-                    ),
+                  : LayoutBuilder(builder: (context, constraints) {
+                      return GridView.builder(
+                        padding: const EdgeInsets.all(12),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 12,
+                          crossAxisSpacing: 12,
+                          childAspectRatio: 0.54,
+                        ),
+                        itemCount: state.products.length,
+                        itemBuilder: (context, index) {
+                          return ProductGridCard(
+                              product: state.products[index]);
+                        },
+                      );
+                    }),
         ),
       ],
     );
@@ -257,7 +277,8 @@ class _ProductsSkeleton extends StatelessWidget {
         childAspectRatio: 0.55,
       ),
       itemCount: 6,
-      itemBuilder: (context, index) => const ShimmerWidget.rounded(width: double.infinity, height: 240),
+      itemBuilder: (context, index) =>
+          const ShimmerWidget.rounded(width: double.infinity, height: 240),
     );
   }
 }

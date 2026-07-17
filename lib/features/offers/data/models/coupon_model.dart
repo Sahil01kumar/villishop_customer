@@ -22,5 +22,6 @@ class CouponModel with _$CouponModel {
     String? shopId,
   }) = _CouponModel;
 
-  factory CouponModel.fromJson(Map<String, dynamic> json) => _$CouponModelFromJson(json);
+  factory CouponModel.fromJson(Map<String, dynamic> json) =>
+      _$CouponModelFromJson(json);
 }

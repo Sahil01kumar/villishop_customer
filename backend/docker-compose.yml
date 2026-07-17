@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  villishop-db:
+    image: postgres:15-alpine
+    container_name: villishop-db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  villishop-redis:
+    image: redis:7-alpine
+    container_name: villishop-redis
+    ports:
+      - '6379:6379'
+
+  villishop-api:
+    build: .
+    container_name: villishop-api
+    depends_on:
+      - villishop-db
+      - villishop-redis
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@villishop-db:5432/${POSTGRES_DB}
+      REDIS_URL: redis://villishop-redis:6379
+    ports:
+      - '3000:3000'
+
+volumes:
+  pgdata:

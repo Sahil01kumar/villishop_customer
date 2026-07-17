@@ -1,3 +1,4 @@
+import 'dart:convert';
 import '../../domain/repositories/cart_repository.dart';
 import '../models/cart_model.dart';
 import '../models/shop_cart_model.dart';
@@ -6,23 +7,50 @@ import '../models/shop_summary_model.dart';
 import '../models/cart_summary_model.dart';
 import '../../../home/data/models/product_model.dart';
 import '../../../delivery/data/models/delivery_config_model.dart';
+import '../../../delivery/domain/services/delivery_charge_calculator.dart';
+import '../../../../core/services/shared_pref_service.dart';
+import '../../../../core/persistence/persistence_keys.dart';
 
 class CartRepositoryImpl implements CartRepository {
+  final SharedPreferenceService? _prefs;
   CartModel _currentCart = const CartModel();
+
+  CartRepositoryImpl([this._prefs]) {
+    _loadCartFromPrefs();
+  }
 
   // Delivery configuration (Enterprise ready)
   final DeliveryConfigModel _deliveryConfig = const DeliveryConfigModel(
     tiers: [
-      DeliveryTier(minOrderValue: 0, maxOrderValue: 98.99, charge: 19),
-      DeliveryTier(minOrderValue: 99, maxOrderValue: 198.99, charge: 9),
-      DeliveryTier(minOrderValue: 199, maxOrderValue: double.infinity, charge: 0),
+      DeliveryTier(minOrderValue: 0, maxOrderValue: 198.99, charge: 19),
+      DeliveryTier(
+          minOrderValue: 199, maxOrderValue: double.infinity, charge: 0),
     ],
-    defaultBaseCharge: 29.0,
+    defaultBaseCharge: 19.0,
     isPremiumMembershipFree: true,
   );
 
+  Future<void> _loadCartFromPrefs() async {
+    if (_prefs == null) return;
+    final jsonStr = _prefs!.getString(PersistenceKeys.cart);
+    if (jsonStr != null) {
+      try {
+        _currentCart = CartModel.fromJson(jsonDecode(jsonStr));
+      } catch (_) {}
+    }
+  }
+
+  Future<void> _saveCartToPrefs() async {
+    if (_prefs == null) return;
+    await _prefs!
+        .setString(PersistenceKeys.cart, jsonEncode(_currentCart.toJson()));
+  }
+
   @override
   Future<CartModel> getCart() async {
+    if (_currentCart.shopCarts.isEmpty) {
+      await _loadCartFromPrefs();
+    }
     return _currentCart;
   }
 
@@ -61,16 +89,17 @@ class CartRepositoryImpl implements CartRepository {
       updatedShopCarts.add(_calculateShopCart(newShopCart));
     }
 
-    _updateOverallCart(updatedShopCarts);
+    await _updateOverallCart(updatedShopCarts);
   }
 
   @override
   Future<void> removeItem(String shopId, String productId) async {
     List<ShopCartModel> updatedShopCarts = List.from(_currentCart.shopCarts);
-    
+
     int shopIndex = -1;
     if (shopId.isEmpty || shopId == 'local_shop') {
-      shopIndex = updatedShopCarts.indexWhere((s) => s.items.any((i) => i.product.id == productId));
+      shopIndex = updatedShopCarts
+          .indexWhere((s) => s.items.any((i) => i.product.id == productId));
     } else {
       shopIndex = updatedShopCarts.indexWhere((s) => s.shopId == shopId);
     }
@@ -86,7 +115,7 @@ class CartRepositoryImpl implements CartRepository {
         updatedShopCarts[shopIndex] =
             _calculateShopCart(shopCart.copyWith(items: items));
       }
-      _updateOverallCart(updatedShopCarts);
+      await _updateOverallCart(updatedShopCarts);
     }
   }
 
@@ -99,12 +128,13 @@ class CartRepositoryImpl implements CartRepository {
     }
 
     List<ShopCartModel> updatedShopCarts = List.from(_currentCart.shopCarts);
-    
+
     int shopIndex = -1;
     if (shopId.isEmpty || shopId == 'local_shop') {
-       shopIndex = updatedShopCarts.indexWhere((s) => s.items.any((i) => i.product.id == productId));
+      shopIndex = updatedShopCarts
+          .indexWhere((s) => s.items.any((i) => i.product.id == productId));
     } else {
-       shopIndex = updatedShopCarts.indexWhere((s) => s.shopId == shopId);
+      shopIndex = updatedShopCarts.indexWhere((s) => s.shopId == shopId);
     }
 
     if (shopIndex != -1) {
@@ -116,7 +146,7 @@ class CartRepositoryImpl implements CartRepository {
         items[itemIndex] = items[itemIndex].copyWith(quantity: quantity);
         updatedShopCarts[shopIndex] =
             _calculateShopCart(shopCart.copyWith(items: items));
-        _updateOverallCart(updatedShopCarts);
+        await _updateOverallCart(updatedShopCarts);
       }
     }
   }
@@ -125,12 +155,12 @@ class CartRepositoryImpl implements CartRepository {
   Future<void> clearShopCart(String shopId) async {
     List<ShopCartModel> updatedShopCarts =
         _currentCart.shopCarts.where((s) => s.shopId != shopId).toList();
-    _updateOverallCart(updatedShopCarts);
+    await _updateOverallCart(updatedShopCarts);
   }
 
   @override
   Future<void> clearAll() async {
-    _updateOverallCart([]);
+    await _updateOverallCart([]);
   }
 
   @override
@@ -140,7 +170,7 @@ class CartRepositoryImpl implements CartRepository {
     if (index != -1) {
       updatedShopCarts[index] =
           updatedShopCarts[index].copyWith(isSelected: isSelected);
-      _updateOverallCart(updatedShopCarts);
+      await _updateOverallCart(updatedShopCarts);
     }
   }
 
@@ -151,7 +181,7 @@ class CartRepositoryImpl implements CartRepository {
     if (index != -1) {
       updatedShopCarts[index] =
           updatedShopCarts[index].copyWith(isExpanded: isExpanded);
-      _updateOverallCart(updatedShopCarts);
+      await _updateOverallCart(updatedShopCarts);
     }
   }
 
@@ -176,24 +206,18 @@ class CartRepositoryImpl implements CartRepository {
               item.quantity;
     }
 
-    final double effectiveValue = subTotal - discount;
-    double deliveryCharge = _deliveryConfig.defaultBaseCharge;
-    
-    // Calculate charge based on tiers
-    for (var tier in _deliveryConfig.tiers) {
-      if (effectiveValue >= tier.minOrderValue && effectiveValue <= tier.maxOrderValue) {
-        deliveryCharge = tier.charge;
-        break;
-      }
-    }
+    final double merchandiseSubtotal = subTotal - discount;
+    double deliveryCharge =
+        DeliveryChargeCalculator.calculate(merchandiseSubtotal);
 
     // Apply global configuration overrides
-    if (_deliveryConfig.isFestivalCampaignActive || _deliveryConfig.isPremiumMembershipFree) {
+    if (_deliveryConfig.isFestivalCampaignActive ||
+        _deliveryConfig.isPremiumMembershipFree) {
       deliveryCharge = 0.0;
     }
-    
+
     const packagingCharge = 5.0;
-    final tax = effectiveValue * 0.05;
+    final tax = merchandiseSubtotal * 0.05;
 
     return shopCart.copyWith(
       summary: ShopSummaryModel(
@@ -203,12 +227,12 @@ class CartRepositoryImpl implements CartRepository {
         packagingCharge: packagingCharge,
         taxAmount: tax,
         grandTotal:
-            effectiveValue + deliveryCharge + packagingCharge + tax,
+            merchandiseSubtotal + deliveryCharge + packagingCharge + tax,
       ),
     );
   }
 
-  void _updateOverallCart(List<ShopCartModel> shopCarts) {
+  Future<void> _updateOverallCart(List<ShopCartModel> shopCarts) async {
     double subTotal = 0;
     double discount = 0;
     double delivery = 0;
@@ -242,5 +266,6 @@ class CartRepositoryImpl implements CartRepository {
         grandTotal: (subTotal - discount) + delivery + packaging + tax,
       ),
     );
+    await _saveCartToPrefs();
   }
 }

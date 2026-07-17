@@ -19,14 +19,17 @@ class OffersScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Offers & Coupons', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('Offers & Coupons',
+            style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.white,
         elevation: 0,
       ),
       body: state.isLoading
           ? const LoadingWidget()
           : state.errorMessage != null
-              ? CustomErrorWidget(message: state.errorMessage!, onRetry: () => ref.read(offerProvider.notifier).refresh())
+              ? CustomErrorWidget(
+                  message: state.errorMessage!,
+                  onRetry: () => ref.read(offerProvider.notifier).refresh())
               : RefreshIndicator(
                   onRefresh: () => ref.read(offerProvider.notifier).refresh(),
                   child: CustomScrollView(
@@ -40,74 +43,84 @@ class OffersScreen extends ConsumerWidget {
                               child: Container(
                                 height: 180,
                                 color: Colors.grey[200],
-                                child: const Center(child: Icon(Icons.campaign_outlined, size: 80, color: AppColors.primary)),
+                                child: const Center(
+                                    child: Icon(Icons.campaign_outlined,
+                                        size: 80, color: AppColors.primary)),
                               ),
                             ),
                           ),
                         ),
-                      
                       if (state.flashSales.isNotEmpty) ...[
                         const SliverToBoxAdapter(
-                          child: _SectionHeader(title: 'Flash Sale', isFlash: true),
+                          child: _SectionHeader(
+                              title: 'Flash Sale', isFlash: true),
                         ),
                         SliverToBoxAdapter(
                           child: SizedBox(
                             height: 200,
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
-                              padding: const EdgeInsets.only(left: AppSpacing.m),
+                              padding:
+                                  const EdgeInsets.only(left: AppSpacing.m),
                               itemCount: state.flashSales.length,
-                              itemBuilder: (context, index) => OfferCard(offer: state.flashSales[index], onTap: () {}),
+                              itemBuilder: (context, index) => OfferCard(
+                                  offer: state.flashSales[index], onTap: () {}),
                             ),
                           ),
                         ),
                       ],
-
                       const SliverToBoxAdapter(
                         child: _SectionHeader(title: 'Available Coupons'),
                       ),
-                      
                       if (state.coupons.isEmpty)
                         const SliverToBoxAdapter(
-                          child: EmptyWidget(message: 'No coupons available right now'),
+                          child: EmptyWidget(
+                              message: 'No coupons available right now'),
                         )
                       else
                         SliverPadding(
-                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.m),
                           sliver: SliverList(
                             delegate: SliverChildBuilderDelegate(
                               (context, index) => CouponCard(
                                 coupon: state.coupons[index],
-                                isSelected: state.selectedCouponCode == state.coupons[index].code,
-                                onApply: () => ref.read(offerProvider.notifier).applyCoupon(state.coupons[index].code, 500),
+                                isSelected: state.selectedCouponCode ==
+                                    state.coupons[index].code,
+                                onApply: () => ref
+                                    .read(offerProvider.notifier)
+                                    .applyCoupon(
+                                        state.coupons[index].code, 500),
                               ),
                               childCount: state.coupons.length,
                             ),
                           ),
                         ),
-                      
-                      const SliverToBoxAdapter(child: _SectionHeader(title: 'Best Offers For You')),
-
+                      const SliverToBoxAdapter(
+                          child: _SectionHeader(title: 'Best Offers For You')),
                       if (state.offers.isEmpty)
                         const SliverToBoxAdapter(
-                          child: EmptyWidget(message: 'No specialized offers found'),
+                          child: EmptyWidget(
+                              message: 'No specialized offers found'),
                         )
                       else
                         SliverPadding(
-                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.m),
                           sliver: SliverGrid(
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 1,
                               mainAxisSpacing: AppSpacing.m,
                               childAspectRatio: 2.2,
                             ),
                             delegate: SliverChildBuilderDelegate(
-                              (context, index) => OfferCard(offer: state.offers[index], onTap: () {}),
+                              (context, index) => OfferCard(
+                                  offer: state.offers[index], onTap: () {}),
                               childCount: state.offers.length,
                             ),
                           ),
                         ),
-                      
                       const SliverToBoxAdapter(child: SizedBox(height: 100)),
                     ],
                   ),
@@ -127,13 +140,20 @@ class _SectionHeader extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.m),
       child: Row(
         children: [
-          Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900)),
+          Text(title,
+              style:
+                  const TextStyle(fontSize: 18, fontWeight: FontWeight.w900)),
           if (isFlash) ...[
             AppSpacing.hS,
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-              decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(4)),
-              child: const Text('ENDING SOON', style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
+              decoration: BoxDecoration(
+                  color: Colors.red, borderRadius: BorderRadius.circular(4)),
+              child: const Text('ENDING SOON',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold)),
             ),
           ],
         ],

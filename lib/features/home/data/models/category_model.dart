@@ -26,19 +26,19 @@ class CategoryModel with _$CategoryModel {
     @Default(false) bool isFestival,
     @Default(false) bool isRecommended,
     @Default(false) bool isPremium,
-    
+
     // Taxonomy Ready
     @Default(0) int productCount,
     String? departmentId,
-    
+
     // AI Ready Architecture
     @Default(0.0) double aiRecommendationScore,
     @Default(0.0) double aiTrendingScore,
     @Default(0.0) double aiSeasonalRanking,
-    
     @Default([]) List<CategoryModel> subCategories,
     Map<String, dynamic>? metadata,
   }) = _CategoryModel;
 
-  factory CategoryModel.fromJson(Map<String, dynamic> json) => _$CategoryModelFromJson(json);
+  factory CategoryModel.fromJson(Map<String, dynamic> json) =>
+      _$CategoryModelFromJson(json);
 }

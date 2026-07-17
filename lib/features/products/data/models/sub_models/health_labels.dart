@@ -17,5 +17,6 @@ class HealthLabels with _$HealthLabels {
     @Default(false) bool isEcoFriendly,
   }) = _HealthLabels;
 
-  factory HealthLabels.fromJson(Map<String, dynamic> json) => _$HealthLabelsFromJson(json);
+  factory HealthLabels.fromJson(Map<String, dynamic> json) =>
+      _$HealthLabelsFromJson(json);
 }

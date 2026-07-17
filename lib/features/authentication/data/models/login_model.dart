@@ -9,5 +9,6 @@ class LoginModel with _$LoginModel {
     required String phoneNumber,
   }) = _LoginModel;
 
-  factory LoginModel.fromJson(Map<String, dynamic> json) => _$LoginModelFromJson(json);
+  factory LoginModel.fromJson(Map<String, dynamic> json) =>
+      _$LoginModelFromJson(json);
 }

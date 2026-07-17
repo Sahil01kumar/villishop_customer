@@ -12,5 +12,6 @@ class DealModel with _$DealModel {
     required ProductModel product,
   }) = _DealModel;
 
-  factory DealModel.fromJson(Map<String, dynamic> json) => _$DealModelFromJson(json);
+  factory DealModel.fromJson(Map<String, dynamic> json) =>
+      _$DealModelFromJson(json);
 }

@@ -15,5 +15,6 @@ class DiscountModel with _$DiscountModel {
     @Default([]) List<String> comboProductIds,
   }) = _DiscountModel;
 
-  factory DiscountModel.fromJson(Map<String, dynamic> json) => _$DiscountModelFromJson(json);
+  factory DiscountModel.fromJson(Map<String, dynamic> json) =>
+      _$DiscountModelFromJson(json);
 }

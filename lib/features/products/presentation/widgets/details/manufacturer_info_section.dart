@@ -21,12 +21,15 @@ class ManufacturerInfoSection extends StatelessWidget {
           AppSpacing.vM,
           _buildInfoItem('Shelf Life', product.manufacturing.shelfLife),
           _buildInfoItem('FSSAI License', product.manufacturing.fssaiNumber),
-          _buildInfoItem('Country of Origin', product.manufacturing.countryOfOrigin),
+          _buildInfoItem(
+              'Country of Origin', product.manufacturing.countryOfOrigin),
           _buildInfoItem('Manufacturer', product.manufacturing.manufacturer),
           _buildInfoItem('Packed By', product.manufacturing.packedBy),
-          _buildInfoItem('Unit', '${product.packaging.weight} ${product.packaging.unit}'),
+          _buildInfoItem(
+              'Unit', '${product.packaging.weight} ${product.packaging.unit}'),
           _buildInfoItem('SKU', product.sku),
-          _buildInfoItem('Disclaimer', 'Every effort is made to maintain accuracy of all information. However, actual product packaging and materials may contain more and/or different information. It is recommended not to solely rely on the information presented.'),
+          _buildInfoItem('Disclaimer',
+              'Every effort is made to maintain accuracy of all information. However, actual product packaging and materials may contain more and/or different information. It is recommended not to solely rely on the information presented.'),
         ],
       ),
     );
@@ -41,7 +44,10 @@ class ManufacturerInfoSection extends StatelessWidget {
         children: [
           Text(
             label,
-            style: TextStyle(color: Colors.grey[600], fontSize: 12, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                color: Colors.grey[600],
+                fontSize: 12,
+                fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 2),
           Text(

@@ -5,6 +5,6 @@ abstract class PaymentRepository {
     required double orderValue,
     required bool isShopCodEnabled,
   });
-  
+
   Future<bool> validateMethod(PaymentMethodModel method);
 }

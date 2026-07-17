@@ -36,13 +36,18 @@ class CustomSearchBar extends StatelessWidget {
         readOnly: readOnly,
         decoration: InputDecoration(
           hintText: hint ?? AppStrings.searchHint,
-          hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14, fontWeight: FontWeight.w500),
-          prefixIcon: const Icon(Icons.search, color: AppColors.primary, size: 22),
+          hintStyle: TextStyle(
+              color: Colors.grey[400],
+              fontSize: 14,
+              fontWeight: FontWeight.w500),
+          prefixIcon:
+              const Icon(Icons.search, color: AppColors.primary, size: 22),
           suffixIcon: suffixIcon,
           border: InputBorder.none,
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
         ),
       ),
     );

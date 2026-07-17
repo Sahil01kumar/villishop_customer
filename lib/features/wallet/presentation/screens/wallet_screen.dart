@@ -18,14 +18,17 @@ class WalletScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('My Wallet', style: TextStyle(fontWeight: FontWeight.w900)),
+        title: const Text('My Wallet',
+            style: TextStyle(fontWeight: FontWeight.w900)),
         elevation: 0,
         backgroundColor: Colors.white,
       ),
       body: state.isLoading
           ? const LoadingWidget()
           : state.errorMessage != null
-              ? CustomErrorWidget(message: state.errorMessage!, onRetry: () => ref.read(walletProvider.notifier).refresh())
+              ? CustomErrorWidget(
+                  message: state.errorMessage!,
+                  onRetry: () => ref.read(walletProvider.notifier).refresh())
               : RefreshIndicator(
                   onRefresh: () => ref.read(walletProvider.notifier).refresh(),
                   child: CustomScrollView(
@@ -45,9 +48,11 @@ class WalletScreen extends ConsumerWidget {
                             height: 120,
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
-                              padding: const EdgeInsets.only(left: AppSpacing.m),
+                              padding:
+                                  const EdgeInsets.only(left: AppSpacing.m),
                               itemCount: state.cashbacks.length,
-                              itemBuilder: (context, index) => CashbackCard(cashback: state.cashbacks[index]),
+                              itemBuilder: (context, index) => CashbackCard(
+                                  cashback: state.cashbacks[index]),
                             ),
                           ),
                         ),
@@ -58,15 +63,17 @@ class WalletScreen extends ConsumerWidget {
                         child: _SectionHeader(title: 'Transaction History'),
                       ),
                       SliverPadding(
-                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.m),
                         sliver: SliverList(
                           delegate: SliverChildBuilderDelegate(
-                            (context, index) => TransactionCard(transaction: state.transactions[index]),
+                            (context, index) => TransactionCard(
+                                transaction: state.transactions[index]),
                             childCount: state.transactions.length,
                           ),
                         ),
                       ),
-                      
+
                       const SliverToBoxAdapter(child: SizedBox(height: 100)),
                     ],
                   ),
@@ -82,7 +89,10 @@ class WalletScreen extends ConsumerWidget {
         color: AppColors.primary,
         borderRadius: AppRadius.rL,
         boxShadow: [
-          BoxShadow(color: AppColors.primary.withAlpha(50), blurRadius: 20, offset: const Offset(0, 10)),
+          BoxShadow(
+              color: AppColors.primary.withAlpha(50),
+              blurRadius: 20,
+              offset: const Offset(0, 10)),
         ],
       ),
       child: Column(
@@ -93,17 +103,23 @@ class WalletScreen extends ConsumerWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Available Balance', style: TextStyle(color: Colors.white70, fontSize: 14)),
+                  const Text('Available Balance',
+                      style: TextStyle(color: Colors.white70, fontSize: 14)),
                   Text(
                     '₹${state.wallet?.balance.toStringAsFixed(0) ?? "0"}',
-                    style: const TextStyle(color: Colors.white, fontSize: 36, fontWeight: FontWeight.w900),
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 36,
+                        fontWeight: FontWeight.w900),
                   ),
                 ],
               ),
               Container(
                 padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(color: Colors.white.withAlpha(50), shape: BoxShape.circle),
-                child: const Icon(Icons.account_balance_wallet, color: Colors.white, size: 30),
+                decoration: BoxDecoration(
+                    color: Colors.white.withAlpha(50), shape: BoxShape.circle),
+                child: const Icon(Icons.account_balance_wallet,
+                    color: Colors.white, size: 30),
               ),
             ],
           ),
@@ -113,8 +129,10 @@ class WalletScreen extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _headerInfoItem('Pending', '₹${state.wallet?.pendingCashback.toStringAsFixed(0) ?? "0"}'),
-              _headerInfoItem('Rewards', '${state.wallet?.loyaltyPoints ?? "0"} pts'),
+              _headerInfoItem('Pending',
+                  '₹${state.wallet?.pendingCashback.toStringAsFixed(0) ?? "0"}'),
+              _headerInfoItem(
+                  'Rewards', '${state.wallet?.loyaltyPoints ?? "0"} pts'),
             ],
           ),
         ],
@@ -126,8 +144,13 @@ class WalletScreen extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(color: Colors.white70, fontSize: 12)),
-        Text(value, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+        Text(label,
+            style: const TextStyle(color: Colors.white70, fontSize: 12)),
+        Text(value,
+            style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.bold)),
       ],
     );
   }
@@ -141,7 +164,8 @@ class _SectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.m),
-      child: Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900)),
+      child: Text(title,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900)),
     );
   }
 }

@@ -14,5 +14,6 @@ class WishlistCollectionModel with _$WishlistCollectionModel {
     String? description,
   }) = _WishlistCollectionModel;
 
-  factory WishlistCollectionModel.fromJson(Map<String, dynamic> json) => _$WishlistCollectionModelFromJson(json);
+  factory WishlistCollectionModel.fromJson(Map<String, dynamic> json) =>
+      _$WishlistCollectionModelFromJson(json);
 }

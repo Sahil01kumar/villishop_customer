@@ -11,7 +11,8 @@ class WriteReviewScreen extends ConsumerStatefulWidget {
   final String targetId;
   final String targetName;
 
-  const WriteReviewScreen({super.key, required this.targetId, required this.targetName});
+  const WriteReviewScreen(
+      {super.key, required this.targetId, required this.targetName});
 
   @override
   ConsumerState<WriteReviewScreen> createState() => _WriteReviewScreenState();
@@ -31,7 +32,8 @@ class _WriteReviewScreenState extends ConsumerState<WriteReviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isSubmitting = ref.watch(reviewProvider(widget.targetId).select((s) => s.isSubmitting));
+    final isSubmitting = ref
+        .watch(reviewProvider(widget.targetId).select((s) => s.isSubmitting));
 
     return Scaffold(
       appBar: AppBar(title: Text('Rate ${widget.targetName}')),
@@ -40,17 +42,20 @@ class _WriteReviewScreenState extends ConsumerState<WriteReviewScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Your Rating', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            const Text('Your Rating',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
             AppSpacing.vS,
             Row(
-              children: List.generate(5, (index) => IconButton(
-                onPressed: () => setState(() => _rating = index + 1.0),
-                icon: Icon(
-                  index < _rating ? Icons.star : Icons.star_border,
-                  color: AppColors.secondary,
-                  size: 32,
-                ),
-              )),
+              children: List.generate(
+                  5,
+                  (index) => IconButton(
+                        onPressed: () => setState(() => _rating = index + 1.0),
+                        icon: Icon(
+                          index < _rating ? Icons.star : Icons.star_border,
+                          color: AppColors.secondary,
+                          size: 32,
+                        ),
+                      )),
             ),
             AppSpacing.vL,
             CustomTextField(
@@ -80,19 +85,23 @@ class _WriteReviewScreenState extends ConsumerState<WriteReviewScreen> {
                 }
                 if (_descriptionController.text.isEmpty) {
                   if (context.mounted) {
-                    SnackbarHelper.showError(context, 'Please write a description');
+                    SnackbarHelper.showError(
+                        context, 'Please write a description');
                   }
                   return;
                 }
-                
-                final success = await ref.read(reviewProvider(widget.targetId).notifier).submitReview(
-                  rating: _rating,
-                  description: _descriptionController.text,
-                  title: _titleController.text,
-                );
-                
+
+                final success = await ref
+                    .read(reviewProvider(widget.targetId).notifier)
+                    .submitReview(
+                      rating: _rating,
+                      description: _descriptionController.text,
+                      title: _titleController.text,
+                    );
+
                 if (success && context.mounted) {
-                  SnackbarHelper.showSuccess(context, 'Review submitted successfully!');
+                  SnackbarHelper.showSuccess(
+                      context, 'Review submitted successfully!');
                   Navigator.pop(context);
                 }
               },
@@ -107,7 +116,8 @@ class _WriteReviewScreenState extends ConsumerState<WriteReviewScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Add Photos', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+        const Text('Add Photos',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
         AppSpacing.vS,
         Container(
           height: 80,
@@ -117,7 +127,8 @@ class _WriteReviewScreenState extends ConsumerState<WriteReviewScreen> {
             borderRadius: AppRadius.rM,
             border: Border.all(color: Colors.grey[300]!),
           ),
-          child: const Icon(Icons.add_a_photo_outlined, color: AppColors.primary),
+          child:
+              const Icon(Icons.add_a_photo_outlined, color: AppColors.primary),
         ),
       ],
     );

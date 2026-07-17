@@ -41,7 +41,8 @@ class CartOptimizationRepositoryImpl implements CartOptimizationRepository {
   }
 
   @override
-  Future<void> trackCartEvent(String eventName, Map<String, dynamic> metadata) async {
+  Future<void> trackCartEvent(
+      String eventName, Map<String, dynamic> metadata) async {
     // Integration with Firebase Analytics or similar would happen here
   }
 

@@ -38,7 +38,8 @@ class CategoryCard extends StatelessWidget {
                 padding: const EdgeInsets.all(AppSpacing.m),
                 decoration: BoxDecoration(
                   color: AppColors.primary.withAlpha(5),
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(20)),
                 ),
                 child: Center(
                   child: Text(

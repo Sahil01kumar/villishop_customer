@@ -50,11 +50,13 @@ class PremiumCouponCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 4),
                             decoration: BoxDecoration(
                               color: AppColors.primary.withAlpha(20),
                               borderRadius: BorderRadius.circular(6),
-                              border: Border.all(color: AppColors.primary.withAlpha(50)),
+                              border: Border.all(
+                                  color: AppColors.primary.withAlpha(50)),
                             ),
                             child: Text(
                               coupon.code,
@@ -70,14 +72,17 @@ class PremiumCouponCard extends StatelessWidget {
                             onPressed: onApply,
                             child: Text(
                               isApplied ? 'APPLIED' : 'APPLY',
-                              style: const TextStyle(fontWeight: FontWeight.w900, color: AppColors.primary),
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w900,
+                                  color: AppColors.primary),
                             ),
                           ),
                         ],
                       ),
                       Text(
                         coupon.title,
-                        style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w900, fontSize: 16),
                       ),
                       Text(
                         coupon.description,
@@ -98,7 +103,7 @@ class PremiumCouponCard extends StatelessWidget {
   Widget _buildOfferTypeIcon() {
     IconData icon;
     Color color;
-    
+
     switch (coupon.type) {
       case CouponType.freeDelivery:
         icon = Icons.delivery_dining_outlined;
@@ -125,10 +130,12 @@ class PremiumCouponCard extends StatelessWidget {
 
   Widget _buildExpiryInfo() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: 8),
+      padding:
+          const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.grey[50],
-        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(AppRadius.m)),
+        borderRadius:
+            const BorderRadius.vertical(bottom: Radius.circular(AppRadius.m)),
       ),
       child: const Row(
         children: [
@@ -136,12 +143,16 @@ class PremiumCouponCard extends StatelessWidget {
           SizedBox(width: 4),
           Text(
             'Expires in 2 days',
-            style: TextStyle(color: Colors.grey, fontSize: 10, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                color: Colors.grey, fontSize: 10, fontWeight: FontWeight.bold),
           ),
           Spacer(),
           Text(
             'T&C Apply',
-            style: TextStyle(color: AppColors.primary, fontSize: 10, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                color: AppColors.primary,
+                fontSize: 10,
+                fontWeight: FontWeight.bold),
           ),
         ],
       ),

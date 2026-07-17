@@ -45,7 +45,8 @@ class FavouriteShopCard extends StatelessWidget {
                 children: [
                   Text(
                     shop.name,
-                    style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w900, fontSize: 16),
                   ),
                   Text(
                     shop.category,
@@ -54,11 +55,16 @@ class FavouriteShopCard extends StatelessWidget {
                   AppSpacing.vXS,
                   Row(
                     children: [
-                      const Icon(Icons.star, size: 14, color: AppColors.secondary),
+                      const Icon(Icons.star,
+                          size: 14, color: AppColors.secondary),
                       const SizedBox(width: 4),
-                      Text(shop.rating.toString(), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                      Text(shop.rating.toString(),
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 12)),
                       const SizedBox(width: 8),
-                      Text(shop.deliveryTime, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                      Text(shop.deliveryTime,
+                          style: const TextStyle(
+                              fontSize: 12, color: Colors.grey)),
                     ],
                   ),
                 ],

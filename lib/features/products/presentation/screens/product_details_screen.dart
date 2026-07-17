@@ -16,6 +16,7 @@ import '../widgets/details/expandable_detail_section.dart';
 import '../widgets/details/manufacturer_info_section.dart';
 import '../widgets/product_grid_card.dart';
 import '../../providers/product_details_provider.dart';
+import '../../providers/recent_products_provider.dart';
 
 class ProductDetailsScreen extends ConsumerWidget {
   final String productId;
@@ -32,7 +33,8 @@ class ProductDetailsScreen extends ConsumerWidget {
       return Scaffold(
         body: CustomErrorWidget(
           message: state.errorMessage!,
-          onRetry: () => ref.read(productDetailsProvider(productId).notifier).refresh(),
+          onRetry: () =>
+              ref.read(productDetailsProvider(productId).notifier).refresh(),
         ),
       );
     }
@@ -42,6 +44,11 @@ class ProductDetailsScreen extends ConsumerWidget {
       return const Scaffold(body: Center(child: Text('Product not found')));
     }
 
+    // Module 8.8: Track recently viewed
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(recentProductsProvider.notifier).addProduct(product);
+    });
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -49,7 +56,9 @@ class ProductDetailsScreen extends ConsumerWidget {
         elevation: 0,
         surfaceTintColor: Colors.white,
         actions: [
-          IconButton(icon: const Icon(Icons.share_outlined, color: Colors.black), onPressed: () {}),
+          IconButton(
+              icon: const Icon(Icons.share_outlined, color: Colors.black),
+              onPressed: () {}),
           _WishlistAction(product: product),
           AppSpacing.hS,
         ],
@@ -61,51 +70,59 @@ class ProductDetailsScreen extends ConsumerWidget {
           children: [
             // Gallery
             ProductImageGallery(product: product),
-            
+
             // Info & Pricing
             ProductPricingSection(product: product),
-            
+
             const Divider(thickness: 8, color: Color(0xFFF3F4F6)),
-            
+
             // Highlights Section
             _buildHighlights(product),
-            
+
             const Divider(thickness: 8, color: Color(0xFFF3F4F6)),
-            
+
             // Detailed Sections
-            ExpandableDetailSection(title: 'Product Description', content: product.description ?? ''),
-            
+            ExpandableDetailSection(
+                title: 'Product Description',
+                content: product.description ?? ''),
+
             if (product.nutrition.ingredients.isNotEmpty)
-              ExpandableDetailSection(title: 'Ingredients', content: product.nutrition.ingredients.join(', ')),
-            
-            if (product.nutrition.nutritionalInfo != null && product.nutrition.nutritionalInfo!.isNotEmpty)
-              ExpandableDetailSection(title: 'Nutritional Info', content: product.nutrition.nutritionalInfo!),
-            
+              ExpandableDetailSection(
+                  title: 'Ingredients',
+                  content: product.nutrition.ingredients.join(', ')),
+
+            if (product.nutrition.nutritionalInfo != null &&
+                product.nutrition.nutritionalInfo!.isNotEmpty)
+              ExpandableDetailSection(
+                  title: 'Nutritional Info',
+                  content: product.nutrition.nutritionalInfo!),
+
             _buildStorageInfo(product),
-            
+
             const Divider(thickness: 8, color: Color(0xFFF3F4F6)),
-            
+
             ManufacturerInfoSection(product: product),
-            
+
             const Divider(thickness: 8, color: Color(0xFFF3F4F6)),
-            
+
             _buildReviewSection(context, product),
-            
+
             const Divider(thickness: 8, color: Color(0xFFF3F4F6)),
-            
+
             _buildRelatedProducts(product.relatedProducts),
-            
+
             const SizedBox(height: 140),
           ],
         ),
       ),
       bottomSheet: _buildBottomActions(context, product, ref),
-      floatingActionButton: cartCount > 0 
+      floatingActionButton: cartCount > 0
           ? FloatingActionButton.extended(
-              onPressed: () => context.push(AppRoutes.home), 
+              onPressed: () => context.push(AppRoutes.home),
               label: const Text('CHECKOUT'),
               icon: const Icon(Icons.shopping_cart_checkout),
-            ) : null,
+            )
+          : null,
     );
   }
 
@@ -115,7 +132,8 @@ class ProductDetailsScreen extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Product Highlights', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
+          const Text('Product Highlights',
+              style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
           AppSpacing.vM,
           Wrap(
             spacing: 12,
@@ -138,18 +156,24 @@ class ProductDetailsScreen extends ConsumerWidget {
       children: [
         Icon(icon, size: 18, color: Colors.green),
         const SizedBox(width: 4),
-        Text(label, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black87)),
+        Text(label,
+            style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87)),
       ],
     );
   }
 
   Widget _buildStorageInfo(ProductModel product) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.s),
+      padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.m, vertical: AppSpacing.s),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Storage & Usage', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+          const Text('Storage & Usage',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
           const SizedBox(height: 4),
           Text(
             'Keep in a cool and dry place. Shelf life: 7 days from packaging.',
@@ -169,10 +193,16 @@ class ProductDetailsScreen extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Customer Reviews', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18)),
+              const Text('Customer Reviews',
+                  style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18)),
               TextButton(
-                onPressed: () => context.push(AppRoutes.reviews, extra: {'targetId': product.id, 'targetName': product.name}),
-                child: const Text('Rate Item', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                onPressed: () => context.push(AppRoutes.reviews, extra: {
+                  'targetId': product.id,
+                  'targetName': product.name
+                }),
+                child: const Text('Rate Item',
+                    style: TextStyle(
+                        color: AppColors.primary, fontWeight: FontWeight.bold)),
               ),
             ],
           ),
@@ -180,7 +210,9 @@ class ProductDetailsScreen extends ConsumerWidget {
             children: [
               _ratingBadge(product.rating),
               const SizedBox(width: 12),
-              Text('${product.totalReviews} ratings', style: TextStyle(color: Colors.grey[600], fontWeight: FontWeight.bold)),
+              Text('${product.totalReviews} ratings',
+                  style: TextStyle(
+                      color: Colors.grey[600], fontWeight: FontWeight.bold)),
             ],
           ),
         ],
@@ -191,10 +223,15 @@ class ProductDetailsScreen extends ConsumerWidget {
   Widget _ratingBadge(double rating) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(color: Colors.green[700], borderRadius: BorderRadius.circular(6)),
+      decoration: BoxDecoration(
+          color: Colors.green[700], borderRadius: BorderRadius.circular(6)),
       child: Row(
         children: [
-          Text(rating.toString(), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+          Text(rating.toString(),
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16)),
           const SizedBox(width: 4),
           const Icon(Icons.star, color: Colors.white, size: 16),
         ],
@@ -209,17 +246,21 @@ class ProductDetailsScreen extends ConsumerWidget {
       children: [
         const Padding(
           padding: EdgeInsets.all(AppSpacing.m),
-          child: Text('Frequently Bought Together', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18)),
+          child: Text('Frequently Bought Together',
+              style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18)),
         ),
         SizedBox(
-          height: 280,
+          height: 250,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
             itemCount: related.length,
             itemBuilder: (context, index) => Padding(
               padding: const EdgeInsets.only(right: AppSpacing.m),
-              child: ProductGridCard(product: related[index]),
+              child: SizedBox(
+                width: 160,
+                child: ProductGridCard(product: related[index]),
+              ),
             ),
           ),
         ),
@@ -227,12 +268,19 @@ class ProductDetailsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildBottomActions(BuildContext context, ProductModel product, WidgetRef ref) {
+  Widget _buildBottomActions(
+      BuildContext context, ProductModel product, WidgetRef ref) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.m, AppSpacing.m, 30),
+      padding: const EdgeInsets.fromLTRB(
+          AppSpacing.m, AppSpacing.m, AppSpacing.m, 30),
       decoration: BoxDecoration(
         color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black.withAlpha(8), blurRadius: 20, offset: const Offset(0, -10))],
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withAlpha(8),
+              blurRadius: 20,
+              offset: const Offset(0, -10))
+        ],
       ),
       child: Row(
         children: [
@@ -242,9 +290,14 @@ class ProductDetailsScreen extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('UNIT PRICE', style: TextStyle(color: Colors.grey, fontSize: 10, fontWeight: FontWeight.bold)),
-                Text('₹${product.pricing.sellingPrice.toStringAsFixed(0)}', 
-                    style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 22)),
+                const Text('UNIT PRICE',
+                    style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold)),
+                Text('₹${product.pricing.sellingPrice.toStringAsFixed(0)}',
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w900, fontSize: 22)),
               ],
             ),
           ),
@@ -264,10 +317,13 @@ class _WishlistAction extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isWishlisted = ref.watch(wishlistProvider.select((s) => s.products.any((p) => p.product.id == product.id)));
+    final isWishlisted = ref.watch(wishlistProvider
+        .select((s) => s.products.any((p) => p.product.id == product.id)));
     return IconButton(
-      icon: Icon(isWishlisted ? Icons.favorite : Icons.favorite_border, color: isWishlisted ? Colors.red : Colors.black),
-      onPressed: () => ref.read(wishlistProvider.notifier).toggleProductWishlist(product),
+      icon: Icon(isWishlisted ? Icons.favorite : Icons.favorite_border,
+          color: isWishlisted ? Colors.red : Colors.black),
+      onPressed: () =>
+          ref.read(wishlistProvider.notifier).toggleProductWishlist(product),
     );
   }
 }

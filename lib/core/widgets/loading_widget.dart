@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../constants/app_colors.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class LoadingWidget extends StatelessWidget {
   final double size;
@@ -7,21 +7,29 @@ class LoadingWidget extends StatelessWidget {
 
   const LoadingWidget({
     super.key,
-    this.size = 30.0,
+    this.size = 40.0,
     this.color,
   });
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: SizedBox(
-        height: size,
-        width: size,
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(color ?? AppColors.primary),
-          strokeWidth: 3,
-        ),
-      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            height: size,
+            width: size,
+            child: CircularProgressIndicator(
+              strokeWidth: 4,
+              valueColor: AlwaysStoppedAnimation<Color>(color ?? Colors.green),
+              backgroundColor: const Color(0xFFF3F4F6),
+            ),
+          )
+              .animate(onPlay: (controller) => controller.repeat())
+              .rotate(duration: 1.seconds),
+        ],
+      ).animate().fadeIn(duration: 300.ms),
     );
   }
 }

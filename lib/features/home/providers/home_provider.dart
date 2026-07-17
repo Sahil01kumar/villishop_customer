@@ -44,7 +44,7 @@ class HomeController extends StateNotifier<HomeState> {
   Future<void> fetchHomeData() async {
     try {
       state = state.copyWith(isLoading: true, errorMessage: null);
-      
+
       final results = await Future.wait([
         _repository.getBanners(),
         _repository.getCategories(),

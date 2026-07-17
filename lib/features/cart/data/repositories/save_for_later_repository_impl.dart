@@ -28,7 +28,8 @@ class SaveForLaterRepositoryImpl implements SaveForLaterRepository {
 
   @override
   Future<void> removeFromSaved(String productId) async {
-    final index = _savedItems.indexWhere((item) => item.product.id == productId);
+    final index =
+        _savedItems.indexWhere((item) => item.product.id == productId);
     if (index != -1) {
       _recentlyRemoved.add(_savedItems[index].product);
       _savedItems.removeAt(index);

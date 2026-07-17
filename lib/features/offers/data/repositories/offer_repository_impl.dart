@@ -45,7 +45,8 @@ class OfferRepositoryImpl implements OfferRepository {
   }
 
   @override
-  Future<List<CouponModel>> getAvailableCoupons({double? cartValue, String? shopId}) async {
+  Future<List<CouponModel>> getAvailableCoupons(
+      {double? cartValue, String? shopId}) async {
     return [
       CouponModel(
         id: 'c1',

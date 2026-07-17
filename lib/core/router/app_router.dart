@@ -19,6 +19,9 @@ import '../../features/products/presentation/screens/product_catalog_screen.dart
 import '../../features/products/presentation/screens/product_details_screen.dart';
 import '../../features/reviews/presentation/screens/reviews_list_screen.dart';
 import '../../features/reviews/presentation/screens/write_review_screen.dart';
+import '../../features/reviews/presentation/screens/order_rating_screen.dart';
+import '../../features/tracking/presentation/screens/tracking_map_screen.dart';
+import '../../features/orders/presentation/screens/order_delivered_success_screen.dart';
 import '../../features/wishlist/presentation/screens/wishlist_screen.dart';
 import '../../features/offers/presentation/screens/offers_screen.dart';
 import '../../features/wallet/presentation/screens/wallet_screen.dart';
@@ -27,6 +30,15 @@ import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/categories/providers/category_provider.dart';
 import '../../features/orders/presentation/screens/order_review_screen.dart';
 import '../../features/payment/presentation/screens/payment_selection_screen.dart';
+import '../../features/orders/presentation/screens/order_success_screen.dart';
+import '../../features/orders/presentation/screens/order_tracking_screen.dart';
+import '../../features/notifications/presentation/screens/notification_center_screen.dart';
+import '../../features/communication/presentation/screens/chat_screen.dart';
+import '../../features/communication/presentation/screens/support_hub_screen.dart';
+import '../../features/location/presentation/screens/map_picker_screen.dart';
+
+import '../../features/communication/data/models/chat_model.dart';
+import '../../features/orders/data/models/order_model.dart';
 
 class AppRoutes {
   static const String splash = '/';
@@ -54,6 +66,15 @@ class AppRoutes {
   static const String editProfile = '/edit-profile';
   static const String orderReview = '/order-review';
   static const String paymentSelection = '/payment-selection';
+  static const String orderSuccess = '/order-success';
+  static const String orderTracking = '/order-tracking';
+  static const String notifications = '/notifications';
+  static const String chat = '/chat';
+  static const String supportHub = '/support-hub';
+  static const String mapPicker = '/map-picker';
+  static const String orderRating = '/order-rating';
+  static const String trackingMap = '/tracking-map';
+  static const String orderDelivered = '/order-delivered';
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -64,20 +85,18 @@ final routerProvider = Provider<GoRouter>((ref) {
     redirect: (context, state) {
       final isSplash = state.matchedLocation == AppRoutes.splash;
       final isOnboarding = state.matchedLocation == AppRoutes.onboarding;
-      final isAuthRoute = state.matchedLocation == AppRoutes.login || 
-                          state.matchedLocation == AppRoutes.register ||
-                          state.matchedLocation == AppRoutes.forgotPassword ||
-                          state.matchedLocation == AppRoutes.phoneLogin ||
-                          state.matchedLocation == AppRoutes.otp;
+      final isAuthRoute = state.matchedLocation == AppRoutes.login ||
+          state.matchedLocation == AppRoutes.register ||
+          state.matchedLocation == AppRoutes.forgotPassword ||
+          state.matchedLocation == AppRoutes.phoneLogin ||
+          state.matchedLocation == AppRoutes.otp;
 
-      return authState.when(
-        initial: () => null,
-        loading: () => null,
+      return authState.maybeWhen(
         authenticated: (user) {
           if (!user.isProfileCompleted) {
-            if (isOnboarding) return null;
-            return AppRoutes.onboarding;
+            return isOnboarding ? null : AppRoutes.onboarding;
           }
+
           if (isSplash || isAuthRoute || isOnboarding) return AppRoutes.home;
           return null;
         },
@@ -86,10 +105,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           if (state.matchedLocation == AppRoutes.home) return AppRoutes.login;
           return null;
         },
-        error: (message) {
-          if (isSplash) return AppRoutes.login;
-          return null;
-        },
+        orElse: () => null,
       );
     },
     routes: [
@@ -173,7 +189,8 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '${AppRoutes.productCatalog}/:shopId',
         builder: (context, state) {
           final shopId = state.pathParameters['shopId']!;
-          final shopName = (state.extra as Map<String, dynamic>?)?['shopName'] ?? 'Shop';
+          final shopName =
+              (state.extra as Map<String, dynamic>?)?['shopName'] ?? 'Shop';
           return ProductCatalogScreen(shopId: shopId, shopName: shopName);
         },
       ),
@@ -227,6 +244,60 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.paymentSelection,
         builder: (context, state) => const PaymentSelectionScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.orderSuccess,
+        builder: (context, state) {
+          final order = state.extra as OrderModel;
+          return OrderSuccessScreen(order: order);
+        },
+      ),
+      GoRoute(
+        path: '${AppRoutes.orderTracking}/:id',
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return OrderTrackingScreen(orderId: id);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.notifications,
+        builder: (context, state) => const NotificationCenterScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.chat,
+        builder: (context, state) {
+          final thread = state.extra as ChatThreadModel;
+          return ChatScreen(thread: thread);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.supportHub,
+        builder: (context, state) => const SupportHubScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.mapPicker,
+        builder: (context, state) => const MapPickerScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.orderRating,
+        builder: (context, state) {
+          final order = state.extra as OrderModel;
+          return OrderRatingScreen(order: order);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.orderDelivered,
+        builder: (context, state) {
+          final order = state.extra as OrderModel;
+          return OrderDeliveredSuccessScreen(order: order);
+        },
+      ),
+      GoRoute(
+        path: '${AppRoutes.trackingMap}/:id',
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return TrackingMapScreen(orderId: id);
+        },
       ),
     ],
   );

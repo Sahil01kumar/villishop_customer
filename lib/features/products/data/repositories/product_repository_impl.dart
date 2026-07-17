@@ -17,16 +17,20 @@ class ProductRepositoryImpl implements ProductRepository {
     Map<String, dynamic>? filters,
   }) async {
     await Future.delayed(const Duration(milliseconds: 300));
-    
+
     if (categoryId != null) {
-      if (categoryId.startsWith('10')) { // Milk & Dairy
-        return _dummyProducts.where((p) => p.category == 'Milk & Dairy').toList();
+      if (categoryId.startsWith('10')) {
+        // Milk & Dairy
+        return _dummyProducts
+            .where((p) => p.category == 'Milk & Dairy')
+            .toList();
       }
-      if (categoryId.startsWith('40')) { // Vegetables
-         return _dummyProducts.where((p) => p.category == 'Vegetables').toList();
+      if (categoryId.startsWith('40')) {
+        // Vegetables
+        return _dummyProducts.where((p) => p.category == 'Vegetables').toList();
       }
     }
-    
+
     return _dummyProducts;
   }
 
@@ -42,7 +46,14 @@ class ProductRepositoryImpl implements ProductRepository {
 
   @override
   Future<List<String>> getProductCategories(String shopId) async {
-    return ['All', 'Milk & Dairy', 'Vegetables', 'Fruits', 'Atta & Dal', 'Snacks'];
+    return [
+      'All',
+      'Milk & Dairy',
+      'Vegetables',
+      'Fruits',
+      'Atta & Dal',
+      'Snacks'
+    ];
   }
 
   @override
@@ -70,14 +81,18 @@ class ProductRepositoryImpl implements ProductRepository {
         shelfLife: '2 Days',
       ),
       pricing: PricingInfo(mrp: 32, sellingPrice: 28, discountPercentage: 12),
-      inventory: InventoryInfo(stockStatus: StockStatus.inStock, availableQuantity: 50, isBestseller: true),
+      inventory: InventoryInfo(
+          stockStatus: StockStatus.inStock,
+          availableQuantity: 50,
+          isBestseller: true),
       delivery: DeliveryInfo(deliveryEta: '10 min', isFreeDelivery: true),
       healthLabels: HealthLabels(isVegan: false),
       rating: 4.8,
       totalReviews: 124,
       shopId: 's1',
       shopName: 'Yadav Dairy Farm',
-      description: 'Pure and fresh A2 cow milk delivered straight from our village farm. No preservatives added.',
+      description:
+          'Pure and fresh A2 cow milk delivered straight from our village farm. No preservatives added.',
       relatedProducts: [],
     ),
     const ProductModel(
@@ -93,13 +108,18 @@ class ProductRepositoryImpl implements ProductRepository {
         countryOfOrigin: 'India',
       ),
       pricing: PricingInfo(mrp: 210, sellingPrice: 180, discountPercentage: 14),
-      inventory: InventoryInfo(stockStatus: StockStatus.lowStock, availableQuantity: 5, isNewArrival: true, isTrending: true),
+      inventory: InventoryInfo(
+          stockStatus: StockStatus.lowStock,
+          availableQuantity: 5,
+          isNewArrival: true,
+          isTrending: true),
       healthLabels: HealthLabels(isVegan: true),
       rating: 4.5,
       totalReviews: 89,
       shopId: 's2',
       shopName: 'Village Veg Mart',
-      description: 'Chakki fresh organic wheat atta with all the natural nutrients intact.',
+      description:
+          'Chakki fresh organic wheat atta with all the natural nutrients intact.',
       relatedProducts: [],
     ),
     const ProductModel(
@@ -115,7 +135,8 @@ class ProductRepositoryImpl implements ProductRepository {
         countryOfOrigin: 'India',
       ),
       pricing: PricingInfo(mrp: 45, sellingPrice: 40, discountPercentage: 10),
-      inventory: InventoryInfo(stockStatus: StockStatus.inStock, availableQuantity: 30),
+      inventory: InventoryInfo(
+          stockStatus: StockStatus.inStock, availableQuantity: 30),
       delivery: DeliveryInfo(deliveryEta: '12 min'),
       rating: 4.7,
       totalReviews: 56,
@@ -134,7 +155,10 @@ class ProductRepositoryImpl implements ProductRepository {
         countryOfOrigin: 'India',
       ),
       pricing: PricingInfo(mrp: 30, sellingPrice: 24, discountPercentage: 20),
-      inventory: InventoryInfo(stockStatus: StockStatus.inStock, availableQuantity: 100, isTrending: true),
+      inventory: InventoryInfo(
+          stockStatus: StockStatus.inStock,
+          availableQuantity: 100,
+          isTrending: true),
       delivery: DeliveryInfo(deliveryEta: '15 min'),
       healthLabels: HealthLabels(isVegan: true),
       rating: 4.2,

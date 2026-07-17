@@ -16,5 +16,6 @@ class ShopModel with _$ShopModel {
     required String minOrder,
   }) = _ShopModel;
 
-  factory ShopModel.fromJson(Map<String, dynamic> json) => _$ShopModelFromJson(json);
+  factory ShopModel.fromJson(Map<String, dynamic> json) =>
+      _$ShopModelFromJson(json);
 }

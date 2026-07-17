@@ -16,10 +16,13 @@ class CashbackCard extends StatelessWidget {
       margin: const EdgeInsets.only(right: AppSpacing.m),
       padding: const EdgeInsets.all(AppSpacing.m),
       decoration: BoxDecoration(
-        color: isPending ? Colors.blue.withAlpha(10) : Colors.green.withAlpha(10),
+        color:
+            isPending ? Colors.blue.withAlpha(10) : Colors.green.withAlpha(10),
         borderRadius: AppRadius.rM,
         border: Border.all(
-          color: isPending ? Colors.blue.withAlpha(50) : Colors.green.withAlpha(50),
+          color: isPending
+              ? Colors.blue.withAlpha(50)
+              : Colors.green.withAlpha(50),
         ),
       ),
       child: Column(

@@ -12,11 +12,12 @@ class CommissionModel with _$CommissionModel {
     @Default(0.0) double platformConvenienceFee,
     @Default(0.0) double shopCommissionAmount,
     @Default(0.0) double totalPlatformEarnings,
-    
+
     // AI Ready
     @Default(false) bool isDynamicCommissionApplied,
     @Default(0.0) double aiDynamicAdjustment,
   }) = _CommissionModel;
 
-  factory CommissionModel.fromJson(Map<String, dynamic> json) => _$CommissionModelFromJson(json);
+  factory CommissionModel.fromJson(Map<String, dynamic> json) =>
+      _$CommissionModelFromJson(json);
 }

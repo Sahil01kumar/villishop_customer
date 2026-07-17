@@ -12,5 +12,6 @@ class CustomerDiscovery with _$CustomerDiscovery {
     @Default([]) List<String> customersAlsoBoughtIds,
   }) = _CustomerDiscovery;
 
-  factory CustomerDiscovery.fromJson(Map<String, dynamic> json) => _$CustomerDiscoveryFromJson(json);
+  factory CustomerDiscovery.fromJson(Map<String, dynamic> json) =>
+      _$CustomerDiscoveryFromJson(json);
 }

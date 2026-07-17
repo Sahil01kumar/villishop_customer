@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
-import '../../data/models/delivery_slot_model.dart';
+import '../../../../core/widgets/skeleton_loader.dart';
 import '../../providers/delivery_provider.dart';
+import '../../data/models/delivery_slot_model.dart';
+import '../../providers/delivery_state.dart';
 
 class DeliverySlotSelector extends ConsumerWidget {
   const DeliverySlotSelector({super.key});
@@ -11,189 +13,171 @@ class DeliverySlotSelector extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(deliveryProvider);
+    final notifier = ref.read(deliveryProvider.notifier);
 
-    if (state.isLoading) {
-      return const Padding(
-        padding: EdgeInsets.all(AppSpacing.m),
-        child: Center(child: CircularProgressIndicator()),
-      );
-    }
-
-    if (state.availableSlots.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.s),
-          child: Text(
-            'Select Delivery Slot',
-            style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: 8),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withAlpha(5),
+              blurRadius: 10,
+              offset: const Offset(0, 4))
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Delivery Mode',
+              style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              _buildModeButton(
+                context: context,
+                label: 'Deliver Now',
+                icon: Icons.bolt_rounded,
+                subtitle: '${state.etaMinutes} mins',
+                isSelected: state.deliveryMode == DeliveryMode.deliverNow,
+                onTap: () => notifier.setDeliveryMode(DeliveryMode.deliverNow),
+              ),
+              const SizedBox(width: 12),
+              _buildModeButton(
+                context: context,
+                label: 'Scheduled',
+                icon: Icons.calendar_today_rounded,
+                subtitle: 'Pick a slot',
+                isSelected: state.deliveryMode == DeliveryMode.scheduled,
+                onTap: () => notifier.setDeliveryMode(DeliveryMode.scheduled),
+              ),
+            ],
           ),
-        ),
-        const SizedBox(height: 8),
-        SizedBox(
-          height: 140,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-            itemCount: state.availableSlots.length,
-            itemBuilder: (context, index) {
-              final slot = state.availableSlots[index];
-              final isSelected = state.selectedSlot?.slotId == slot.slotId;
-              return _SlotCard(
-                slot: slot,
-                isSelected: isSelected,
-                onTap: () => ref.read(deliveryProvider.notifier).selectSlot(slot),
-              );
-            },
-          ),
-        ),
-        if (state.selectedSlot != null) _buildSlotInfo(state.selectedSlot!),
-      ],
+          if (state.deliveryMode == DeliveryMode.scheduled) ...[
+            const SizedBox(height: 24),
+            const Text('Available Slots',
+                style: TextStyle(
+                    fontWeight: FontWeight.w900,
+                    fontSize: 13,
+                    color: Colors.grey)),
+            const SizedBox(height: 12),
+            state.isLoading
+                ? _buildSlotsSkeleton()
+                : state.availableSlots.isEmpty
+                    ? const Text('No slots available for this location.',
+                        style: TextStyle(color: Colors.red))
+                    : _buildSlotsList(state, notifier),
+          ],
+        ],
+      ),
     );
   }
 
-  Widget _buildSlotInfo(DeliverySlotModel slot) {
-    return Padding(
-      padding: const EdgeInsets.all(AppSpacing.m),
+  Widget _buildSlotsSkeleton() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: List.generate(
+            3,
+            (index) => const Padding(
+                  padding: EdgeInsets.only(right: 12),
+                  child:
+                      SkeletonLoader(width: 120, height: 80, borderRadius: 16),
+                )),
+      ),
+    );
+  }
+
+  Widget _buildSlotsList(DeliveryState state, DeliveryNotifier notifier) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      physics: const BouncingScrollPhysics(),
+      child: Row(
+        children: state.availableSlots.map((slot) {
+          final isSelected = state.selectedSlot?.slotId == slot.slotId;
+          return _buildSlotCard(
+              slot, isSelected, () => notifier.selectSlot(slot));
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildSlotCard(
+      DeliverySlotModel slot, bool isSelected, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(16),
+        margin: const EdgeInsets.only(right: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: AppColors.primary.withAlpha(5),
+          color: isSelected
+              ? AppColors.primary.withAlpha(10)
+              : const Color(0xFFF7F8FA),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.primary.withAlpha(15)),
+          border: Border.all(
+              color: isSelected ? AppColors.primary : Colors.transparent,
+              width: 2),
         ),
-        child: Row(
+        child: Column(
           children: [
-            const Icon(Icons.timer_outlined, color: AppColors.primary, size: 20),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Arriving in ${slot.estimatedMinutes} mins',
-                    style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 14),
-                  ),
-                  Text(
-                    'Delivery Partner assigned near your area',
-                    style: TextStyle(color: Colors.grey[600], fontSize: 11, fontWeight: FontWeight.w500),
-                  ),
-                ],
-              ),
+            Text(
+              slot.label?.split(',').first ?? 'Today',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 11,
+                  color: isSelected ? AppColors.primary : Colors.grey),
             ),
-            if (slot.deliveryType == DeliveryType.instant)
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(color: Colors.green.withAlpha(15), borderRadius: BorderRadius.circular(6)),
-                child: const Text('⚡ EXPRESS', style: TextStyle(color: Colors.green, fontWeight: FontWeight.w900, fontSize: 10)),
-              ),
+            const SizedBox(height: 4),
+            Text(
+              slot.label?.split(',').last.trim() ?? '',
+              style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 13),
+            ),
           ],
         ),
       ),
     );
   }
-}
 
-class _SlotCard extends StatelessWidget {
-  final DeliverySlotModel slot;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const _SlotCard({
-    required this.slot,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final bool isFree = slot.isFree || slot.deliveryCharge == 0;
-
-    return GestureDetector(
-      onTap: slot.isAvailable ? onTap : null,
-      child: Opacity(
-        opacity: slot.isAvailable ? 1.0 : 0.5,
+  Widget _buildModeButton({
+    required BuildContext context,
+    required String label,
+    required IconData icon,
+    required String subtitle,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
         child: Container(
-          width: 140,
-          margin: const EdgeInsets.only(right: 12),
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: isSelected ? AppColors.primary.withAlpha(10) : Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: isSelected ? AppColors.primary : Colors.grey.withAlpha(30),
-              width: isSelected ? 2 : 1,
-            ),
-            boxShadow: [
-              if (isSelected) BoxShadow(color: AppColors.primary.withAlpha(10), blurRadius: 10, offset: const Offset(0, 4)),
-            ],
+            color: isSelected ? AppColors.primary : const Color(0xFFF7F8FA),
+            borderRadius: BorderRadius.circular(16),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (slot.badge != null)
-                Container(
-                  margin: const EdgeInsets.only(bottom: 6),
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  decoration: BoxDecoration(color: Colors.orange.withAlpha(20), borderRadius: BorderRadius.circular(4)),
-                  child: Text(slot.badge!, style: const TextStyle(color: Colors.orange, fontWeight: FontWeight.w900, fontSize: 8)),
-                ),
-              Text(
-                _getDeliveryIcon(slot.deliveryType),
-                style: const TextStyle(fontSize: 20),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                slot.label ?? 'Delivery',
-                style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 13, height: 1.1),
-                maxLines: 2,
-              ),
-              const Spacer(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  if (isFree)
-                    Row(
-                      children: [
-                        if (slot.originalCharge > 0)
-                          Text(
-                            '₹${slot.originalCharge.toStringAsFixed(0)}',
-                            style: const TextStyle(color: Colors.grey, fontSize: 10, decoration: TextDecoration.lineThrough),
-                          ),
-                        const SizedBox(width: 4),
-                        const Text('FREE', style: TextStyle(color: Colors.green, fontWeight: FontWeight.w900, fontSize: 12)),
-                      ],
-                    )
-                  else
-                    Text('₹${slot.deliveryCharge.toStringAsFixed(0)}', style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 13)),
-                  
-                  if (isSelected)
-                    const Icon(Icons.check_circle_rounded, color: AppColors.primary, size: 18),
-                ],
-              ),
-              if (!slot.isAvailable)
-                 Padding(
-                   padding: const EdgeInsets.only(top: 4),
-                   child: Text(slot.unavailableReason ?? 'Unavailable', style: const TextStyle(color: Colors.red, fontSize: 8, fontWeight: FontWeight.bold)),
-                 ),
+              Icon(icon,
+                  color: isSelected ? Colors.white : AppColors.primary,
+                  size: 24),
+              const SizedBox(height: 12),
+              Text(label,
+                  style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      color: isSelected ? Colors.white : Colors.black,
+                      fontSize: 14)),
+              Text(subtitle,
+                  style: TextStyle(
+                      color: isSelected ? Colors.white70 : Colors.grey,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold)),
             ],
           ),
         ),
       ),
     );
-  }
-
-  String _getDeliveryIcon(DeliveryType type) {
-    switch (type) {
-      case DeliveryType.instant: return '⚡';
-      case DeliveryType.express: return '🚀';
-      case DeliveryType.scheduled: return '🕒';
-      case DeliveryType.standard: return '📦';
-    }
   }
 }

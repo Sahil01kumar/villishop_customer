@@ -23,6 +23,7 @@ mixin _$ReviewModel {
   String get id => throw _privateConstructorUsedError;
   String get userId => throw _privateConstructorUsedError;
   String get userName => throw _privateConstructorUsedError;
+  String? get productId => throw _privateConstructorUsedError;
   String? get userProfilePhoto => throw _privateConstructorUsedError;
   bool get isVerifiedPurchase => throw _privateConstructorUsedError;
   DateTime get reviewDate => throw _privateConstructorUsedError;
@@ -64,6 +65,7 @@ abstract class $ReviewModelCopyWith<$Res> {
       {String id,
       String userId,
       String userName,
+      String? productId,
       String? userProfilePhoto,
       bool isVerifiedPurchase,
       DateTime reviewDate,
@@ -103,6 +105,7 @@ class _$ReviewModelCopyWithImpl<$Res, $Val extends ReviewModel>
     Object? id = null,
     Object? userId = null,
     Object? userName = null,
+    Object? productId = freezed,
     Object? userProfilePhoto = freezed,
     Object? isVerifiedPurchase = null,
     Object? reviewDate = null,
@@ -136,6 +139,10 @@ class _$ReviewModelCopyWithImpl<$Res, $Val extends ReviewModel>
           ? _value.userName
           : userName // ignore: cast_nullable_to_non_nullable
               as String,
+      productId: freezed == productId
+          ? _value.productId
+          : productId // ignore: cast_nullable_to_non_nullable
+              as String?,
       userProfilePhoto: freezed == userProfilePhoto
           ? _value.userProfilePhoto
           : userProfilePhoto // ignore: cast_nullable_to_non_nullable
@@ -228,6 +235,7 @@ abstract class _$$ReviewModelImplCopyWith<$Res>
       {String id,
       String userId,
       String userName,
+      String? productId,
       String? userProfilePhoto,
       bool isVerifiedPurchase,
       DateTime reviewDate,
@@ -265,6 +273,7 @@ class __$$ReviewModelImplCopyWithImpl<$Res>
     Object? id = null,
     Object? userId = null,
     Object? userName = null,
+    Object? productId = freezed,
     Object? userProfilePhoto = freezed,
     Object? isVerifiedPurchase = null,
     Object? reviewDate = null,
@@ -298,6 +307,10 @@ class __$$ReviewModelImplCopyWithImpl<$Res>
           ? _value.userName
           : userName // ignore: cast_nullable_to_non_nullable
               as String,
+      productId: freezed == productId
+          ? _value.productId
+          : productId // ignore: cast_nullable_to_non_nullable
+              as String?,
       userProfilePhoto: freezed == userProfilePhoto
           ? _value.userProfilePhoto
           : userProfilePhoto // ignore: cast_nullable_to_non_nullable
@@ -385,6 +398,7 @@ class _$ReviewModelImpl implements _ReviewModel {
       {required this.id,
       required this.userId,
       required this.userName,
+      this.productId,
       this.userProfilePhoto,
       this.isVerifiedPurchase = true,
       required this.reviewDate,
@@ -419,6 +433,8 @@ class _$ReviewModelImpl implements _ReviewModel {
   final String userId;
   @override
   final String userName;
+  @override
+  final String? productId;
   @override
   final String? userProfilePhoto;
   @override
@@ -505,7 +521,7 @@ class _$ReviewModelImpl implements _ReviewModel {
 
   @override
   String toString() {
-    return 'ReviewModel(id: $id, userId: $userId, userName: $userName, userProfilePhoto: $userProfilePhoto, isVerifiedPurchase: $isVerifiedPurchase, reviewDate: $reviewDate, productVariant: $productVariant, rating: $rating, title: $title, description: $description, images: $images, videoUrls: $videoUrls, helpfulCount: $helpfulCount, isLikedByMe: $isLikedByMe, replies: $replies, aiReviewSummary: $aiReviewSummary, positiveKeywords: $positiveKeywords, negativeKeywords: $negativeKeywords, sentimentScore: $sentimentScore, isFakeSuspected: $isFakeSuspected, isToxic: $isToxic, isSpam: $isSpam)';
+    return 'ReviewModel(id: $id, userId: $userId, userName: $userName, productId: $productId, userProfilePhoto: $userProfilePhoto, isVerifiedPurchase: $isVerifiedPurchase, reviewDate: $reviewDate, productVariant: $productVariant, rating: $rating, title: $title, description: $description, images: $images, videoUrls: $videoUrls, helpfulCount: $helpfulCount, isLikedByMe: $isLikedByMe, replies: $replies, aiReviewSummary: $aiReviewSummary, positiveKeywords: $positiveKeywords, negativeKeywords: $negativeKeywords, sentimentScore: $sentimentScore, isFakeSuspected: $isFakeSuspected, isToxic: $isToxic, isSpam: $isSpam)';
   }
 
   @override
@@ -517,6 +533,8 @@ class _$ReviewModelImpl implements _ReviewModel {
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.userName, userName) ||
                 other.userName == userName) &&
+            (identical(other.productId, productId) ||
+                other.productId == productId) &&
             (identical(other.userProfilePhoto, userProfilePhoto) ||
                 other.userProfilePhoto == userProfilePhoto) &&
             (identical(other.isVerifiedPurchase, isVerifiedPurchase) ||
@@ -558,6 +576,7 @@ class _$ReviewModelImpl implements _ReviewModel {
         id,
         userId,
         userName,
+        productId,
         userProfilePhoto,
         isVerifiedPurchase,
         reviewDate,
@@ -600,6 +619,7 @@ abstract class _ReviewModel implements ReviewModel {
       {required final String id,
       required final String userId,
       required final String userName,
+      final String? productId,
       final String? userProfilePhoto,
       final bool isVerifiedPurchase,
       required final DateTime reviewDate,
@@ -629,6 +649,8 @@ abstract class _ReviewModel implements ReviewModel {
   String get userId;
   @override
   String get userName;
+  @override
+  String? get productId;
   @override
   String? get userProfilePhoto;
   @override

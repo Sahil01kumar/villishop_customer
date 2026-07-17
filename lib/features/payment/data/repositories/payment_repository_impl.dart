@@ -11,11 +11,11 @@ class PaymentRepositoryImpl implements PaymentRepository {
     await Future.delayed(const Duration(milliseconds: 500));
 
     final List<PaymentMethodModel> methods = [
-      // Recommended UPI
+      // Recommended UPI - Using Local Assets for Production Stability
       const PaymentMethodModel(
         id: 'google_pay',
         name: 'Google Pay',
-        icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Google_Pay_Logo_%282020%29.svg/2560px-Google_Pay_Logo_%282020%29.svg.png',
+        icon: 'assets/images/payment/google_pay.png',
         type: PaymentType.upi,
         recommended: true,
         badge: 'Fastest',
@@ -23,14 +23,14 @@ class PaymentRepositoryImpl implements PaymentRepository {
       const PaymentMethodModel(
         id: 'phonepe',
         name: 'PhonePe',
-        icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/PhonePe_Logo.svg/2560px-PhonePe_Logo.svg.png',
+        icon: 'assets/images/payment/phonepe.png',
         type: PaymentType.upi,
         recommended: true,
       ),
       const PaymentMethodModel(
         id: 'paytm',
         name: 'Paytm',
-        icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Paytm_Logo.svg/2560px-Paytm_Logo.svg.png',
+        icon: 'assets/images/payment/paytm.png',
         type: PaymentType.upi,
       ),
 
@@ -85,7 +85,6 @@ class PaymentRepositoryImpl implements PaymentRepository {
   @override
   Future<bool> validateMethod(PaymentMethodModel method) async {
     await Future.delayed(const Duration(milliseconds: 300));
-    // Implementation for real-time validation like card expiry check
     return true;
   }
 }

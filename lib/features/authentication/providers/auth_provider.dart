@@ -8,7 +8,8 @@ import '../data/models/user_model.dart';
 import '../services/session_manager.dart';
 import '../../../core/utils/logger.dart';
 
-final firebaseAuthProvider = Provider<FirebaseAuth>((ref) => FirebaseAuth.instance);
+final firebaseAuthProvider =
+    Provider<FirebaseAuth>((ref) => FirebaseAuth.instance);
 final googleSignInProvider = Provider<GoogleSignIn>((ref) => GoogleSignIn());
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
@@ -22,21 +23,31 @@ class AuthNotifier extends StateNotifier<AuthState> {
   final AuthRepository _repository;
   final SessionManager _sessionManager;
 
-  AuthNotifier(this._repository, this._sessionManager) : super(const AuthState.initial()) {
+  AuthNotifier(this._repository, this._sessionManager)
+      : super(const AuthState.initial()) {
     _init();
   }
 
-  void _init() {
+  Future<void> _init() async {
+    final token = await _sessionManager.getToken();
+    if (token != null) {
+      final user = await _repository.getCurrentUser();
+      if (user != null) {
+        state = AuthState.authenticated(user);
+      } else {
+        state = const AuthState.unauthenticated();
+      }
+    } else {
+      state = const AuthState.unauthenticated();
+    }
+
     _repository.authStateChanges.listen((user) async {
       if (user != null) {
         final userModel = await _repository.getCurrentUser();
         if (userModel != null) {
-          final token = await user.getIdToken();
-          if (token != null) await _sessionManager.saveToken(token);
-          
+          final idToken = await user.getIdToken();
+          if (idToken != null) await _sessionManager.saveToken(idToken);
           state = AuthState.authenticated(userModel);
-        } else {
-          state = const AuthState.unauthenticated();
         }
       } else {
         await _sessionManager.clearSession();
@@ -54,7 +65,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
-  Future<void> signUpWithEmail(String email, String password, String name) async {
+  Future<void> signUpWithEmail(
+      String email, String password, String name) async {
     state = const AuthState.loading();
     try {
       await _repository.signUpWithEmailPassword(email, password);
@@ -104,7 +116,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
           dateOfBirth: dob,
           isProfileCompleted: true,
         );
-        
+
         state = const AuthState.loading();
         try {
           await _repository.updateProfile(updatedUser);

@@ -3,7 +3,15 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'offer_model.freezed.dart';
 part 'offer_model.g.dart';
 
-enum OfferType { flat, percentage, bogo, combo, cashback, freeDelivery, freeGift }
+enum OfferType {
+  flat,
+  percentage,
+  bogo,
+  combo,
+  cashback,
+  freeDelivery,
+  freeGift
+}
 
 @freezed
 class OfferModel with _$OfferModel {
@@ -24,5 +32,6 @@ class OfferModel with _$OfferModel {
     @Default([]) List<String> termsAndConditions,
   }) = _OfferModel;
 
-  factory OfferModel.fromJson(Map<String, dynamic> json) => _$OfferModelFromJson(json);
+  factory OfferModel.fromJson(Map<String, dynamic> json) =>
+      _$OfferModelFromJson(json);
 }

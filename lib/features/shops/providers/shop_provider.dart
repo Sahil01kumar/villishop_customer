@@ -37,7 +37,8 @@ class ShopNotifier extends StateNotifier<ShopState> {
       state = state.copyWith(filteredShops: state.nearbyShops);
     } else {
       final filtered = state.nearbyShops
-          .where((shop) => shop.name.toLowerCase().contains(query.toLowerCase()))
+          .where(
+              (shop) => shop.name.toLowerCase().contains(query.toLowerCase()))
           .toList();
       state = state.copyWith(filteredShops: filtered);
     }

@@ -3,7 +3,15 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'validation_rule_model.freezed.dart';
 part 'validation_rule_model.g.dart';
 
-enum RuleCategory { product, quantity, price, delivery, customer, payment, revenue }
+enum RuleCategory {
+  product,
+  quantity,
+  price,
+  delivery,
+  customer,
+  payment,
+  revenue
+}
 
 @freezed
 class ValidationRuleModel with _$ValidationRuleModel {
@@ -15,5 +23,6 @@ class ValidationRuleModel with _$ValidationRuleModel {
     @Default({}) Map<String, dynamic> config,
   }) = _ValidationRuleModel;
 
-  factory ValidationRuleModel.fromJson(Map<String, dynamic> json) => _$ValidationRuleModelFromJson(json);
+  factory ValidationRuleModel.fromJson(Map<String, dynamic> json) =>
+      _$ValidationRuleModelFromJson(json);
 }

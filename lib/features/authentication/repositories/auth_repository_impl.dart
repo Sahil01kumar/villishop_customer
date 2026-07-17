@@ -14,7 +14,8 @@ class AuthRepositoryImpl implements AuthRepository {
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 
   @override
-  Future<void> loginWithPhone(String phoneNumber, {
+  Future<void> loginWithPhone(
+    String phoneNumber, {
     required void Function(String verificationId, int? resendToken) codeSent,
     required void Function(FirebaseAuthException e) verificationFailed,
   }) async {
@@ -34,7 +35,8 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<UserCredential> verifyOTP(String verificationId, String smsCode) async {
+  Future<UserCredential> verifyOTP(
+      String verificationId, String smsCode) async {
     try {
       PhoneAuthCredential credential = PhoneAuthProvider.credential(
         verificationId: verificationId,
@@ -47,18 +49,22 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<UserCredential> signInWithEmailPassword(String email, String password) async {
+  Future<UserCredential> signInWithEmailPassword(
+      String email, String password) async {
     try {
-      return await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+      return await _firebaseAuth.signInWithEmailAndPassword(
+          email: email, password: password);
     } on FirebaseAuthException catch (e) {
       throw AuthFailure(e.message ?? 'Login failed');
     }
   }
 
   @override
-  Future<UserCredential> signUpWithEmailPassword(String email, String password) async {
+  Future<UserCredential> signUpWithEmailPassword(
+      String email, String password) async {
     try {
-      return await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+      return await _firebaseAuth.createUserWithEmailAndPassword(
+          email: email, password: password);
     } on FirebaseAuthException catch (e) {
       throw AuthFailure(e.message ?? 'Signup failed');
     }
@@ -86,9 +92,12 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<UserCredential> signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) throw const AuthFailure('Google Sign-In cancelled');
+      if (googleUser == null) {
+        throw const AuthFailure('Google Sign-In cancelled');
+      }
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
@@ -119,7 +128,8 @@ class AuthRepositoryImpl implements AuthRepository {
         name: user.displayName,
         email: user.email,
         profilePicture: user.photoURL,
-        isProfileCompleted: user.displayName != null && user.displayName!.isNotEmpty,
+        isProfileCompleted:
+            user.displayName != null && user.displayName!.isNotEmpty,
         joinedAt: user.metadata.creationTime,
       );
     }
@@ -141,10 +151,6 @@ class AuthRepositoryImpl implements AuthRepository {
       final user = _firebaseAuth.currentUser;
       if (user != null) {
         await user.updateDisplayName(userModel.name);
-        if (userModel.email != null && userModel.email != user.email) {
-          // Note: updateEmail requires recent login
-          // await user.updateEmail(userModel.email!);
-        }
         // Save other fields to Firestore in production
       }
     } on FirebaseAuthException catch (e) {

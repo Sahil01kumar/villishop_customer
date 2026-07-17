@@ -39,10 +39,12 @@ class TransactionCard extends StatelessWidget {
               children: [
                 Text(
                   transaction.description ?? 'Transaction',
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 14),
                 ),
                 Text(
-                  DateFormat('dd MMM yyyy, hh:mm a').format(transaction.createdAt),
+                  DateFormat('dd MMM yyyy, hh:mm a')
+                      .format(transaction.createdAt),
                   style: TextStyle(color: Colors.grey[500], fontSize: 11),
                 ),
               ],
@@ -61,7 +63,10 @@ class TransactionCard extends StatelessWidget {
               ),
               Text(
                 'Balance: ₹${transaction.balanceAfter.toStringAsFixed(0)}',
-                style: TextStyle(color: Colors.grey[600], fontSize: 10, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold),
               ),
             ],
           ),

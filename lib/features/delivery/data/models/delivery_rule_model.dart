@@ -13,5 +13,6 @@ class DeliveryRuleModel with _$DeliveryRuleModel {
     @Default([]) List<String> freeDeliveryCouponCodes,
   }) = _DeliveryRuleModel;
 
-  factory DeliveryRuleModel.fromJson(Map<String, dynamic> json) => _$DeliveryRuleModelFromJson(json);
+  factory DeliveryRuleModel.fromJson(Map<String, dynamic> json) =>
+      _$DeliveryRuleModelFromJson(json);
 }

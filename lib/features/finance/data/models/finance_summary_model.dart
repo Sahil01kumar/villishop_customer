@@ -12,15 +12,16 @@ class FinanceSummaryModel with _$FinanceSummaryModel {
     @Default(0.0) double yearlyRevenue,
     @Default(0.0) double totalCommissionEarned,
     @Default(0.0) double totalNetProfit,
-    
+
     // Top Performers
     @Default([]) List<String> topSellingShopIds,
     @Default([]) List<String> topSellingProductIds,
-    
+
     // AI Forecast Ready
     @Default(0.0) double aiProjectedProfit,
     @Default(0.0) double aiDemandPredictionIndex,
   }) = _FinanceSummaryModel;
 
-  factory FinanceSummaryModel.fromJson(Map<String, dynamic> json) => _$FinanceSummaryModelFromJson(json);
+  factory FinanceSummaryModel.fromJson(Map<String, dynamic> json) =>
+      _$FinanceSummaryModelFromJson(json);
 }

@@ -33,7 +33,11 @@ class AddressItemTile extends StatelessWidget {
           width: isSelected ? 1.5 : 1,
         ),
         boxShadow: [
-          if (isSelected) BoxShadow(color: AppColors.primary.withAlpha(5), blurRadius: 10, offset: const Offset(0, 4)),
+          if (isSelected)
+            BoxShadow(
+                color: AppColors.primary.withAlpha(5),
+                blurRadius: 10,
+                offset: const Offset(0, 4)),
         ],
       ),
       child: Material(
@@ -51,8 +55,16 @@ class AddressItemTile extends StatelessWidget {
                   children: [
                     Container(
                       padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(color: (isSelected ? AppColors.primary : Colors.grey[400]!).withAlpha(15), shape: BoxShape.circle),
-                      child: Icon(icon, color: isSelected ? AppColors.primary : Colors.grey[600], size: 20),
+                      decoration: BoxDecoration(
+                          color: (isSelected
+                                  ? AppColors.primary
+                                  : Colors.grey[400]!)
+                              .withAlpha(15),
+                          shape: BoxShape.circle),
+                      child: Icon(icon,
+                          color:
+                              isSelected ? AppColors.primary : Colors.grey[600],
+                          size: 20),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
@@ -61,34 +73,52 @@ class AddressItemTile extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              Text(address.label, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
+                              Text(address.label,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w900,
+                                      fontSize: 16)),
                               if (address.isDefault) ...[
                                 const SizedBox(width: 8),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                  decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(4)),
-                                  child: const Text('DEFAULT', style: TextStyle(fontSize: 9, fontWeight: FontWeight.w900, color: Colors.grey)),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 6, vertical: 2),
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey[100],
+                                      borderRadius: BorderRadius.circular(4)),
+                                  child: const Text('DEFAULT',
+                                      style: TextStyle(
+                                          fontSize: 9,
+                                          fontWeight: FontWeight.w900,
+                                          color: Colors.grey)),
                                 ),
                               ],
                             ],
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            address.fullAddress, 
-                            style: TextStyle(color: Colors.grey[600], fontSize: 13, height: 1.3, fontWeight: FontWeight.w500),
+                            address.fullAddress,
+                            style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 13,
+                                height: 1.3,
+                                fontWeight: FontWeight.w500),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'Phone: ${address.phoneNumber}', 
-                            style: TextStyle(color: Colors.grey[500], fontSize: 12, fontWeight: FontWeight.bold),
+                            'Phone: ${address.phoneNumber}',
+                            style: TextStyle(
+                                color: Colors.grey[500],
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
                     ),
                     if (isSelected)
-                      const Icon(Icons.check_circle_rounded, color: Colors.green, size: 22),
+                      const Icon(Icons.check_circle_rounded,
+                          color: Colors.green, size: 22),
                   ],
                 ),
                 const Padding(
@@ -99,13 +129,20 @@ class AddressItemTile extends StatelessWidget {
                   children: [
                     _buildActionButton(Icons.edit_outlined, 'EDIT', onEdit),
                     const SizedBox(width: 24),
-                    _buildActionButton(Icons.delete_outline_rounded, 'DELETE', onDelete, color: Colors.red),
+                    _buildActionButton(
+                        Icons.delete_outline_rounded, 'DELETE', onDelete,
+                        color: Colors.red),
                     const Spacer(),
                     if (!isSelected)
                       TextButton(
-                        onPressed: onTap, 
-                        style: TextButton.styleFrom(visualDensity: VisualDensity.compact),
-                        child: const Text('SELECT', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 12, color: AppColors.primary)),
+                        onPressed: onTap,
+                        style: TextButton.styleFrom(
+                            visualDensity: VisualDensity.compact),
+                        child: const Text('SELECT',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w900,
+                                fontSize: 12,
+                                color: AppColors.primary)),
                       ),
                   ],
                 ),
@@ -117,7 +154,8 @@ class AddressItemTile extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButton(IconData icon, String label, VoidCallback onTap, {Color? color}) {
+  Widget _buildActionButton(IconData icon, String label, VoidCallback onTap,
+      {Color? color}) {
     return InkWell(
       onTap: onTap,
       child: Row(
@@ -125,7 +163,11 @@ class AddressItemTile extends StatelessWidget {
         children: [
           Icon(icon, size: 16, color: color ?? Colors.black87),
           const SizedBox(width: 4),
-          Text(label, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w900, color: color ?? Colors.black87)),
+          Text(label,
+              style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w900,
+                  color: color ?? Colors.black87)),
         ],
       ),
     );

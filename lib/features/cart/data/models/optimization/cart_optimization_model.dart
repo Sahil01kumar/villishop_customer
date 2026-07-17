@@ -14,7 +14,8 @@ class CartOptimizationModel with _$CartOptimizationModel {
     @Default(false) bool isAbandonedCartReminderEnabled,
   }) = _CartOptimizationModel;
 
-  factory CartOptimizationModel.fromJson(Map<String, dynamic> json) => _$CartOptimizationModelFromJson(json);
+  factory CartOptimizationModel.fromJson(Map<String, dynamic> json) =>
+      _$CartOptimizationModelFromJson(json);
 }
 
 @freezed
@@ -27,5 +28,6 @@ class CartBundleSuggestion with _$CartBundleSuggestion {
     required double savingsAmount,
   }) = _CartBundleSuggestion;
 
-  factory CartBundleSuggestion.fromJson(Map<String, dynamic> json) => _$CartBundleSuggestionFromJson(json);
+  factory CartBundleSuggestion.fromJson(Map<String, dynamic> json) =>
+      _$CartBundleSuggestionFromJson(json);
 }

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
+import '../../../../core/widgets/network_image_with_fallback.dart';
 import '../../../location/data/models/address_model.dart';
 import '../../../delivery/data/models/delivery_slot_model.dart';
 import '../../../cart/data/models/shop_cart_model.dart';
 import '../../../cart/data/models/cart_summary_model.dart';
 import '../../../cart/presentation/widgets/quantity_stepper.dart';
+import '../../../delivery/providers/delivery_provider.dart';
 
 class AddressReviewCard extends StatelessWidget {
   final AddressModel? address;
@@ -28,19 +31,27 @@ class AddressReviewCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Delivery Address', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
+              const Text('Delivery Address',
+                  style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
               TextButton(
                 onPressed: onTap,
-                child: const Text('CHANGE', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w900, fontSize: 12)),
+                child: const Text('CHANGE',
+                    style: TextStyle(
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 12)),
               ),
             ],
           ),
           if (address != null) ...[
             Row(
               children: [
-                const Icon(Icons.location_on_rounded, color: AppColors.primary, size: 20),
+                const Icon(Icons.location_on_rounded,
+                    color: AppColors.primary, size: 20),
                 const SizedBox(width: 8),
-                Text(address!.label, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 14)),
+                Text(address!.label,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w900, fontSize: 14)),
               ],
             ),
             const SizedBox(height: 4),
@@ -55,21 +66,21 @@ class AddressReviewCard extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
           ] else
-            const Text('No address selected', style: TextStyle(color: Colors.red)),
+            const Text('No address selected',
+                style: TextStyle(color: Colors.red)),
         ],
       ),
     );
   }
 }
 
-class SlotReviewCard extends StatelessWidget {
-  final DeliverySlotModel? slot;
-
-  const SlotReviewCard({super.key, this.slot});
+class SlotReviewCard extends ConsumerWidget {
+  const SlotReviewCard({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    if (slot == null) return const SizedBox.shrink();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(deliveryProvider);
+    final isDeliverNow = state.deliveryMode == DeliveryMode.deliverNow;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
@@ -82,23 +93,40 @@ class SlotReviewCard extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(color: Colors.green.withAlpha(15), shape: BoxShape.circle),
-            child: const Icon(Icons.timer_outlined, color: Colors.green, size: 24),
+            decoration: BoxDecoration(
+                color:
+                    (isDeliverNow ? Colors.green : Colors.blue).withAlpha(15),
+                shape: BoxShape.circle),
+            child: Icon(
+                isDeliverNow ? Icons.bolt_rounded : Icons.timer_outlined,
+                color: isDeliverNow ? Colors.green : Colors.blue,
+                size: 24),
           ),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Delivery Slot', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 14, color: Colors.grey)),
+                Text(isDeliverNow ? '⚡ Deliver Now' : '📅 Scheduled Delivery',
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 14,
+                        color: Colors.grey)),
                 Text(
-                  slot!.label ?? 'Instant Delivery',
-                  style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
+                  isDeliverNow
+                      ? 'ETA: ${state.etaMinutes} mins'
+                      : (state.selectedSlot?.label ?? 'Select a slot'),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w900, fontSize: 16),
                 ),
-                Text(
-                  'Estimated Arrival in ${slot!.estimatedMinutes} mins',
-                  style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 12),
-                ),
+                if (isDeliverNow)
+                  const Text(
+                    'Arriving as fast as village wind!',
+                    style: TextStyle(
+                        color: Colors.green,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12),
+                  ),
               ],
             ),
           ),
@@ -116,7 +144,8 @@ class ShopProductsReviewSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.m, AppSpacing.m, 0),
+      margin: const EdgeInsets.fromLTRB(
+          AppSpacing.m, AppSpacing.m, AppSpacing.m, 0),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -127,9 +156,12 @@ class ShopProductsReviewSection extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.storefront_rounded, color: AppColors.primary, size: 18),
+              const Icon(Icons.storefront_rounded,
+                  color: AppColors.primary, size: 18),
               const SizedBox(width: 8),
-              Text(shopCart.shopName, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 15)),
+              Text(shopCart.shopName,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w900, fontSize: 15)),
             ],
           ),
           const Divider(height: 24),
@@ -146,12 +178,12 @@ class ShopProductsReviewSection extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: Container(
-                      width: 60, height: 60,
-                      color: Colors.grey[100],
-                      child: product.imageUrl.isNotEmpty 
-                          ? Image.network(product.imageUrl, fit: BoxFit.cover)
-                          : const Icon(Icons.image_not_supported_outlined, color: Colors.grey),
+                    child: NetworkImageWithFallback(
+                      imageUrl: product.imageUrl,
+                      fit: BoxFit.cover,
+                      width: 60,
+                      height: 60,
+                      fallbackIcon: Icons.shopping_basket_outlined,
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -159,15 +191,27 @@ class ShopProductsReviewSection extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(product.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                        Text(product.packaging.variant ?? '${product.packaging.weight} ${product.packaging.unit}', style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                        Text(product.name,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 14)),
+                        Text(
+                            product.packaging.variant ??
+                                '${product.packaging.weight} ${product.packaging.unit}',
+                            style: TextStyle(
+                                color: Colors.grey[600], fontSize: 12)),
                         const SizedBox(height: 4),
                         Row(
                           children: [
-                            Text('₹${product.pricing.sellingPrice.toStringAsFixed(0)}', style: const TextStyle(fontWeight: FontWeight.w900)),
+                            Text(
+                                '₹${product.pricing.sellingPrice.toStringAsFixed(0)}',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w900)),
                             const SizedBox(width: 6),
-                            Text('₹${product.pricing.mrp.toStringAsFixed(0)}', 
-                                style: const TextStyle(decoration: TextDecoration.lineThrough, color: Colors.grey, fontSize: 11)),
+                            Text('₹${product.pricing.mrp.toStringAsFixed(0)}',
+                                style: const TextStyle(
+                                    decoration: TextDecoration.lineThrough,
+                                    color: Colors.grey,
+                                    fontSize: 11)),
                           ],
                         ),
                       ],
@@ -201,9 +245,11 @@ class DeliveryInfoCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _infoRow(Icons.shopping_bag_outlined, 'Items in Order', '$totalItems items'),
+          _infoRow(Icons.shopping_bag_outlined, 'Items in Order',
+              '$totalItems items'),
           const Divider(height: 24),
-          _infoRow(Icons.delivery_dining_rounded, 'Delivery Partner', 'Assigned on checkout'),
+          _infoRow(Icons.delivery_dining_rounded, 'Delivery Partner',
+              'Assigned on checkout'),
           const Divider(height: 24),
           _infoRow(Icons.straighten_rounded, 'Store Distance', '2.4 km'),
           const Divider(height: 24),
@@ -218,9 +264,14 @@ class DeliveryInfoCard extends StatelessWidget {
       children: [
         Icon(icon, color: Colors.grey[600], size: 18),
         const SizedBox(width: 12),
-        Text(label, style: TextStyle(color: Colors.grey[600], fontWeight: FontWeight.w600, fontSize: 13)),
+        Text(label,
+            style: TextStyle(
+                color: Colors.grey[600],
+                fontWeight: FontWeight.w600,
+                fontSize: 13)),
         const Spacer(),
-        Text(value, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 13)),
+        Text(value,
+            style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 13)),
       ],
     );
   }
@@ -233,8 +284,8 @@ class SpecialInstructionsSection extends StatelessWidget {
   final String? otherText;
 
   const SpecialInstructionsSection({
-    super.key, 
-    required this.selectedInstructions, 
+    super.key,
+    required this.selectedInstructions,
     required this.onToggle,
     required this.onOtherChanged,
     this.otherText,
@@ -242,8 +293,13 @@ class SpecialInstructionsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final instructions = ['Leave at Door', 'Ring Bell', 'Call Before Delivery', 'Do Not Call'];
-    
+    final instructions = [
+      'Leave at Door',
+      'Ring Bell',
+      'Call Before Delivery',
+      'Do Not Call'
+    ];
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
       padding: const EdgeInsets.all(16),
@@ -254,7 +310,8 @@ class SpecialInstructionsSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Special Instructions', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
+          const Text('Special Instructions',
+              style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
           const SizedBox(height: 12),
           Wrap(
             spacing: 8,
@@ -267,11 +324,16 @@ class SpecialInstructionsSection extends StatelessWidget {
                 onSelected: (_) => onToggle(ins),
                 selectedColor: AppColors.primary.withAlpha(20),
                 labelStyle: TextStyle(
-                  fontSize: 12, 
+                  fontSize: 12,
                   fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
                   color: isSelected ? AppColors.primary : Colors.black87,
                 ),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: BorderSide(color: isSelected ? AppColors.primary : Colors.grey[300]!)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    side: BorderSide(
+                        color: isSelected
+                            ? AppColors.primary
+                            : Colors.grey[300]!)),
                 showCheckmark: false,
               );
             }).toList(),
@@ -284,7 +346,9 @@ class SpecialInstructionsSection extends StatelessWidget {
               hintStyle: TextStyle(color: Colors.grey[400], fontSize: 13),
               fillColor: Colors.grey[50],
               filled: true,
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none),
             ),
             maxLength: 250,
             maxLines: 2,
@@ -315,41 +379,51 @@ class PriceBreakdownCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Bill Summary', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
+          const Text('Bill Summary',
+              style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
           const SizedBox(height: 16),
           _summaryRow('Item Total (MRP)', summary.subTotal),
           if (summary.totalDiscount > 0)
-            _summaryRow('Product Discount', -summary.totalDiscount, isGreen: true),
+            _summaryRow('Product Discount', -summary.totalDiscount,
+                isGreen: true),
           if (summary.couponDiscount > 0)
-            _summaryRow('Coupon Discount', -summary.couponDiscount, isGreen: true),
-          
-          _summaryRow('Delivery Charge', summary.deliveryCharge, isFree: summary.deliveryCharge == 0),
+            _summaryRow('Coupon Discount', -summary.couponDiscount,
+                isGreen: true),
+          _summaryRow('Delivery Charge', summary.deliveryCharge,
+              isFree: summary.deliveryCharge == 0,
+              originalValue: summary.deliveryCharge == 0 ? 19.0 : null),
           _summaryRow('Platform Fee', 2.0),
           _summaryRow('Handling & Packing', summary.packagingCharge),
           _summaryRow('Taxes & GST', summary.totalTax),
-          
           const Divider(height: 32),
-          
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Grand Total', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18)),
-              Text('₹${(summary.grandTotal + 2.0).toStringAsFixed(2)}', style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 18)),
+              const Text('Grand Total',
+                  style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18)),
+              Text('₹${(summary.grandTotal + 2.0).toStringAsFixed(2)}',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w900, fontSize: 18)),
             ],
           ),
-          
           if (savings > 0)
             Container(
               margin: const EdgeInsets.only(top: 16),
               padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(color: Colors.green.withAlpha(15), borderRadius: BorderRadius.circular(12)),
+              decoration: BoxDecoration(
+                  color: Colors.green.withAlpha(15),
+                  borderRadius: BorderRadius.circular(12)),
               child: Row(
                 children: [
-                  const Icon(Icons.celebration_rounded, color: Colors.green, size: 20),
+                  const Icon(Icons.celebration_rounded,
+                      color: Colors.green, size: 20),
                   const SizedBox(width: 8),
                   Text(
                     'You saved ₹${savings.toStringAsFixed(0)} today!',
-                    style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w900, fontSize: 13),
+                    style: const TextStyle(
+                        color: Colors.green,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 13),
                   ),
                 ],
               ),
@@ -359,15 +433,37 @@ class PriceBreakdownCard extends StatelessWidget {
     );
   }
 
-  Widget _summaryRow(String label, double value, {bool isGreen = false, bool isFree = false}) {
+  Widget _summaryRow(String label, double value,
+      {bool isGreen = false, bool isFree = false, double? originalValue}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(color: Colors.grey[700], fontWeight: FontWeight.w500, fontSize: 14)),
+          Text(label,
+              style: TextStyle(
+                  color: Colors.grey[700],
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14)),
           if (isFree)
-            const Text('FREE', style: TextStyle(color: Colors.green, fontWeight: FontWeight.w900, fontSize: 14))
+            Row(
+              children: [
+                if (originalValue != null)
+                  Text(
+                    '₹${originalValue.toStringAsFixed(0)}',
+                    style: const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 12,
+                        decoration: TextDecoration.lineThrough),
+                  ),
+                const SizedBox(width: 4),
+                const Text('FREE',
+                    style: TextStyle(
+                        color: Colors.green,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 14)),
+              ],
+            )
           else
             Text(
               '${value < 0 ? "-" : ""}₹${value.abs().toStringAsFixed(2)}',

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
 import '../../../../core/router/app_router.dart';
+import '../../../../core/widgets/network_image_with_fallback.dart';
 import '../../data/models/shop_model.dart';
 
 class ShopDiscoveryCard extends StatelessWidget {
@@ -21,7 +22,9 @@ class ShopDiscoveryCard extends StatelessWidget {
       onTap: () => context.push('${AppRoutes.shopDetails}/${shop.id}'),
       child: Container(
         width: isGrid ? null : 320,
-        margin: isGrid ? EdgeInsets.zero : const EdgeInsets.only(left: AppSpacing.m),
+        margin: isGrid
+            ? EdgeInsets.zero
+            : const EdgeInsets.only(left: AppSpacing.m),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: AppRadius.rL,
@@ -40,14 +43,13 @@ class ShopDiscoveryCard extends StatelessWidget {
             Stack(
               children: [
                 ClipRRect(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.l)),
-                  child: Container(
+                  borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(AppRadius.l)),
+                  child: NetworkImageWithFallback(
+                    imageUrl: shop.imageUrl,
+                    fit: BoxFit.cover,
                     height: isGrid ? 120 : 160,
-                    width: double.infinity,
-                    color: Colors.grey[100],
-                    child: shop.imageUrl.isNotEmpty
-                        ? Image.network(shop.imageUrl, fit: BoxFit.cover)
-                        : const Center(child: Icon(Icons.storefront, size: 50, color: AppColors.primary)),
+                    fallbackIcon: Icons.storefront,
                   ),
                 ),
                 if (!shop.isOpen)
@@ -55,12 +57,16 @@ class ShopDiscoveryCard extends StatelessWidget {
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.black.withAlpha(150),
-                        borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.l)),
+                        borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(AppRadius.l)),
                       ),
                       child: const Center(
                         child: Text(
                           'CLOSED',
-                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, letterSpacing: 2),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 2),
                         ),
                       ),
                     ),
@@ -72,14 +78,18 @@ class ShopDiscoveryCard extends StatelessWidget {
                     children: shop.offers
                         .map((offer) => Container(
                               margin: const EdgeInsets.only(bottom: 4),
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 4),
                               decoration: BoxDecoration(
                                 color: AppColors.primary,
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Text(
                                 offer,
-                                style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold),
                               ),
                             ))
                         .toList(),
@@ -111,7 +121,8 @@ class ShopDiscoveryCard extends StatelessWidget {
                       Expanded(
                         child: Text(
                           shop.name,
-                          style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w900, fontSize: 16),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -126,25 +137,37 @@ class ShopDiscoveryCard extends StatelessWidget {
                   AppSpacing.vS,
                   Row(
                     children: [
-                      const Icon(Icons.timer_outlined, size: 14, color: AppColors.primary),
+                      const Icon(Icons.timer_outlined,
+                          size: 14, color: AppColors.primary),
                       const SizedBox(width: 4),
-                      Text(shop.deliveryTime, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                      Text(shop.deliveryTime,
+                          style: const TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.bold)),
                       const SizedBox(width: 8),
                       const Text('•', style: TextStyle(color: Colors.grey)),
                       const SizedBox(width: 8),
-                      Text(shop.distance, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                      Text(shop.distance,
+                          style:
+                              TextStyle(color: Colors.grey[600], fontSize: 12)),
                     ],
                   ),
                   AppSpacing.vS,
                   Row(
                     children: [
-                      Text('Min ${shop.minOrder}', style: TextStyle(color: Colors.grey[600], fontSize: 11)),
+                      Text('Min ${shop.minOrder}',
+                          style:
+                              TextStyle(color: Colors.grey[600], fontSize: 11)),
                       const Spacer(),
                       if (shop.deliveryCharge == 'Free')
                         const Text('FREE DELIVERY',
-                            style: TextStyle(color: Colors.green, fontSize: 10, fontWeight: FontWeight.bold))
+                            style: TextStyle(
+                                color: Colors.green,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold))
                       else
-                        Text('Delivery ${shop.deliveryCharge}', style: TextStyle(color: Colors.grey[600], fontSize: 11)),
+                        Text('Delivery ${shop.deliveryCharge}',
+                            style: TextStyle(
+                                color: Colors.grey[600], fontSize: 11)),
                     ],
                   ),
                 ],
@@ -171,7 +194,11 @@ class _RatingBadge extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Text(rating.toString(), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.green)),
+          Text(rating.toString(),
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                  color: Colors.green)),
           const Icon(Icons.star, size: 12, color: Colors.green),
         ],
       ),

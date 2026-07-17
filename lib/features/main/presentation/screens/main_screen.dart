@@ -1,23 +1,78 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:villishop_customer/features/main/providers/navigation_provider.dart';
+import 'package:villishop_customer/features/location/providers/location_provider.dart';
+import 'package:villishop_customer/features/location/presentation/widgets/location_permission_sheet.dart';
 import '../../../home/presentation/screens/home_screen.dart';
 import '../../../categories/presentation/screens/categories_screen.dart';
 import '../../../cart/presentation/screens/cart_screen.dart';
 import '../../../orders/presentation/screens/orders_screen.dart';
 import '../../../profile/presentation/screens/profile_screen.dart';
+import '../../../orders/providers/active_order_provider.dart';
+import '../../../../core/persistence/persistence_keys.dart';
+import '../../../../core/persistence/providers/persistence_providers.dart';
+import '../../../../core/widgets/connectivity_banner.dart';
 
-class MainScreen extends ConsumerWidget {
+class MainScreen extends ConsumerStatefulWidget {
   final int? initialTab;
 
   const MainScreen({super.key, this.initialTab});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // Sync initialTab with provider once
-    if (initialTab != null) {
+  ConsumerState<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends ConsumerState<MainScreen>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _restoreLastTab();
+    _checkLocation();
+  }
+
+  void _restoreLastTab() {
+    final lastTab =
+        ref.read(localStorageProvider).get<int>(PersistenceKeys.lastTab);
+    if (lastTab != null && widget.initialTab == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ref.read(navigationIndexProvider.notifier).state = initialTab!;
+        ref.read(navigationIndexProvider.notifier).state = lastTab;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // Refresh location when user returns from settings
+      ref.read(locationProvider.notifier).checkPermissionAndStartTracking();
+    }
+  }
+
+  void _checkLocation() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final locState = ref.read(locationProvider);
+      if (locState.permissionStatus == LocationPermissionStatus.initial ||
+          locState.permissionStatus == LocationPermissionStatus.denied ||
+          locState.permissionStatus == LocationPermissionStatus.disabled) {
+        LocationPermissionSheet.show(context);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Sync initialTab with provider once
+    if (widget.initialTab != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(navigationIndexProvider.notifier).state = widget.initialTab!;
       });
     }
 
@@ -32,14 +87,22 @@ class MainScreen extends ConsumerWidget {
     ];
 
     return Scaffold(
-      body: IndexedStack(
-        index: currentIndex,
-        children: screens,
+      body: Column(
+        children: [
+          const ConnectivityBanner(),
+          Expanded(
+            child: IndexedStack(
+              index: currentIndex,
+              children: screens,
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: currentIndex,
         onDestinationSelected: (index) {
           ref.read(navigationIndexProvider.notifier).state = index;
+          ref.read(localStorageProvider).save(PersistenceKeys.lastTab, index);
         },
         destinations: const [
           NavigationDestination(
@@ -58,8 +121,8 @@ class MainScreen extends ConsumerWidget {
             label: 'Cart',
           ),
           NavigationDestination(
-            icon: Icon(Icons.receipt_long_outlined),
-            selectedIcon: Icon(Icons.receipt_long),
+            icon: _OrdersIconWithBadge(),
+            selectedIcon: _OrdersIconWithBadge(isSelected: true),
             label: 'Orders',
           ),
           NavigationDestination(
@@ -69,6 +132,37 @@ class MainScreen extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _OrdersIconWithBadge extends ConsumerWidget {
+  final bool isSelected;
+  const _OrdersIconWithBadge({this.isSelected = false});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final hasActiveOrder = ref.watch(activeOrderProvider) != null;
+
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Icon(isSelected ? Icons.receipt_long : Icons.receipt_long_outlined),
+        if (hasActiveOrder)
+          Positioned(
+            top: -2,
+            right: -2,
+            child: Container(
+              width: 10,
+              height: 10,
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white, width: 2),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

@@ -8,7 +8,7 @@ class CartValidationRepositoryImpl implements CartValidationRepository {
   @override
   Future<CartValidationModel> validateCart(CartModel cart) async {
     await Future.delayed(const Duration(milliseconds: 600));
-    
+
     List<ValidationResultModel> results = [];
     int errors = 0;
     int warnings = 0;
@@ -30,7 +30,8 @@ class CartValidationRepositoryImpl implements CartValidationRepository {
       if (shopCart.summary.subTotal < shopCart.minOrderValue) {
         results.add(ValidationResultModel(
           ruleId: 'min_order',
-          message: 'Min order for ${shopCart.shopName} is ₹${shopCart.minOrderValue.toStringAsFixed(0)}',
+          message:
+              'Min order for ${shopCart.shopName} is ₹${shopCart.minOrderValue.toStringAsFixed(0)}',
           severity: ValidationSeverity.warning,
           isValid: false,
           errorCode: 'MIN_ORDER_NOT_MET',
@@ -54,7 +55,8 @@ class CartValidationRepositoryImpl implements CartValidationRepository {
         } else if (product.inventory.stockStatus == StockStatus.lowStock) {
           results.add(ValidationResultModel(
             ruleId: 'low_stock_${product.id}',
-            message: 'Only ${product.inventory.availableQuantity} left for ${product.name}.',
+            message:
+                'Only ${product.inventory.availableQuantity} left for ${product.name}.',
             severity: ValidationSeverity.warning,
             isValid: true,
             errorCode: 'LOW_STOCK_WARNING',
@@ -66,7 +68,8 @@ class CartValidationRepositoryImpl implements CartValidationRepository {
         if (item.quantity > product.inventory.maxOrderQuantity) {
           results.add(ValidationResultModel(
             ruleId: 'max_qty_${product.id}',
-            message: 'Max limit for ${product.name} is ${product.inventory.maxOrderQuantity}.',
+            message:
+                'Max limit for ${product.name} is ${product.inventory.maxOrderQuantity}.',
             severity: ValidationSeverity.error,
             isValid: false,
             errorCode: 'MAX_QTY_EXCEEDED',

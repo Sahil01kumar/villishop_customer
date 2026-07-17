@@ -11,7 +11,8 @@ class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({super.key});
 
   @override
-  ConsumerState<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+  ConsumerState<ForgotPasswordScreen> createState() =>
+      _ForgotPasswordScreenState();
 }
 
 class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
@@ -29,7 +30,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
       try {
-        await ref.read(authProvider.notifier).forgotPassword(_emailController.text.trim());
+        await ref
+            .read(authProvider.notifier)
+            .forgotPassword(_emailController.text.trim());
         if (mounted) {
           SnackbarHelper.showSuccess(context, 'Reset link sent to your email');
           Navigator.pop(context);

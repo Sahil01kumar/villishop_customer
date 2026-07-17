@@ -8,7 +8,8 @@ import '../../../products/data/models/sub_models/inventory_info.dart';
 
 class ShopRepositoryImpl implements ShopRepository {
   @override
-  Future<List<ShopModel>> getNearbyShops({double? latitude, double? longitude}) async {
+  Future<List<ShopModel>> getNearbyShops(
+      {double? latitude, double? longitude}) async {
     await Future.delayed(const Duration(seconds: 1));
     return [
       const ShopModel(
@@ -28,7 +29,8 @@ class ShopRepositoryImpl implements ShopRepository {
         tags: ['Fresh', 'Local'],
         isVeg: true,
         isFavourite: true,
-        description: 'Providing fresh milk and dairy products directly from our farm since 1995.',
+        description:
+            'Providing fresh milk and dairy products directly from our farm since 1995.',
         address: '123 Village Lane, Near Panchayat Bhavan',
         policies: ['No returns on dairy', 'Contactless delivery available'],
       ),
@@ -49,7 +51,8 @@ class ShopRepositoryImpl implements ShopRepository {
         tags: ['Organic', 'Village'],
         isVeg: true,
         isFavourite: false,
-        description: 'Farm fresh organic vegetables and fruits delivered to your doorstep.',
+        description:
+            'Farm fresh organic vegetables and fruits delivered to your doorstep.',
       ),
     ];
   }
@@ -71,7 +74,8 @@ class ShopRepositoryImpl implements ShopRepository {
   }
 
   @override
-  Future<List<ProductModel>> getShopProducts(String shopId, {String? categoryId}) async {
+  Future<List<ProductModel>> getShopProducts(String shopId,
+      {String? categoryId}) async {
     await Future.delayed(const Duration(milliseconds: 500));
     return [
       const ProductModel(
@@ -80,7 +84,10 @@ class ShopRepositoryImpl implements ShopRepository {
         imageUrl: '',
         category: 'Milk & Dairy',
         packaging: PackagingInfo(weight: 500, unit: 'ml'),
-        manufacturing: ManufacturingInfo(manufacturer: 'Yadav Dairy', packedBy: 'Yadav Dairy', countryOfOrigin: 'India'),
+        manufacturing: ManufacturingInfo(
+            manufacturer: 'Yadav Dairy',
+            packedBy: 'Yadav Dairy',
+            countryOfOrigin: 'India'),
         pricing: PricingInfo(mrp: 32, sellingPrice: 28, discountPercentage: 12),
         inventory: InventoryInfo(stockStatus: StockStatus.inStock),
         rating: 4.5,
@@ -91,8 +98,12 @@ class ShopRepositoryImpl implements ShopRepository {
         imageUrl: '',
         category: 'Milk & Dairy',
         packaging: PackagingInfo(weight: 1, unit: 'kg'),
-        manufacturing: ManufacturingInfo(manufacturer: 'Yadav Dairy', packedBy: 'Yadav Dairy', countryOfOrigin: 'India'),
-        pricing: PricingInfo(mrp: 750, sellingPrice: 650, discountPercentage: 13),
+        manufacturing: ManufacturingInfo(
+            manufacturer: 'Yadav Dairy',
+            packedBy: 'Yadav Dairy',
+            countryOfOrigin: 'India'),
+        pricing:
+            PricingInfo(mrp: 750, sellingPrice: 650, discountPercentage: 13),
         inventory: InventoryInfo(stockStatus: StockStatus.inStock),
         rating: 4.9,
       ),
@@ -102,8 +113,12 @@ class ShopRepositoryImpl implements ShopRepository {
         imageUrl: '',
         category: 'Milk & Dairy',
         packaging: PackagingInfo(weight: 250, unit: 'gm'),
-        manufacturing: ManufacturingInfo(manufacturer: 'Yadav Dairy', packedBy: 'Yadav Dairy', countryOfOrigin: 'India'),
-        pricing: PricingInfo(mrp: 100, sellingPrice: 90, discountPercentage: 10),
+        manufacturing: ManufacturingInfo(
+            manufacturer: 'Yadav Dairy',
+            packedBy: 'Yadav Dairy',
+            countryOfOrigin: 'India'),
+        pricing:
+            PricingInfo(mrp: 100, sellingPrice: 90, discountPercentage: 10),
         inventory: InventoryInfo(stockStatus: StockStatus.inStock),
         rating: 4.7,
       ),

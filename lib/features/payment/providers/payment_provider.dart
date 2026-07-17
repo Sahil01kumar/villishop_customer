@@ -1,9 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import '../../../core/services/payment_service.dart';
+import '../../authentication/providers/auth_provider.dart';
 import '../data/models/payment_method_model.dart';
-import '../domain/repositories/payment_repository.dart';
-import '../data/repositories/payment_repository_impl.dart';
-import '../../cart/providers/cart_provider.dart';
 
 part 'payment_provider.freezed.dart';
 
@@ -20,55 +19,30 @@ class PaymentState with _$PaymentState {
   }) = _PaymentState;
 }
 
-final paymentRepositoryProvider = Provider<PaymentRepository>((ref) {
-  return PaymentRepositoryImpl();
-});
-
 class PaymentNotifier extends StateNotifier<PaymentState> {
-  final PaymentRepository _repository;
+  final PaymentService _service;
   final Ref _ref;
 
-  PaymentNotifier(this._repository, this._ref) : super(const PaymentState()) {
-    _init();
-  }
-
-  Future<void> _init() async {
-    state = state.copyWith(
-      walletBalance: 150.0,
-      cashbackBalance: 45.0,
-    );
-    await loadMethods();
+  PaymentNotifier(this._service, this._ref) : super(const PaymentState()) {
+    loadMethods();
   }
 
   Future<void> loadMethods() async {
-    state = state.copyWith(isLoading: true, errorMessage: null);
-    try {
-      final cart = _ref.read(cartProvider).cart;
-      final double orderValue = cart.overallSummary.grandTotal;
-      
-      bool allShopsCod = cart.shopCarts.every((s) => s.isOpen);
-
-      final methods = await _repository.loadPaymentMethods(
-        orderValue: orderValue,
-        isShopCodEnabled: allShopsCod,
-      );
-      
-      final enabledMethods = methods.where((m) => m.enabled).toList();
-
-      state = state.copyWith(
-        isLoading: false,
-        methods: methods,
-        selectedMethod: enabledMethods.isNotEmpty 
-            ? enabledMethods.firstWhere((m) => m.recommended, orElse: () => enabledMethods.first)
-            : null,
-      );
-    } catch (e) {
-      state = state.copyWith(isLoading: false, errorMessage: e.toString());
-    }
+    state = state.copyWith(isLoading: true);
+    // In production, fetch from API
+    await Future.delayed(const Duration(milliseconds: 500));
+    final mockMethods = [
+      const PaymentMethodModel(
+          id: '1', name: 'Google Pay', icon: '', type: PaymentType.upi),
+      const PaymentMethodModel(
+          id: '2', name: 'Credit/Debit Card', icon: '', type: PaymentType.card),
+      const PaymentMethodModel(
+          id: '3', name: 'Cash on Delivery', icon: '', type: PaymentType.cod),
+    ];
+    state = state.copyWith(isLoading: false, methods: mockMethods);
   }
 
   void selectMethod(PaymentMethodModel method) {
-    if (!method.enabled) return;
     state = state.copyWith(selectedMethod: method);
   }
 
@@ -76,20 +50,37 @@ class PaymentNotifier extends StateNotifier<PaymentState> {
     state = state.copyWith(useWallet: value);
   }
 
-  double get walletDeduction {
-    if (!state.useWallet) return 0.0;
-    final cart = _ref.read(cartProvider).cart;
-    final total = cart.overallSummary.grandTotal;
-    final available = state.walletBalance + state.cashbackBalance;
-    return total < available ? total : available;
-  }
+  double get remainingAmount => 0.0; // Implement calculation logic
+  double get walletDeduction => 0.0;
 
-  double get remainingAmount {
-    final cart = _ref.read(cartProvider).cart;
-    return cart.overallSummary.grandTotal - walletDeduction;
+  Future<PaymentResponse> processPayment({
+    required double amount,
+    required String orderId,
+  }) async {
+    state = state.copyWith(isLoading: true, errorMessage: null);
+    final user = _ref
+        .read(authProvider)
+        .maybeWhen(authenticated: (u) => u, orElse: () => null);
+
+    try {
+      final response = await _service.initiatePayment(
+        amount: amount,
+        orderId: orderId,
+        customerName: user?.name ?? 'Customer',
+        customerPhone: user?.phoneNumber ?? '',
+        customerEmail: user?.email ?? '',
+      );
+      state = state.copyWith(isLoading: false);
+      return response;
+    } catch (e) {
+      state = state.copyWith(isLoading: false, errorMessage: e.toString());
+      return PaymentResponse(
+          status: PaymentStatus.failed, errorMessage: e.toString());
+    }
   }
 }
 
-final paymentProvider = StateNotifierProvider<PaymentNotifier, PaymentState>((ref) {
-  return PaymentNotifier(ref.watch(paymentRepositoryProvider), ref);
+final paymentProvider =
+    StateNotifierProvider<PaymentNotifier, PaymentState>((ref) {
+  return PaymentNotifier(ref.watch(paymentServiceProvider), ref);
 });

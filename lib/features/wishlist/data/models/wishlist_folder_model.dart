@@ -16,5 +16,6 @@ class WishlistFolderModel with _$WishlistFolderModel {
     @Default(false) bool isSystemFolder, // e.g. "Monthly List"
   }) = _WishlistFolderModel;
 
-  factory WishlistFolderModel.fromJson(Map<String, dynamic> json) => _$WishlistFolderModelFromJson(json);
+  factory WishlistFolderModel.fromJson(Map<String, dynamic> json) =>
+      _$WishlistFolderModelFromJson(json);
 }

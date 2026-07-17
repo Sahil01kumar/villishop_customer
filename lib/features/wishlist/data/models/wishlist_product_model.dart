@@ -13,5 +13,6 @@ class WishlistProductModel with _$WishlistProductModel {
     @Default(false) bool isSavedForLater,
   }) = _WishlistProductModel;
 
-  factory WishlistProductModel.fromJson(Map<String, dynamic> json) => _$WishlistProductModelFromJson(json);
+  factory WishlistProductModel.fromJson(Map<String, dynamic> json) =>
+      _$WishlistProductModelFromJson(json);
 }

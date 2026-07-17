@@ -21,7 +21,7 @@ class WalletNotifier extends StateNotifier<WalletState> {
       final transactions = await _repository.getTransactionHistory();
       final cashbacks = await _repository.getCashbackHistory();
       final rewards = await _repository.getRewardHistory();
-      
+
       state = state.copyWith(
         isLoading: false,
         wallet: wallet,
@@ -50,6 +50,7 @@ class WalletNotifier extends StateNotifier<WalletState> {
   Future<void> refresh() => loadWalletData();
 }
 
-final walletProvider = StateNotifierProvider<WalletNotifier, WalletState>((ref) {
+final walletProvider =
+    StateNotifierProvider<WalletNotifier, WalletState>((ref) {
   return WalletNotifier(ref.watch(walletRepositoryProvider));
 });

@@ -64,6 +64,7 @@ class WishlistNotifier extends StateNotifier<WishlistState> {
   Future<void> refresh() => init();
 }
 
-final wishlistProvider = StateNotifierProvider<WishlistNotifier, WishlistState>((ref) {
+final wishlistProvider =
+    StateNotifierProvider<WishlistNotifier, WishlistState>((ref) {
   return WishlistNotifier(ref.watch(wishlistRepositoryProvider));
 });

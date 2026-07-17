@@ -13,7 +13,8 @@ class SaveForLaterNotifier extends StateNotifier<SaveForLaterState> {
   final SaveForLaterRepository _repository;
   final Ref _ref;
 
-  SaveForLaterNotifier(this._repository, this._ref) : super(const SaveForLaterState()) {
+  SaveForLaterNotifier(this._repository, this._ref)
+      : super(const SaveForLaterState()) {
     loadSavedItems();
   }
 
@@ -44,6 +45,7 @@ class SaveForLaterNotifier extends StateNotifier<SaveForLaterState> {
   }
 }
 
-final saveForLaterProvider = StateNotifierProvider<SaveForLaterNotifier, SaveForLaterState>((ref) {
+final saveForLaterProvider =
+    StateNotifierProvider<SaveForLaterNotifier, SaveForLaterState>((ref) {
   return SaveForLaterNotifier(ref.watch(saveForLaterRepositoryProvider), ref);
 });

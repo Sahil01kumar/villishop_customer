@@ -30,8 +30,14 @@ class ProductCatalogScreen extends ConsumerWidget {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(shopName, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            const Text('8 mins delivery', style: TextStyle(fontSize: 12, color: Colors.green, fontWeight: FontWeight.w500)),
+            Text(shopName,
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            const Text('8 mins delivery',
+                style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.green,
+                    fontWeight: FontWeight.w500)),
           ],
         ),
         actions: [
@@ -41,7 +47,9 @@ class ProductCatalogScreen extends ConsumerWidget {
           ),
           IconButton(
             icon: Icon(state.isGridView ? Icons.view_list : Icons.grid_view),
-            onPressed: () => ref.read(productCatalogProvider(shopId).notifier).toggleViewMode(),
+            onPressed: () => ref
+                .read(productCatalogProvider(shopId).notifier)
+                .toggleViewMode(),
           ),
         ],
       ),
@@ -55,7 +63,9 @@ class ProductCatalogScreen extends ConsumerWidget {
                 : state.errorMessage != null
                     ? CustomErrorWidget(
                         message: state.errorMessage!,
-                        onRetry: () => ref.read(productCatalogProvider(shopId).notifier).refresh(),
+                        onRetry: () => ref
+                            .read(productCatalogProvider(shopId).notifier)
+                            .refresh(),
                       )
                     : state.products.isEmpty
                         ? const EmptyWidget(message: 'No products found')
@@ -74,7 +84,9 @@ class ProductCatalogScreen extends ConsumerWidget {
           Expanded(
             child: CustomSearchBar(
               hint: 'Search items in this shop',
-              onChanged: (val) => ref.read(productCatalogProvider(shopId).notifier).updateSearchQuery(val),
+              onChanged: (val) => ref
+                  .read(productCatalogProvider(shopId).notifier)
+                  .updateSearchQuery(val),
             ),
           ),
           AppSpacing.hS,
@@ -113,7 +125,9 @@ class ProductCatalogScreen extends ConsumerWidget {
           final category = state.categories[index];
           final isSelected = category == state.selectedCategory;
           return GestureDetector(
-            onTap: () => ref.read(productCatalogProvider(shopId).notifier).updateCategory(category),
+            onTap: () => ref
+                .read(productCatalogProvider(shopId).notifier)
+                .updateCategory(category),
             child: Container(
               margin: const EdgeInsets.only(right: 24),
               alignment: Alignment.center,
@@ -150,14 +164,16 @@ class ProductCatalogScreen extends ConsumerWidget {
           childAspectRatio: 0.65,
         ),
         itemCount: state.products.length,
-        itemBuilder: (context, index) => ProductGridCard(product: state.products[index]),
+        itemBuilder: (context, index) =>
+            ProductGridCard(product: state.products[index]),
       );
     } else {
       return ListView.separated(
         padding: const EdgeInsets.all(AppSpacing.m),
         itemCount: state.products.length,
         separatorBuilder: (context, index) => AppSpacing.vM,
-        itemBuilder: (context, index) => ProductListTile(product: state.products[index]),
+        itemBuilder: (context, index) =>
+            ProductListTile(product: state.products[index]),
       );
     }
   }

@@ -37,7 +37,8 @@ class WishlistProductCard extends StatelessWidget {
                 color: Colors.grey[50],
                 borderRadius: AppRadius.rM,
               ),
-              child: const Icon(Icons.shopping_bag_outlined, size: 40, color: Colors.grey),
+              child: const Icon(Icons.shopping_bag_outlined,
+                  size: 40, color: Colors.grey),
             ),
             AppSpacing.hM,
             Expanded(
@@ -49,10 +50,14 @@ class WishlistProductCard extends StatelessWidget {
                     children: [
                       Text(
                         product.brand ?? 'Local',
-                        style: TextStyle(color: Colors.grey[600], fontSize: 11, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            color: Colors.grey[600],
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.delete_outline, size: 20, color: Colors.red),
+                        icon: const Icon(Icons.delete_outline,
+                            size: 20, color: Colors.red),
                         onPressed: onRemove,
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
@@ -61,7 +66,8 @@ class WishlistProductCard extends StatelessWidget {
                   ),
                   Text(
                     product.name,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 14),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -75,7 +81,8 @@ class WishlistProductCard extends StatelessWidget {
                     children: [
                       Text(
                         '₹${product.pricing.sellingPrice.toStringAsFixed(0)}',
-                        style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w900, fontSize: 16),
                       ),
                       QuantityStepper(product: product),
                     ],

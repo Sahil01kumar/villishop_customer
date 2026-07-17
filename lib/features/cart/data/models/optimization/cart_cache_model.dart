@@ -12,5 +12,6 @@ class CartCacheModel with _$CartCacheModel {
     @Default(true) bool isAutoRestoreEnabled,
   }) = _CartCacheModel;
 
-  factory CartCacheModel.fromJson(Map<String, dynamic> json) => _$CartCacheModelFromJson(json);
+  factory CartCacheModel.fromJson(Map<String, dynamic> json) =>
+      _$CartCacheModelFromJson(json);
 }

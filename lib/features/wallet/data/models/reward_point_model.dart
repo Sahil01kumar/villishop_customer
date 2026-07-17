@@ -17,5 +17,6 @@ class RewardPointModel with _$RewardPointModel {
     String? description,
   }) = _RewardPointModel;
 
-  factory RewardPointModel.fromJson(Map<String, dynamic> json) => _$RewardPointModelFromJson(json);
+  factory RewardPointModel.fromJson(Map<String, dynamic> json) =>
+      _$RewardPointModelFromJson(json);
 }

@@ -20,5 +20,6 @@ class ManufacturingInfo with _$ManufacturingInfo {
     @Default(0.0) double gstPercentage,
   }) = _ManufacturingInfo;
 
-  factory ManufacturingInfo.fromJson(Map<String, dynamic> json) => _$ManufacturingInfoFromJson(json);
+  factory ManufacturingInfo.fromJson(Map<String, dynamic> json) =>
+      _$ManufacturingInfoFromJson(json);
 }

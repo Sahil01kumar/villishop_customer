@@ -11,5 +11,6 @@ class OTPModel with _$OTPModel {
     required String phoneNumber,
   }) = _OTPModel;
 
-  factory OTPModel.fromJson(Map<String, dynamic> json) => _$OTPModelFromJson(json);
+  factory OTPModel.fromJson(Map<String, dynamic> json) =>
+      _$OTPModelFromJson(json);
 }

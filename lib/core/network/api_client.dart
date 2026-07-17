@@ -38,7 +38,8 @@ class ApiClient {
     }
   }
 
-  Future<Response> get(String path, {Map<String, dynamic>? queryParameters}) async {
+  Future<Response> get(String path,
+      {Map<String, dynamic>? queryParameters}) async {
     return await _dio.get(path, queryParameters: queryParameters);
   }
 
@@ -56,4 +57,5 @@ class ApiClient {
 }
 
 final dioProvider = Provider<Dio>((ref) => Dio());
-final apiClientProvider = Provider<ApiClient>((ref) => ApiClient(ref.watch(dioProvider)));
+final apiClientProvider =
+    Provider<ApiClient>((ref) => ApiClient(ref.watch(dioProvider)));

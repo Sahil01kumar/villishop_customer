@@ -12,7 +12,7 @@ class ShopSummaryModel with _$ShopSummaryModel {
     @Default(0.0) double packagingCharge,
     @Default(0.0) double taxAmount,
     @Default(0.0) double grandTotal,
-    
+
     // Revenue Architecture Ready (Per Shop)
     @Default(0.0) double platformCommission,
     @Default(0.0) double shopEarnings,
@@ -21,5 +21,6 @@ class ShopSummaryModel with _$ShopSummaryModel {
     @Default(0.0) double serviceFee,
   }) = _ShopSummaryModel;
 
-  factory ShopSummaryModel.fromJson(Map<String, dynamic> json) => _$ShopSummaryModelFromJson(json);
+  factory ShopSummaryModel.fromJson(Map<String, dynamic> json) =>
+      _$ShopSummaryModelFromJson(json);
 }

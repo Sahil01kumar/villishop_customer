@@ -26,17 +26,24 @@ class LocationSelectorSheet extends ConsumerWidget {
         children: [
           Center(
             child: Container(
-              height: 4, width: 40,
-              decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(2)),
+              height: 4,
+              width: 40,
+              decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2)),
             ),
           ),
           const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Change Location', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, letterSpacing: -0.5)),
+              const Text('Change Location',
+                  style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: -0.5)),
               IconButton(
-                onPressed: () => Navigator.pop(context), 
+                onPressed: () => Navigator.pop(context),
                 icon: const Icon(Icons.close_rounded, color: Colors.black),
                 style: IconButton.styleFrom(backgroundColor: Colors.grey[100]),
               ),
@@ -46,16 +53,21 @@ class LocationSelectorSheet extends ConsumerWidget {
           TextField(
             readOnly: true,
             onTap: () {
-               Navigator.pop(context);
-               context.push(AppRoutes.search); // Reusing search or specific address search
+              Navigator.pop(context);
+              context.push(AppRoutes
+                  .search); // Reusing search or specific address search
             },
             decoration: InputDecoration(
               hintText: 'Search for area, street name...',
-              prefixIcon: const Icon(Icons.search_rounded, color: AppColors.primary),
+              prefixIcon:
+                  const Icon(Icons.search_rounded, color: AppColors.primary),
               fillColor: const Color(0xFFF3F4F6),
               filled: true,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide.none),
             ),
           ),
           const SizedBox(height: 20),
@@ -63,21 +75,52 @@ class LocationSelectorSheet extends ConsumerWidget {
             context,
             icon: Icons.my_location_rounded,
             title: 'Use Current Location',
-            subtitle: locationState.isLoading ? 'Detecting village...' : 'Using GPS for pinpoint accuracy',
+            subtitle: locationState.isLoading
+                ? 'Detecting village...'
+                : 'Using GPS for pinpoint accuracy',
             color: AppColors.primary,
             isLoading: locationState.isLoading,
             onTap: () async {
-               await ref.read(locationProvider.notifier).pickCurrentLocation();
-               if (context.mounted) Navigator.pop(context);
+              await ref.read(locationProvider.notifier).pickCurrentLocation();
+              if (context.mounted) Navigator.pop(context);
+            },
+          ),
+          _buildActionItem(
+            context,
+            icon: Icons.map_outlined,
+            title: 'Locate on Map',
+            subtitle: 'Manually select your precise location',
+            color: Colors.blue,
+            onTap: () async {
+              Navigator.pop(context);
+              final result = await context.push(AppRoutes.mapPicker)
+                  as Map<String, dynamic>?;
+              if (result != null) {
+                final lat = result['lat'] as double;
+                final lng = result['lng'] as double;
+                final address = result['address'] as String;
+
+                ref.read(locationProvider.notifier).selectAddress(AddressModel(
+                      id: 'picked_${DateTime.now().millisecondsSinceEpoch}',
+                      label: 'Selected Location',
+                      fullAddress: address,
+                      latitude: lat,
+                      longitude: lng,
+                    ));
+              }
             },
           ),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 16),
             child: Divider(height: 1),
           ),
-          
           if (locationState.addresses.isNotEmpty) ...[
-            const Text('SAVED ADDRESSES', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900, color: Colors.grey, letterSpacing: 1)),
+            const Text('SAVED ADDRESSES',
+                style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.grey,
+                    letterSpacing: 1)),
             const SizedBox(height: 12),
             Flexible(
               child: ListView.builder(
@@ -86,12 +129,15 @@ class LocationSelectorSheet extends ConsumerWidget {
                 itemCount: locationState.addresses.length,
                 itemBuilder: (context, index) {
                   final address = locationState.addresses[index];
-                  final isSelected = address.id == locationState.selectedAddress?.id;
+                  final isSelected =
+                      address.id == locationState.selectedAddress?.id;
                   return _buildAddressItem(
                     address: address,
                     isSelected: isSelected,
                     onTap: () {
-                      ref.read(locationProvider.notifier).selectAddress(address);
+                      ref
+                          .read(locationProvider.notifier)
+                          .selectAddress(address);
                       Navigator.pop(context);
                     },
                   );
@@ -100,9 +146,13 @@ class LocationSelectorSheet extends ConsumerWidget {
             ),
             const SizedBox(height: 20),
           ],
-
           if (locationState.recentAddresses.isNotEmpty) ...[
-            const Text('RECENT SEARCHES', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900, color: Colors.grey, letterSpacing: 1)),
+            const Text('RECENT SEARCHES',
+                style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.grey,
+                    letterSpacing: 1)),
             const SizedBox(height: 12),
             Flexible(
               child: ListView.builder(
@@ -114,7 +164,9 @@ class LocationSelectorSheet extends ConsumerWidget {
                   return _buildAddressItem(
                     address: address,
                     onTap: () {
-                      ref.read(locationProvider.notifier).selectAddress(address);
+                      ref
+                          .read(locationProvider.notifier)
+                          .selectAddress(address);
                       Navigator.pop(context);
                     },
                   );
@@ -123,20 +175,21 @@ class LocationSelectorSheet extends ConsumerWidget {
             ),
             const SizedBox(height: 20),
           ],
-          
           ElevatedButton.icon(
             onPressed: () {
               Navigator.pop(context);
               context.push(AppRoutes.addAddress);
             },
             icon: const Icon(Icons.add_location_alt_rounded),
-            label: const Text('ADD NEW ADDRESS', style: TextStyle(fontWeight: FontWeight.w900)),
+            label: const Text('ADD NEW ADDRESS',
+                style: TextStyle(fontWeight: FontWeight.w900)),
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFF3F4F6),
               foregroundColor: Colors.black87,
               minimumSize: const Size(double.infinity, 56),
               elevation: 0,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16)),
             ),
           ),
         ],
@@ -162,7 +215,9 @@ class LocationSelectorSheet extends ConsumerWidget {
           children: [
             Container(
               padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(color: (color ?? Colors.grey[700]!).withAlpha(15), shape: BoxShape.circle),
+              decoration: BoxDecoration(
+                  color: (color ?? Colors.grey[700]!).withAlpha(15),
+                  shape: BoxShape.circle),
               child: Icon(icon, color: color ?? Colors.grey[700], size: 24),
             ),
             const SizedBox(width: 16),
@@ -170,13 +225,22 @@ class LocationSelectorSheet extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
-                  Text(subtitle, style: TextStyle(color: Colors.grey[600], fontSize: 13, fontWeight: FontWeight.w500)),
+                  Text(title,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w900, fontSize: 16)),
+                  Text(subtitle,
+                      style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500)),
                 ],
               ),
             ),
             if (isLoading)
-              const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
+              const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(strokeWidth: 2)),
           ],
         ),
       ),
@@ -199,31 +263,33 @@ class LocationSelectorSheet extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
         child: Row(
           children: [
-            Icon(icon, color: isSelected ? AppColors.primary : Colors.grey[600], size: 22),
+            Icon(icon,
+                color: isSelected ? AppColors.primary : Colors.grey[600],
+                size: 22),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    address.label, 
-                    style: TextStyle(
-                      fontWeight: FontWeight.w900, 
-                      fontSize: 15,
-                      color: isSelected ? AppColors.primary : Colors.black87,
-                    )
-                  ),
-                  Text(
-                    address.fullAddress, 
-                    style: TextStyle(color: Colors.grey[600], fontSize: 12, fontWeight: FontWeight.w500),
-                    maxLines: 1, 
-                    overflow: TextOverflow.ellipsis
-                  ),
+                  Text(address.label,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 15,
+                        color: isSelected ? AppColors.primary : Colors.black87,
+                      )),
+                  Text(address.fullAddress,
+                      style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis),
                 ],
               ),
             ),
             if (isSelected)
-              const Icon(Icons.check_circle_rounded, color: Colors.green, size: 22),
+              const Icon(Icons.check_circle_rounded,
+                  color: Colors.green, size: 22),
           ],
         ),
       ),

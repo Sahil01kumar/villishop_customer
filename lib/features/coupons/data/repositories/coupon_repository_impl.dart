@@ -13,7 +13,8 @@ class CouponRepositoryImpl implements CouponRepository {
   }
 
   @override
-  Future<CouponModel?> validateCouponCode(String code, {
+  Future<CouponModel?> validateCouponCode(
+    String code, {
     required double cartValue,
     required List<String> shopIds,
     required List<String> productIds,
@@ -29,7 +30,8 @@ class CouponRepositoryImpl implements CouponRepository {
   }
 
   @override
-  Future<CouponCalculationResult> calculateDiscount(CouponModel coupon, {
+  Future<CouponCalculationResult> calculateDiscount(
+    CouponModel coupon, {
     required double cartValue,
     required double deliveryCharge,
     required List<String> shopIds,
@@ -42,7 +44,8 @@ class CouponRepositoryImpl implements CouponRepository {
         cashbackAmount: 0,
         isFreeDelivery: false,
         isValid: false,
-        message: 'Add ₹${(coupon.minOrderValue - cartValue).toStringAsFixed(0)} more to use this coupon',
+        message:
+            'Add ₹${(coupon.minOrderValue - cartValue).toStringAsFixed(0)} more to use this coupon',
       );
     }
 

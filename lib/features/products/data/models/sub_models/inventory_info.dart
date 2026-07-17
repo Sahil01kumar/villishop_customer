@@ -21,5 +21,6 @@ class InventoryInfo with _$InventoryInfo {
     @Default(10) int maxOrderQuantity,
   }) = _InventoryInfo;
 
-  factory InventoryInfo.fromJson(Map<String, dynamic> json) => _$InventoryInfoFromJson(json);
+  factory InventoryInfo.fromJson(Map<String, dynamic> json) =>
+      _$InventoryInfoFromJson(json);
 }

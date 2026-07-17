@@ -17,13 +17,14 @@ class WalletModel with _$WalletModel {
     @Default([]) List<WalletTransactionModel> recentTransactions,
     @Default([]) List<WalletCashbackModel> activeCashbacks,
     @Default([]) List<RewardPointModel> recentRewards,
-    
+
     // Revenue & Ledger Architecture
     @Default(0.0) double totalRefundsReceived,
     @Default(0.0) double totalCashbackEarned,
   }) = _WalletModel;
 
-  factory WalletModel.fromJson(Map<String, dynamic> json) => _$WalletModelFromJson(json);
+  factory WalletModel.fromJson(Map<String, dynamic> json) =>
+      _$WalletModelFromJson(json);
 }
 
 @freezed
@@ -36,5 +37,6 @@ class WalletSummaryModel with _$WalletSummaryModel {
     @Default(0) int totalRewards,
   }) = _WalletSummaryModel;
 
-  factory WalletSummaryModel.fromJson(Map<String, dynamic> json) => _$WalletSummaryModelFromJson(json);
+  factory WalletSummaryModel.fromJson(Map<String, dynamic> json) =>
+      _$WalletSummaryModelFromJson(json);
 }

@@ -1,98 +1,63 @@
+import 'dart:convert';
 import '../../domain/repositories/review_repository.dart';
 import '../models/review_model.dart';
-import '../models/rating_distribution_model.dart';
-import '../models/review_image_model.dart';
+import '../../../../core/services/shared_pref_service.dart';
 
 class ReviewRepositoryImpl implements ReviewRepository {
+  final SharedPreferenceService? _prefs;
+  static const String _reviewKeyPrefix = 'persistent_reviews_v1_';
+  final List<ReviewModel> _memoryReviews = [];
+
+  ReviewRepositoryImpl([this._prefs]);
+
   @override
-  Future<List<ReviewModel>> getReviews({
-    required String targetId,
-    String? filter,
-    String? sortBy,
-    int page = 1,
-    int limit = 20,
-  }) async {
-    await Future.delayed(const Duration(milliseconds: 800));
+  Future<List<ReviewModel>> getProductReviews(String productId) async {
+    final cached = _loadFromPrefs(productId);
     return [
-      ReviewModel(
-        id: 'rev1',
-        userId: 'u1',
-        userName: 'Suresh Kumar',
-        userProfilePhoto: 'https://i.pravatar.cc/150?u=suresh',
-        isVerifiedPurchase: true,
-        reviewDate: DateTime.now().subtract(const Duration(days: 2)),
-        productVariant: '500ml',
-        rating: 5.0,
-        title: 'Best quality milk in the village!',
-        description: 'The milk is very fresh and thick. My kids love it. Delivering it in 10 minutes is a lifesaver.',
-        images: [
-          const ReviewImageModel(id: 'img1', url: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500'),
-        ],
-        helpfulCount: 12,
-        positiveKeywords: ['Fresh', 'Fast Delivery'],
-        sentimentScore: 0.95,
-      ),
-      ReviewModel(
-        id: 'rev2',
-        userId: 'u2',
-        userName: 'Anjali Sharma',
-        userProfilePhoto: 'https://i.pravatar.cc/150?u=anjali',
-        isVerifiedPurchase: true,
-        reviewDate: DateTime.now().subtract(const Duration(days: 5)),
-        productVariant: '1kg',
-        rating: 4.0,
-        description: 'Quality is good, but once it was delayed by 5 minutes. Overall satisfied.',
-        helpfulCount: 3,
-        sentimentScore: 0.7,
-      ),
+      ...cached,
+      ..._memoryReviews.where((r) => r.productId == productId)
     ];
   }
 
   @override
-  Future<RatingDistributionModel> getRatingSummary(String targetId) async {
-    return const RatingDistributionModel(
-      fiveStar: 120,
-      fourStar: 45,
-      threeStar: 10,
-      twoStar: 5,
-      oneStar: 2,
-      totalRatings: 182,
-      averageRating: 4.6,
-    );
+  Future<List<ReviewModel>> getRiderReviews(String riderId) async {
+    return [];
   }
 
   @override
-  Future<ReviewAnalyticsModel> getReviewAnalytics(String targetId) async {
-    return const ReviewAnalyticsModel(
-      totalReviews: 182,
-      positivePercentage: 92.0,
-      negativePercentage: 8.0,
-      mostMentionedPros: ['Freshness', 'Packaging', 'Fast Delivery'],
-      mostMentionedCons: ['Price'],
-    );
+  Future<void> submitProductReview(String productId, ReviewModel review) async {
+    _memoryReviews.insert(0, review);
+    await _saveToPrefs(productId, review);
   }
 
   @override
-  Future<void> submitReview({
-    required String targetId,
-    required double rating,
-    required String description,
-    String? title,
-    List<String>? imagePaths,
-    bool isAnonymous = false,
-  }) async {
-    await Future.delayed(const Duration(seconds: 1));
+  Future<void> submitRiderReview(String riderId, ReviewModel review) async {
+    // Rider reviews can also be persisted if needed
   }
 
   @override
-  Future<void> updateReview(ReviewModel review) async {}
+  Future<ReviewAnalyticsModel> getProductReviewAnalytics(
+      String productId) async {
+    return const ReviewAnalyticsModel();
+  }
 
-  @override
-  Future<void> deleteReview(String reviewId) async {}
+  List<ReviewModel> _loadFromPrefs(String productId) {
+    if (_prefs == null) return [];
+    final jsonStr = _prefs!.getString('$_reviewKeyPrefix$productId');
+    if (jsonStr == null) return [];
+    try {
+      final List<dynamic> list = jsonDecode(jsonStr);
+      return list.map((item) => ReviewModel.fromJson(item)).toList();
+    } catch (_) {
+      return [];
+    }
+  }
 
-  @override
-  Future<void> markHelpful(String reviewId) async {}
-
-  @override
-  Future<void> reportReview(String reviewId, String reason) async {}
+  Future<void> _saveToPrefs(String productId, ReviewModel review) async {
+    if (_prefs == null) return;
+    final current = _loadFromPrefs(productId);
+    current.insert(0, review);
+    await _prefs!.setString('$_reviewKeyPrefix$productId',
+        jsonEncode(current.map((e) => e.toJson()).toList()));
+  }
 }

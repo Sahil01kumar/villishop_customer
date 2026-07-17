@@ -14,5 +14,6 @@ class PackagingInfo with _$PackagingInfo {
     String? cartonSize,
   }) = _PackagingInfo;
 
-  factory PackagingInfo.fromJson(Map<String, dynamic> json) => _$PackagingInfoFromJson(json);
+  factory PackagingInfo.fromJson(Map<String, dynamic> json) =>
+      _$PackagingInfoFromJson(json);
 }

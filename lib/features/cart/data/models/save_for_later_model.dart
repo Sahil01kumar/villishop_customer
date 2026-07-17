@@ -15,5 +15,6 @@ class SaveForLaterModel with _$SaveForLaterModel {
     @Default(false) bool stockBackAlertReady,
   }) = _SaveForLaterModel;
 
-  factory SaveForLaterModel.fromJson(Map<String, dynamic> json) => _$SaveForLaterModelFromJson(json);
+  factory SaveForLaterModel.fromJson(Map<String, dynamic> json) =>
+      _$SaveForLaterModelFromJson(json);
 }

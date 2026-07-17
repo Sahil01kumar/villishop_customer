@@ -17,5 +17,6 @@ class OrderReviewModel with _$OrderReviewModel {
     String? orderNote,
   }) = _OrderReviewModel;
 
-  factory OrderReviewModel.fromJson(Map<String, dynamic> json) => _$OrderReviewModelFromJson(json);
+  factory OrderReviewModel.fromJson(Map<String, dynamic> json) =>
+      _$OrderReviewModelFromJson(json);
 }

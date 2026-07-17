@@ -4,6 +4,7 @@ part 'user_model.freezed.dart';
 part 'user_model.g.dart';
 
 enum Gender { male, female, other }
+
 enum MembershipType { normal, premium }
 
 @freezed
@@ -25,7 +26,7 @@ class UserModel with _$UserModel {
     @Default('English') String preferredLanguage,
     @Default(false) bool isProfileCompleted,
     DateTime? joinedAt,
-    
+
     // Enterprise Enhancements
     @Default(MembershipInfo()) MembershipInfo membership,
     @Default(ReferralInfo()) ReferralInfo referral,
@@ -38,7 +39,8 @@ class UserModel with _$UserModel {
     @Default(AIProfile()) AIProfile aiProfile,
   }) = _UserModel;
 
-  factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
+  factory UserModel.fromJson(Map<String, dynamic> json) =>
+      _$UserModelFromJson(json);
 }
 
 @freezed
@@ -50,7 +52,8 @@ class MembershipInfo with _$MembershipInfo {
     @Default([]) List<String> benefits,
   }) = _MembershipInfo;
 
-  factory MembershipInfo.fromJson(Map<String, dynamic> json) => _$MembershipInfoFromJson(json);
+  factory MembershipInfo.fromJson(Map<String, dynamic> json) =>
+      _$MembershipInfoFromJson(json);
 }
 
 @freezed
@@ -63,7 +66,8 @@ class ReferralInfo with _$ReferralInfo {
     @Default([]) List<String> history, // Transaction IDs
   }) = _ReferralInfo;
 
-  factory ReferralInfo.fromJson(Map<String, dynamic> json) => _$ReferralInfoFromJson(json);
+  factory ReferralInfo.fromJson(Map<String, dynamic> json) =>
+      _$ReferralInfoFromJson(json);
 }
 
 @freezed
@@ -76,7 +80,8 @@ class RewardInfo with _$RewardInfo {
     @Default('Bronze') String loyaltyLevel,
   }) = _RewardInfo;
 
-  factory RewardInfo.fromJson(Map<String, dynamic> json) => _$RewardInfoFromJson(json);
+  factory RewardInfo.fromJson(Map<String, dynamic> json) =>
+      _$RewardInfoFromJson(json);
 }
 
 @freezed
@@ -88,7 +93,8 @@ class WalletInfo with _$WalletInfo {
     @Default([]) List<String> transactions,
   }) = _WalletInfo;
 
-  factory WalletInfo.fromJson(Map<String, dynamic> json) => _$WalletInfoFromJson(json);
+  factory WalletInfo.fromJson(Map<String, dynamic> json) =>
+      _$WalletInfoFromJson(json);
 }
 
 @freezed
@@ -100,7 +106,8 @@ class PaymentInfo with _$PaymentInfo {
     String? preferredPaymentMethod,
   }) = _PaymentInfo;
 
-  factory PaymentInfo.fromJson(Map<String, dynamic> json) => _$PaymentInfoFromJson(json);
+  factory PaymentInfo.fromJson(Map<String, dynamic> json) =>
+      _$PaymentInfoFromJson(json);
 }
 
 @freezed
@@ -111,7 +118,8 @@ class DeliveryPreference with _$DeliveryPreference {
     String? instructions,
   }) = _DeliveryPreference;
 
-  factory DeliveryPreference.fromJson(Map<String, dynamic> json) => _$DeliveryPreferenceFromJson(json);
+  factory DeliveryPreference.fromJson(Map<String, dynamic> json) =>
+      _$DeliveryPreferenceFromJson(json);
 }
 
 @freezed
@@ -122,7 +130,8 @@ class BusinessInfo with _$BusinessInfo {
     @Default(false) bool isBusinessAccount,
   }) = _BusinessInfo;
 
-  factory BusinessInfo.fromJson(Map<String, dynamic> json) => _$BusinessInfoFromJson(json);
+  factory BusinessInfo.fromJson(Map<String, dynamic> json) =>
+      _$BusinessInfoFromJson(json);
 }
 
 @freezed
@@ -135,7 +144,8 @@ class PreferenceSettings with _$PreferenceSettings {
     @Default(true) bool marketingCommunications,
   }) = _PreferenceSettings;
 
-  factory PreferenceSettings.fromJson(Map<String, dynamic> json) => _$PreferenceSettingsFromJson(json);
+  factory PreferenceSettings.fromJson(Map<String, dynamic> json) =>
+      _$PreferenceSettingsFromJson(json);
 }
 
 @freezed
@@ -148,5 +158,6 @@ class AIProfile with _$AIProfile {
     @Default(0.0) double loyaltyScore,
   }) = _AIProfile;
 
-  factory AIProfile.fromJson(Map<String, dynamic> json) => _$AIProfileFromJson(json);
+  factory AIProfile.fromJson(Map<String, dynamic> json) =>
+      _$AIProfileFromJson(json);
 }

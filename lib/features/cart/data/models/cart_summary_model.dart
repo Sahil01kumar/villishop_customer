@@ -21,12 +21,13 @@ class CartSummaryModel with _$CartSummaryModel {
     @Default(0.0) double grandTotal,
     @Default(0) int totalItems,
     @Default(0) int totalQuantity,
-    
+
     // Settlement Architecture Ready
     @Default(0.0) double shopSettlementAmount,
     @Default(0.0) double platformEarnings,
     @Default(0.0) double deliveryPartnerEarnings,
   }) = _CartSummaryModel;
 
-  factory CartSummaryModel.fromJson(Map<String, dynamic> json) => _$CartSummaryModelFromJson(json);
+  factory CartSummaryModel.fromJson(Map<String, dynamic> json) =>
+      _$CartSummaryModelFromJson(json);
 }

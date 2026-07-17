@@ -18,7 +18,8 @@ class WalletRepositoryImpl implements WalletRepository {
   }
 
   @override
-  Future<List<WalletTransactionModel>> getTransactionHistory({int page = 1, int limit = 20}) async {
+  Future<List<WalletTransactionModel>> getTransactionHistory(
+      {int page = 1, int limit = 20}) async {
     return [
       WalletTransactionModel(
         id: 't1',

@@ -15,7 +15,7 @@ abstract class CartOptimizationRepository {
 
   // AI & Optimization (Architecture Ready)
   Future<CartOptimizationModel> getOptimizationData(CartModel cart);
-  
+
   // Experience
   Future<void> scheduleAbandonedCartReminder();
   Future<CartModel?> getPreviousSuccessfulCart();

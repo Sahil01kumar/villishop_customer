@@ -30,7 +30,8 @@ class PrimaryButton extends StatelessWidget {
         onPressed: (isLoading || isDisabled) ? null : onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: color ?? AppColors.primary,
-          disabledBackgroundColor: (color ?? AppColors.primary).withAlpha((0.6 * 255).toInt()),
+          disabledBackgroundColor:
+              (color ?? AppColors.primary).withAlpha((0.6 * 255).toInt()),
         ),
         child: isLoading
             ? const SizedBox(

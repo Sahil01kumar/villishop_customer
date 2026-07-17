@@ -40,7 +40,8 @@ class CouponCard extends StatelessWidget {
                     color: AppColors.primary.withAlpha(20),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.confirmation_num_outlined, color: AppColors.primary),
+                  child: const Icon(Icons.confirmation_num_outlined,
+                      color: AppColors.primary),
                 ),
                 AppSpacing.hM,
                 Expanded(
@@ -50,7 +51,8 @@ class CouponCard extends StatelessWidget {
                       Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
                               color: Colors.grey[100],
                               borderRadius: BorderRadius.circular(4),
@@ -58,7 +60,8 @@ class CouponCard extends StatelessWidget {
                             ),
                             child: Text(
                               coupon.code,
-                              style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 14),
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w900, fontSize: 14),
                             ),
                           ),
                           const Spacer(),
@@ -66,14 +69,17 @@ class CouponCard extends StatelessWidget {
                             onPressed: onApply,
                             child: Text(
                               isSelected ? 'APPLIED' : 'APPLY',
-                              style: const TextStyle(fontWeight: FontWeight.w900, color: AppColors.primary),
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w900,
+                                  color: AppColors.primary),
                             ),
                           ),
                         ],
                       ),
                       Text(
                         coupon.title,
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 15),
                       ),
                       Text(
                         coupon.description,
@@ -86,21 +92,29 @@ class CouponCard extends StatelessWidget {
             ),
           ),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: 8),
+            padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.m, vertical: 8),
             decoration: BoxDecoration(
               color: Colors.grey[50],
-              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(AppRadius.m)),
+              borderRadius: const BorderRadius.vertical(
+                  bottom: Radius.circular(AppRadius.m)),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   'Expires: ${DateFormat('dd MMM yyyy').format(coupon.expiryDate)}',
-                  style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey),
+                  style: const TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey),
                 ),
                 const Text(
                   'T&C Apply',
-                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.primary),
+                  style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primary),
                 ),
               ],
             ),

@@ -40,20 +40,26 @@ class ShopCard extends StatelessWidget {
                   height: 140,
                   decoration: BoxDecoration(
                     color: Colors.grey[100],
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.l)),
+                    borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(AppRadius.l)),
                     image: shop.imageUrl.isNotEmpty
-                        ? DecorationImage(image: NetworkImage(shop.imageUrl), fit: BoxFit.cover)
+                        ? DecorationImage(
+                            image: NetworkImage(shop.imageUrl),
+                            fit: BoxFit.cover)
                         : null,
                   ),
                   child: shop.imageUrl.isEmpty
-                      ? const Center(child: Icon(Icons.storefront, size: 60, color: AppColors.primary))
+                      ? const Center(
+                          child: Icon(Icons.storefront,
+                              size: 60, color: AppColors.primary))
                       : null,
                 ),
                 Positioned(
                   bottom: 8,
                   left: 8,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(6),
@@ -61,11 +67,13 @@ class ShopCard extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.timer_outlined, size: 14, color: AppColors.primary),
+                        const Icon(Icons.timer_outlined,
+                            size: 14, color: AppColors.primary),
                         const SizedBox(width: 4),
                         Text(
                           shop.deliveryTime,
-                          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w900),
+                          style: const TextStyle(
+                              fontSize: 11, fontWeight: FontWeight.w900),
                         ),
                       ],
                     ),
@@ -84,21 +92,26 @@ class ShopCard extends StatelessWidget {
                       Expanded(
                         child: Text(
                           shop.name,
-                          style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w900, fontSize: 16),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
                           color: Colors.green[50],
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Row(
                           children: [
-                            Text(shop.rating.toString(), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-                            const Icon(Icons.star, size: 14, color: Colors.green),
+                            Text(shop.rating.toString(),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 12)),
+                            const Icon(Icons.star,
+                                size: 14, color: Colors.green),
                           ],
                         ),
                       ),
@@ -106,18 +119,26 @@ class ShopCard extends StatelessWidget {
                   ),
                   Text(
                     shop.category,
-                    style: TextStyle(color: Colors.grey[600], fontSize: 13, fontWeight: FontWeight.w500),
+                    style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500),
                   ),
                   AppSpacing.vS,
                   const Divider(height: 1),
                   AppSpacing.vS,
                   Row(
                     children: [
-                      Icon(Icons.location_on_outlined, size: 14, color: Colors.grey[600]),
+                      Icon(Icons.location_on_outlined,
+                          size: 14, color: Colors.grey[600]),
                       const SizedBox(width: 4),
-                      Text(shop.distance, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                      Text(shop.distance,
+                          style:
+                              TextStyle(color: Colors.grey[600], fontSize: 12)),
                       const Spacer(),
-                      Text('Min. ${shop.minOrder}', style: const TextStyle(color: Colors.grey, fontSize: 12)),
+                      Text('Min. ${shop.minOrder}',
+                          style: const TextStyle(
+                              color: Colors.grey, fontSize: 12)),
                     ],
                   ),
                 ],

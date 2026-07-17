@@ -20,5 +20,6 @@ class OfferRuleModel with _$OfferRuleModel {
     DateTime? endTime,
   }) = _OfferRuleModel;
 
-  factory OfferRuleModel.fromJson(Map<String, dynamic> json) => _$OfferRuleModelFromJson(json);
+  factory OfferRuleModel.fromJson(Map<String, dynamic> json) =>
+      _$OfferRuleModelFromJson(json);
 }

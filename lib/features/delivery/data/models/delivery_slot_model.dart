@@ -3,11 +3,22 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'delivery_slot_model.freezed.dart';
 part 'delivery_slot_model.g.dart';
 
-enum DeliveryType { 
-  @JsonValue('instant') instant, 
-  @JsonValue('express') express, 
-  @JsonValue('scheduled') scheduled, 
-  @JsonValue('standard') standard 
+enum DeliveryMode {
+  @JsonValue('deliver_now')
+  deliverNow,
+  @JsonValue('scheduled')
+  scheduled
+}
+
+enum DeliveryType {
+  @JsonValue('instant')
+  instant,
+  @JsonValue('express')
+  express,
+  @JsonValue('scheduled')
+  scheduled,
+  @JsonValue('standard')
+  standard
 }
 
 @freezed
@@ -31,5 +42,6 @@ class DeliverySlotModel with _$DeliverySlotModel {
     String? label,
   }) = _DeliverySlotModel;
 
-  factory DeliverySlotModel.fromJson(Map<String, dynamic> json) => _$DeliverySlotModelFromJson(json);
+  factory DeliverySlotModel.fromJson(Map<String, dynamic> json) =>
+      _$DeliverySlotModelFromJson(json);
 }

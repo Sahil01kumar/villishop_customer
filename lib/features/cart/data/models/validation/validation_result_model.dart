@@ -16,5 +16,6 @@ class ValidationResultModel with _$ValidationResultModel {
     Map<String, dynamic>? metadata,
   }) = _ValidationResultModel;
 
-  factory ValidationResultModel.fromJson(Map<String, dynamic> json) => _$ValidationResultModelFromJson(json);
+  factory ValidationResultModel.fromJson(Map<String, dynamic> json) =>
+      _$ValidationResultModelFromJson(json);
 }

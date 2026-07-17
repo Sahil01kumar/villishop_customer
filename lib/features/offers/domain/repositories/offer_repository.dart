@@ -5,7 +5,8 @@ import '../../data/models/campaign_model.dart';
 abstract class OfferRepository {
   Future<List<OfferModel>> getActiveOffers();
   Future<List<OfferModel>> getFlashSales();
-  Future<List<CouponModel>> getAvailableCoupons({double? cartValue, String? shopId});
+  Future<List<CouponModel>> getAvailableCoupons(
+      {double? cartValue, String? shopId});
   Future<List<CampaignModel>> getActiveCampaigns();
   Future<bool> validateCoupon(String code, double cartValue);
   Future<void> saveCoupon(String couponId);

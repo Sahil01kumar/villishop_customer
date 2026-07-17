@@ -20,8 +20,13 @@ mixin _$LocationState {
   List<AddressModel> get addresses => throw _privateConstructorUsedError;
   List<AddressModel> get recentAddresses => throw _privateConstructorUsedError;
   AddressModel? get selectedAddress => throw _privateConstructorUsedError;
+  Position? get currentPosition => throw _privateConstructorUsedError;
+  String? get currentAddressName => throw _privateConstructorUsedError;
+  LocationPermissionStatus get permissionStatus =>
+      throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
   bool get isServiceable => throw _privateConstructorUsedError;
+  bool get isLiveTracking => throw _privateConstructorUsedError;
 
   /// Create a copy of LocationState
   /// with the given fields replaced by the non-null parameter values.
@@ -41,8 +46,12 @@ abstract class $LocationStateCopyWith<$Res> {
       List<AddressModel> addresses,
       List<AddressModel> recentAddresses,
       AddressModel? selectedAddress,
+      Position? currentPosition,
+      String? currentAddressName,
+      LocationPermissionStatus permissionStatus,
       String? errorMessage,
-      bool isServiceable});
+      bool isServiceable,
+      bool isLiveTracking});
 
   $AddressModelCopyWith<$Res>? get selectedAddress;
 }
@@ -66,8 +75,12 @@ class _$LocationStateCopyWithImpl<$Res, $Val extends LocationState>
     Object? addresses = null,
     Object? recentAddresses = null,
     Object? selectedAddress = freezed,
+    Object? currentPosition = freezed,
+    Object? currentAddressName = freezed,
+    Object? permissionStatus = null,
     Object? errorMessage = freezed,
     Object? isServiceable = null,
+    Object? isLiveTracking = null,
   }) {
     return _then(_value.copyWith(
       isLoading: null == isLoading
@@ -86,6 +99,18 @@ class _$LocationStateCopyWithImpl<$Res, $Val extends LocationState>
           ? _value.selectedAddress
           : selectedAddress // ignore: cast_nullable_to_non_nullable
               as AddressModel?,
+      currentPosition: freezed == currentPosition
+          ? _value.currentPosition
+          : currentPosition // ignore: cast_nullable_to_non_nullable
+              as Position?,
+      currentAddressName: freezed == currentAddressName
+          ? _value.currentAddressName
+          : currentAddressName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      permissionStatus: null == permissionStatus
+          ? _value.permissionStatus
+          : permissionStatus // ignore: cast_nullable_to_non_nullable
+              as LocationPermissionStatus,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -93,6 +118,10 @@ class _$LocationStateCopyWithImpl<$Res, $Val extends LocationState>
       isServiceable: null == isServiceable
           ? _value.isServiceable
           : isServiceable // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isLiveTracking: null == isLiveTracking
+          ? _value.isLiveTracking
+          : isLiveTracking // ignore: cast_nullable_to_non_nullable
               as bool,
     ) as $Val);
   }
@@ -125,8 +154,12 @@ abstract class _$$LocationStateImplCopyWith<$Res>
       List<AddressModel> addresses,
       List<AddressModel> recentAddresses,
       AddressModel? selectedAddress,
+      Position? currentPosition,
+      String? currentAddressName,
+      LocationPermissionStatus permissionStatus,
       String? errorMessage,
-      bool isServiceable});
+      bool isServiceable,
+      bool isLiveTracking});
 
   @override
   $AddressModelCopyWith<$Res>? get selectedAddress;
@@ -149,8 +182,12 @@ class __$$LocationStateImplCopyWithImpl<$Res>
     Object? addresses = null,
     Object? recentAddresses = null,
     Object? selectedAddress = freezed,
+    Object? currentPosition = freezed,
+    Object? currentAddressName = freezed,
+    Object? permissionStatus = null,
     Object? errorMessage = freezed,
     Object? isServiceable = null,
+    Object? isLiveTracking = null,
   }) {
     return _then(_$LocationStateImpl(
       isLoading: null == isLoading
@@ -169,6 +206,18 @@ class __$$LocationStateImplCopyWithImpl<$Res>
           ? _value.selectedAddress
           : selectedAddress // ignore: cast_nullable_to_non_nullable
               as AddressModel?,
+      currentPosition: freezed == currentPosition
+          ? _value.currentPosition
+          : currentPosition // ignore: cast_nullable_to_non_nullable
+              as Position?,
+      currentAddressName: freezed == currentAddressName
+          ? _value.currentAddressName
+          : currentAddressName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      permissionStatus: null == permissionStatus
+          ? _value.permissionStatus
+          : permissionStatus // ignore: cast_nullable_to_non_nullable
+              as LocationPermissionStatus,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -177,20 +226,30 @@ class __$$LocationStateImplCopyWithImpl<$Res>
           ? _value.isServiceable
           : isServiceable // ignore: cast_nullable_to_non_nullable
               as bool,
+      isLiveTracking: null == isLiveTracking
+          ? _value.isLiveTracking
+          : isLiveTracking // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
 
 /// @nodoc
 
-class _$LocationStateImpl implements _LocationState {
+class _$LocationStateImpl
+    with DiagnosticableTreeMixin
+    implements _LocationState {
   const _$LocationStateImpl(
       {this.isLoading = false,
       final List<AddressModel> addresses = const [],
       final List<AddressModel> recentAddresses = const [],
       this.selectedAddress,
+      this.currentPosition,
+      this.currentAddressName,
+      this.permissionStatus = LocationPermissionStatus.initial,
       this.errorMessage,
-      this.isServiceable = true})
+      this.isServiceable = true,
+      this.isLiveTracking = false})
       : _addresses = addresses,
         _recentAddresses = recentAddresses;
 
@@ -218,14 +277,41 @@ class _$LocationStateImpl implements _LocationState {
   @override
   final AddressModel? selectedAddress;
   @override
+  final Position? currentPosition;
+  @override
+  final String? currentAddressName;
+  @override
+  @JsonKey()
+  final LocationPermissionStatus permissionStatus;
+  @override
   final String? errorMessage;
   @override
   @JsonKey()
   final bool isServiceable;
+  @override
+  @JsonKey()
+  final bool isLiveTracking;
 
   @override
-  String toString() {
-    return 'LocationState(isLoading: $isLoading, addresses: $addresses, recentAddresses: $recentAddresses, selectedAddress: $selectedAddress, errorMessage: $errorMessage, isServiceable: $isServiceable)';
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'LocationState(isLoading: $isLoading, addresses: $addresses, recentAddresses: $recentAddresses, selectedAddress: $selectedAddress, currentPosition: $currentPosition, currentAddressName: $currentAddressName, permissionStatus: $permissionStatus, errorMessage: $errorMessage, isServiceable: $isServiceable, isLiveTracking: $isLiveTracking)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'LocationState'))
+      ..add(DiagnosticsProperty('isLoading', isLoading))
+      ..add(DiagnosticsProperty('addresses', addresses))
+      ..add(DiagnosticsProperty('recentAddresses', recentAddresses))
+      ..add(DiagnosticsProperty('selectedAddress', selectedAddress))
+      ..add(DiagnosticsProperty('currentPosition', currentPosition))
+      ..add(DiagnosticsProperty('currentAddressName', currentAddressName))
+      ..add(DiagnosticsProperty('permissionStatus', permissionStatus))
+      ..add(DiagnosticsProperty('errorMessage', errorMessage))
+      ..add(DiagnosticsProperty('isServiceable', isServiceable))
+      ..add(DiagnosticsProperty('isLiveTracking', isLiveTracking));
   }
 
   @override
@@ -241,10 +327,18 @@ class _$LocationStateImpl implements _LocationState {
                 .equals(other._recentAddresses, _recentAddresses) &&
             (identical(other.selectedAddress, selectedAddress) ||
                 other.selectedAddress == selectedAddress) &&
+            (identical(other.currentPosition, currentPosition) ||
+                other.currentPosition == currentPosition) &&
+            (identical(other.currentAddressName, currentAddressName) ||
+                other.currentAddressName == currentAddressName) &&
+            (identical(other.permissionStatus, permissionStatus) ||
+                other.permissionStatus == permissionStatus) &&
             (identical(other.errorMessage, errorMessage) ||
                 other.errorMessage == errorMessage) &&
             (identical(other.isServiceable, isServiceable) ||
-                other.isServiceable == isServiceable));
+                other.isServiceable == isServiceable) &&
+            (identical(other.isLiveTracking, isLiveTracking) ||
+                other.isLiveTracking == isLiveTracking));
   }
 
   @override
@@ -254,8 +348,12 @@ class _$LocationStateImpl implements _LocationState {
       const DeepCollectionEquality().hash(_addresses),
       const DeepCollectionEquality().hash(_recentAddresses),
       selectedAddress,
+      currentPosition,
+      currentAddressName,
+      permissionStatus,
       errorMessage,
-      isServiceable);
+      isServiceable,
+      isLiveTracking);
 
   /// Create a copy of LocationState
   /// with the given fields replaced by the non-null parameter values.
@@ -272,8 +370,12 @@ abstract class _LocationState implements LocationState {
       final List<AddressModel> addresses,
       final List<AddressModel> recentAddresses,
       final AddressModel? selectedAddress,
+      final Position? currentPosition,
+      final String? currentAddressName,
+      final LocationPermissionStatus permissionStatus,
       final String? errorMessage,
-      final bool isServiceable}) = _$LocationStateImpl;
+      final bool isServiceable,
+      final bool isLiveTracking}) = _$LocationStateImpl;
 
   @override
   bool get isLoading;
@@ -284,9 +386,17 @@ abstract class _LocationState implements LocationState {
   @override
   AddressModel? get selectedAddress;
   @override
+  Position? get currentPosition;
+  @override
+  String? get currentAddressName;
+  @override
+  LocationPermissionStatus get permissionStatus;
+  @override
   String? get errorMessage;
   @override
   bool get isServiceable;
+  @override
+  bool get isLiveTracking;
 
   /// Create a copy of LocationState
   /// with the given fields replaced by the non-null parameter values.

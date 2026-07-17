@@ -45,7 +45,8 @@ class CouponNotifier extends StateNotifier<CouponState> {
     }
   }
 
-  Future<bool> applyCouponCode(String code, {
+  Future<bool> applyCouponCode(
+    String code, {
     required double cartValue,
     required double deliveryCharge,
     required List<String> shopIds,
@@ -76,7 +77,8 @@ class CouponNotifier extends StateNotifier<CouponState> {
     );
   }
 
-  Future<bool> applyCoupon(CouponModel coupon, {
+  Future<bool> applyCoupon(
+    CouponModel coupon, {
     required double cartValue,
     required double deliveryCharge,
     required List<String> shopIds,
@@ -117,6 +119,7 @@ class CouponNotifier extends StateNotifier<CouponState> {
   }
 }
 
-final couponProvider = StateNotifierProvider<CouponNotifier, CouponState>((ref) {
+final couponProvider =
+    StateNotifierProvider<CouponNotifier, CouponState>((ref) {
   return CouponNotifier(ref.watch(couponRepositoryProvider));
 });

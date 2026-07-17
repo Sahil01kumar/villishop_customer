@@ -31,16 +31,20 @@ class SavedItemCard extends ConsumerWidget {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: Colors.grey[50],
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.m)),
+                  borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(AppRadius.m)),
                 ),
-                child: const Icon(Icons.shopping_bag_outlined, size: 40, color: Colors.grey),
+                child: const Icon(Icons.shopping_bag_outlined,
+                    size: 40, color: Colors.grey),
               ),
               Positioned(
                 top: 4,
                 right: 4,
                 child: IconButton(
                   icon: const Icon(Icons.close, size: 18, color: Colors.grey),
-                  onPressed: () => ref.read(saveForLaterProvider.notifier).removeFromSaved(product.id),
+                  onPressed: () => ref
+                      .read(saveForLaterProvider.notifier)
+                      .removeFromSaved(product.id),
                 ),
               ),
             ],
@@ -52,7 +56,8 @@ class SavedItemCard extends ConsumerWidget {
               children: [
                 Text(
                   product.name,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 12),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -66,19 +71,26 @@ class SavedItemCard extends ConsumerWidget {
                   children: [
                     Text(
                       '₹${product.pricing.sellingPrice.toStringAsFixed(0)}',
-                      style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 14),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w900, fontSize: 14),
                     ),
                     InkWell(
-                      onTap: () => ref.read(saveForLaterProvider.notifier).moveToCart(product),
+                      onTap: () => ref
+                          .read(saveForLaterProvider.notifier)
+                          .moveToCart(product),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           border: Border.all(color: AppColors.primary),
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: const Text(
                           'MOVE',
-                          style: TextStyle(color: AppColors.primary, fontSize: 10, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              color: AppColors.primary,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),

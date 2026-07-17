@@ -23,7 +23,7 @@ class ProductModel with _$ProductModel {
     required String imageUrl,
     @Default([]) List<String> imageUrls,
     String? videoUrl,
-    
+
     // Taxonomy Engine Fields
     required String category, // Legacy support
     String? departmentId,
@@ -31,19 +31,18 @@ class ProductModel with _$ProductModel {
     String? subCategoryId,
     String? productGroupId,
     String? variantGroupId,
-    
     String? subCategory,
     String? brand,
     String? description,
     String? shortDescription,
     String? sku,
     String? barcode,
-    
+
     // Usage & Safety
     String? usageInstructions,
     String? safetyWarning,
     String? careInstructions,
-    
+
     // Complex Info Objects
     required PackagingInfo packaging,
     required ManufacturingInfo manufacturing,
@@ -64,10 +63,11 @@ class ProductModel with _$ProductModel {
     String? shopId,
     String? shopName,
     @Default([]) List<ProductModel> relatedProducts,
-    
+
     // Attributes for Enterprise Taxonomy
     @Default({}) Map<String, dynamic> attributes,
   }) = _ProductModel;
 
-  factory ProductModel.fromJson(Map<String, dynamic> json) => _$ProductModelFromJson(json);
+  factory ProductModel.fromJson(Map<String, dynamic> json) =>
+      _$ProductModelFromJson(json);
 }

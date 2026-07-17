@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../domain/repositories/delivery_repository.dart';
 import '../data/repositories/delivery_repository_impl.dart';
@@ -23,11 +24,11 @@ class DeliveryNotifier extends StateNotifier<DeliveryState> {
         shopWiseCartValues: shopWiseValues,
         customerAddressId: addressId,
       );
-      
+
       final total = results.fold(0.0, (sum, item) {
         return sum + item.charges.totalCharge;
       });
-      
+
       state = state.copyWith(
         isLoading: false,
         summaries: results,
@@ -50,21 +51,34 @@ class DeliveryNotifier extends StateNotifier<DeliveryState> {
         cartValue: cartValue,
         customerAddressId: addressId,
       );
-      
+
       // Auto-select first available slot if none selected
       DeliverySlotModel? initialSlot = state.selectedSlot;
       if (initialSlot == null && slots.isNotEmpty) {
-        initialSlot = slots.firstWhere((s) => s.isAvailable, orElse: () => slots.first);
+        initialSlot =
+            slots.firstWhere((s) => s.isAvailable, orElse: () => slots.first);
       }
 
       state = state.copyWith(
         isLoading: false,
         availableSlots: slots,
         selectedSlot: initialSlot,
+        etaMinutes: _generateRandomEta(),
       );
     } catch (e) {
       state = state.copyWith(isLoading: false, errorMessage: e.toString());
     }
+  }
+
+  int _generateRandomEta() {
+    final list = [12, 18, 25, 35];
+    return list[Random().nextInt(list.length)];
+  }
+
+  void setDeliveryMode(DeliveryMode mode) {
+    state = state.copyWith(deliveryMode: mode);
+    // If switching to Deliver Now, we might want to clear selected slot
+    // or keep it for internal data, but UI will skip validation.
   }
 
   void selectSlot(DeliverySlotModel slot) {
@@ -73,6 +87,7 @@ class DeliveryNotifier extends StateNotifier<DeliveryState> {
   }
 }
 
-final deliveryProvider = StateNotifierProvider<DeliveryNotifier, DeliveryState>((ref) {
+final deliveryProvider =
+    StateNotifierProvider<DeliveryNotifier, DeliveryState>((ref) {
   return DeliveryNotifier(ref.watch(deliveryRepositoryProvider));
 });

@@ -14,7 +14,7 @@ abstract class DeliveryRepository {
     required double cartValue,
     required String customerAddressId,
   });
-  
+
   Future<List<DeliverySummaryModel>> getConsolidatedDeliverySummary({
     required Map<String, double> shopWiseCartValues,
     required String customerAddressId,

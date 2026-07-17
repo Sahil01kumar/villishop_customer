@@ -12,5 +12,6 @@ class DeliveryInfo with _$DeliveryInfo {
     @Default(false) bool isExpressDeliveryAvailable,
   }) = _DeliveryInfo;
 
-  factory DeliveryInfo.fromJson(Map<String, dynamic> json) => _$DeliveryInfoFromJson(json);
+  factory DeliveryInfo.fromJson(Map<String, dynamic> json) =>
+      _$DeliveryInfoFromJson(json);
 }

@@ -15,7 +15,9 @@ class ExpandableDetailSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (content == null && customContent == null) return const SizedBox.shrink();
+    if (content == null && customContent == null) {
+      return const SizedBox.shrink();
+    }
 
     return Column(
       children: [
@@ -25,7 +27,8 @@ class ExpandableDetailSection extends StatelessWidget {
             title,
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
-          childrenPadding: const EdgeInsets.fromLTRB(AppSpacing.m, 0, AppSpacing.m, AppSpacing.m),
+          childrenPadding: const EdgeInsets.fromLTRB(
+              AppSpacing.m, 0, AppSpacing.m, AppSpacing.m),
           expandedCrossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (content != null)

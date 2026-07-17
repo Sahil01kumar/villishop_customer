@@ -42,7 +42,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Complete Your Profile', style: TextStyle(fontWeight: FontWeight.w900)),
+        title: const Text('Complete Your Profile',
+            style: TextStyle(fontWeight: FontWeight.w900)),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -66,24 +67,29 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       child: CircleAvatar(
                         radius: 18,
                         backgroundColor: AppColors.primary,
-                        child: Icon(Icons.camera_alt, size: 18, color: Colors.white),
+                        child: Icon(Icons.camera_alt,
+                            size: 18, color: Colors.white),
                       ),
                     ),
                   ],
                 ),
               ),
               AppSpacing.vL,
-              const Text('Basic Information', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              const Text('Basic Information',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
               AppSpacing.vM,
               TextFormField(
                 controller: _nameController,
                 decoration: InputDecoration(
                   labelText: 'Full Name *',
                   hintText: 'Enter your full name',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12)),
                   prefixIcon: const Icon(Icons.person_outline),
                 ),
-                validator: (val) => val == null || val.isEmpty ? 'Please enter your name' : null,
+                validator: (val) => val == null || val.isEmpty
+                    ? 'Please enter your name'
+                    : null,
               ),
               AppSpacing.vM,
               TextFormField(
@@ -92,10 +98,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 decoration: InputDecoration(
                   labelText: 'Mobile Number *',
                   hintText: 'Enter your mobile number',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12)),
                   prefixIcon: const Icon(Icons.phone_outlined),
                 ),
-                validator: (val) => val == null || val.isEmpty ? 'Please enter your phone number' : null,
+                validator: (val) => val == null || val.isEmpty
+                    ? 'Please enter your phone number'
+                    : null,
               ),
               AppSpacing.vM,
               TextFormField(
@@ -104,12 +113,14 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 decoration: InputDecoration(
                   labelText: 'Email Address',
                   hintText: 'Enter your email (optional)',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12)),
                   prefixIcon: const Icon(Icons.email_outlined),
                 ),
               ),
               AppSpacing.vL,
-              const Text('Gender', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              const Text('Gender',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
               Row(
                 children: [
                   Expanded(
@@ -119,7 +130,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       // ignore: deprecated_member_use
                       groupValue: _selectedGender,
                       // ignore: deprecated_member_use
-                      onChanged: (val) => setState(() => _selectedGender = val!),
+                      onChanged: (val) =>
+                          setState(() => _selectedGender = val!),
                       activeColor: AppColors.primary,
                     ),
                   ),
@@ -130,38 +142,46 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       // ignore: deprecated_member_use
                       groupValue: _selectedGender,
                       // ignore: deprecated_member_use
-                      onChanged: (val) => setState(() => _selectedGender = val!),
+                      onChanged: (val) =>
+                          setState(() => _selectedGender = val!),
                       activeColor: AppColors.primary,
                     ),
                   ),
                 ],
               ),
               AppSpacing.vL,
-              const Text('Date of Birth', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              const Text('Date of Birth',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
               AppSpacing.vM,
               InkWell(
                 onTap: () async {
                   final picked = await showDatePicker(
                     context: context,
-                    initialDate: _dob ?? DateTime.now().subtract(const Duration(days: 365 * 18)),
+                    initialDate: _dob ??
+                        DateTime.now().subtract(const Duration(days: 365 * 18)),
                     firstDate: DateTime(1900),
                     lastDate: DateTime.now(),
                   );
                   if (picked != null) setState(() => _dob = picked);
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.calendar_today_outlined, size: 20, color: Colors.grey),
+                      const Icon(Icons.calendar_today_outlined,
+                          size: 20, color: Colors.grey),
                       AppSpacing.hM,
                       Text(
-                        _dob == null ? 'Select Date of Birth' : '${_dob!.day}/${_dob!.month}/${_dob!.year}',
-                        style: TextStyle(color: _dob == null ? Colors.grey : Colors.black),
+                        _dob == null
+                            ? 'Select Date of Birth'
+                            : '${_dob!.day}/${_dob!.month}/${_dob!.year}',
+                        style: TextStyle(
+                            color: _dob == null ? Colors.grey : Colors.black),
                       ),
                     ],
                   ),
@@ -182,13 +202,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   void _completeOnboarding() {
     if (_formKey.currentState!.validate()) {
-       ref.read(authProvider.notifier).updateProfile(
-         name: _nameController.text,
-         email: _emailController.text,
-         phoneNumber: _phoneController.text,
-         gender: _selectedGender,
-         dob: _dob,
-       );
+      ref.read(authProvider.notifier).updateProfile(
+            name: _nameController.text,
+            email: _emailController.text,
+            phoneNumber: _phoneController.text,
+            gender: _selectedGender,
+            dob: _dob,
+          );
     }
   }
 }

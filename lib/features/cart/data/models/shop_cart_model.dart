@@ -21,5 +21,6 @@ class ShopCartModel with _$ShopCartModel {
     @Default(true) bool isSelected,
   }) = _ShopCartModel;
 
-  factory ShopCartModel.fromJson(Map<String, dynamic> json) => _$ShopCartModelFromJson(json);
+  factory ShopCartModel.fromJson(Map<String, dynamic> json) =>
+      _$ShopCartModelFromJson(json);
 }

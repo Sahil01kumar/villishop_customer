@@ -51,7 +51,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     });
 
     final authState = ref.watch(authProvider);
-    final isLoading = authState.maybeWhen(loading: () => true, orElse: () => false);
+    final isLoading =
+        authState.maybeWhen(loading: () => true, orElse: () => false);
 
     return Scaffold(
       body: SafeArea(
@@ -100,7 +101,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       children: [
                         Checkbox(
                           value: _rememberMe,
-                          onChanged: (value) => setState(() => _rememberMe = value ?? true),
+                          onChanged: (value) =>
+                              setState(() => _rememberMe = value ?? true),
                         ),
                         const Text('Remember me'),
                       ],
@@ -151,7 +153,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 AppSpacing.vL,
                 OutlinedButton.icon(
-                  onPressed: () => ref.read(authProvider.notifier).signInWithGoogle(),
+                  onPressed: () =>
+                      ref.read(authProvider.notifier).signInWithGoogle(),
                   style: OutlinedButton.styleFrom(
                     minimumSize: const Size(double.infinity, 54),
                     shape: RoundedRectangleBorder(

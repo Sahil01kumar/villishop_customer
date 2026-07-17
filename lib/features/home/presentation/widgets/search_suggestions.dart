@@ -8,7 +8,7 @@ class SearchSuggestions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final suggestions = ['Milk', 'Bread', 'Eggs', 'Oil', 'Potato', 'Onion'];
-    
+
     return SizedBox(
       height: 36,
       child: ListView.builder(
@@ -26,11 +26,13 @@ class SearchSuggestions extends StatelessWidget {
             ),
             child: Row(
               children: [
-                const Icon(Icons.trending_up, size: 14, color: AppColors.primary),
+                const Icon(Icons.trending_up,
+                    size: 14, color: AppColors.primary),
                 const SizedBox(width: 4),
                 Text(
                   suggestions[index],
-                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 12, fontWeight: FontWeight.bold),
                 ),
               ],
             ),

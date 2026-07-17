@@ -21,12 +21,13 @@ class FinanceRepositoryImpl implements FinanceRepository {
 
     final commAmount = (orderAmount * platformCommPercent) / 100;
     final totalPlatformEarnings = commAmount + fixedFee + serviceFee;
-    
+
     final gstTotal = orderAmount * 0.05;
     final cgst = gstTotal / 2;
     final sgst = gstTotal / 2;
 
-    final shopEarnings = orderAmount - commAmount - fixedFee - (couponDiscount ?? 0.0);
+    final shopEarnings =
+        orderAmount - commAmount - fixedFee - (couponDiscount ?? 0.0);
 
     return RevenueModel(
       id: 'rev_$orderId',

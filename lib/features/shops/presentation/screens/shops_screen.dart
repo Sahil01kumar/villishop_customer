@@ -22,17 +22,20 @@ class ShopsScreen extends ConsumerWidget {
         title: const Text('Discovery Nearby Shops'),
         actions: [
           IconButton(
-            icon: Icon(shopState.isGridView ? Icons.view_list : Icons.grid_view),
+            icon:
+                Icon(shopState.isGridView ? Icons.view_list : Icons.grid_view),
             onPressed: () => ref.read(shopProvider.notifier).toggleView(),
           ),
         ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(60),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.s),
+            padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.m, vertical: AppSpacing.s),
             child: CustomSearchBar(
               hint: 'Search shops by name...',
-              onChanged: (val) => ref.read(shopProvider.notifier).filterShops(val),
+              onChanged: (val) =>
+                  ref.read(shopProvider.notifier).filterShops(val),
             ),
           ),
         ),
@@ -42,12 +45,16 @@ class ShopsScreen extends ConsumerWidget {
           : shopState.errorMessage != null
               ? CustomErrorWidget(
                   message: shopState.errorMessage!,
-                  onRetry: () => ref.read(shopProvider.notifier).fetchNearbyShops(),
+                  onRetry: () =>
+                      ref.read(shopProvider.notifier).fetchNearbyShops(),
                 )
               : shopState.filteredShops.isEmpty
-                  ? const EmptyWidget(message: 'No shops found nearby', icon: Icons.storefront_outlined)
+                  ? const EmptyWidget(
+                      message: 'No shops found nearby',
+                      icon: Icons.storefront_outlined)
                   : RefreshIndicator(
-                      onRefresh: () => ref.read(shopProvider.notifier).fetchNearbyShops(),
+                      onRefresh: () =>
+                          ref.read(shopProvider.notifier).fetchNearbyShops(),
                       child: shopState.isGridView
                           ? _ShopsGrid(shops: shopState.filteredShops)
                           : _ShopsList(shops: shopState.filteredShops),

@@ -17,12 +17,13 @@ class DeliveryChargeModel with _$DeliveryChargeModel {
     @Default(0.0) double coldStorageCharge,
     @Default(0.0) double expressCharge,
     @Default(0.0) double totalCharge,
-    
+
     // Revenue Ready Fields
     @Default(0.0) double deliveryPartnerEarning,
     @Default(0.0) double platformMargin,
     @Default(0.0) double shopContribution,
   }) = _DeliveryChargeModel;
 
-  factory DeliveryChargeModel.fromJson(Map<String, dynamic> json) => _$DeliveryChargeModelFromJson(json);
+  factory DeliveryChargeModel.fromJson(Map<String, dynamic> json) =>
+      _$DeliveryChargeModelFromJson(json);
 }

@@ -38,9 +38,8 @@ class CategoryNotifier extends StateNotifier<CategoryState> {
   final ProductRepository _productRepository;
   final Ref _ref;
 
-  CategoryNotifier(this._categoryRepository, this._productRepository, this._ref) 
+  CategoryNotifier(this._categoryRepository, this._productRepository, this._ref)
       : super(const CategoryState()) {
-    
     // Listen for shop changes
     _ref.listen<String?>(currentShopIdProvider, (previous, next) {
       if (previous != next) {
@@ -60,24 +59,28 @@ class CategoryNotifier extends StateNotifier<CategoryState> {
   }
 
   Future<void> init({String? shopId}) async {
-    state = state.copyWith(isLoading: true, selectedShopId: shopId, products: []);
+    state =
+        state.copyWith(isLoading: true, selectedShopId: shopId, products: []);
     try {
-      final categories = shopId != null 
+      final categories = shopId != null
           ? await _categoryRepository.getShopCategories(shopId)
           : await _categoryRepository.getCategories();
-          
+
       // Filter out empty categories for the shop if needed
-      final visibleCategories = categories.where((c) => c.isVisible && c.isActive).toList();
+      final visibleCategories =
+          categories.where((c) => c.isVisible && c.isActive).toList();
 
       state = state.copyWith(
         isLoading: false,
         parentCategories: visibleCategories,
-        selectedParent: visibleCategories.isNotEmpty ? visibleCategories.first : null,
-        selectedSub: (visibleCategories.isNotEmpty && visibleCategories.first.subCategories.isNotEmpty) 
-            ? visibleCategories.first.subCategories.first 
+        selectedParent:
+            visibleCategories.isNotEmpty ? visibleCategories.first : null,
+        selectedSub: (visibleCategories.isNotEmpty &&
+                visibleCategories.first.subCategories.isNotEmpty)
+            ? visibleCategories.first.subCategories.first
             : null,
       );
-      
+
       if (state.selectedSub != null) {
         await fetchProducts(state.selectedSub!.id);
       }
@@ -112,14 +115,15 @@ class CategoryNotifier extends StateNotifier<CategoryState> {
 
   void selectParent(CategoryModel parent) {
     if (state.selectedParent?.id == parent.id) return;
-    
-    final sub = parent.subCategories.isNotEmpty ? parent.subCategories.first : null;
+
+    final sub =
+        parent.subCategories.isNotEmpty ? parent.subCategories.first : null;
     state = state.copyWith(
       selectedParent: parent,
       selectedSub: sub,
       products: [],
     );
-    
+
     if (sub != null) {
       fetchProducts(sub.id);
     }
@@ -145,7 +149,8 @@ class CategoryNotifier extends StateNotifier<CategoryState> {
   }
 }
 
-final categoryProvider = StateNotifierProvider<CategoryNotifier, CategoryState>((ref) {
+final categoryProvider =
+    StateNotifierProvider<CategoryNotifier, CategoryState>((ref) {
   return CategoryNotifier(
     ref.watch(categoryRepositoryProvider),
     ref.watch(productRepositoryProvider),

@@ -19,7 +19,9 @@ class WalletSelectionCard extends ConsumerWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: state.useWallet ? AppColors.primary : const Color(0xFFF3F4F6)),
+        border: Border.all(
+            color:
+                state.useWallet ? AppColors.primary : const Color(0xFFF3F4F6)),
       ),
       child: Column(
         children: [
@@ -27,25 +29,35 @@ class WalletSelectionCard extends ConsumerWidget {
             children: [
               Container(
                 padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(color: AppColors.primary.withAlpha(10), shape: BoxShape.circle),
-                child: const Icon(Icons.account_balance_wallet_rounded, color: AppColors.primary, size: 20),
+                decoration: BoxDecoration(
+                    color: AppColors.primary.withAlpha(10),
+                    shape: BoxShape.circle),
+                child: const Icon(Icons.account_balance_wallet_rounded,
+                    color: AppColors.primary, size: 20),
               ),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Village Wallet', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
+                    const Text('Village Wallet',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w900, fontSize: 16)),
                     Text(
                       'Available: ₹${totalBalance.toStringAsFixed(2)}',
-                      style: TextStyle(color: Colors.grey[600], fontSize: 13, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
               ),
               Switch.adaptive(
                 value: state.useWallet,
-                onChanged: totalBalance > 0 ? (val) => notifier.toggleUseWallet(val) : null,
+                onChanged: totalBalance > 0
+                    ? (val) => notifier.toggleUseWallet(val)
+                    : null,
                 activeTrackColor: AppColors.primary,
               ),
             ],
@@ -55,10 +67,17 @@ class WalletSelectionCard extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Wallet Deduction', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 12)),
+                const Text('Wallet Deduction',
+                    style: TextStyle(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12)),
                 Text(
                   '-₹${notifier.walletDeduction.toStringAsFixed(2)}',
-                  style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w900, fontSize: 14),
+                  style: const TextStyle(
+                      color: Colors.green,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 14),
                 ),
               ],
             ),

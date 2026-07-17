@@ -11,5 +11,6 @@ class ReviewImageModel with _$ReviewImageModel {
     String? thumbnailUrl,
   }) = _ReviewImageModel;
 
-  factory ReviewImageModel.fromJson(Map<String, dynamic> json) => _$ReviewImageModelFromJson(json);
+  factory ReviewImageModel.fromJson(Map<String, dynamic> json) =>
+      _$ReviewImageModelFromJson(json);
 }

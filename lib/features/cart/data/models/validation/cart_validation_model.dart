@@ -15,5 +15,6 @@ class CartValidationModel with _$CartValidationModel {
     @Default(0) int warningCount,
   }) = _CartValidationModel;
 
-  factory CartValidationModel.fromJson(Map<String, dynamic> json) => _$CartValidationModelFromJson(json);
+  factory CartValidationModel.fromJson(Map<String, dynamic> json) =>
+      _$CartValidationModelFromJson(json);
 }

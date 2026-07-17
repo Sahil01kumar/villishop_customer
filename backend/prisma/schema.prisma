@@ -1,0 +1,149 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum OrderStatus {
+  PLACED
+  CONFIRMED
+  ACCEPTED
+  PREPARING
+  PACKED
+  READY_FOR_PICKUP
+  OUT_FOR_DELIVERY
+  DELIVERED
+  CANCELLED
+  FAILED
+  REFUNDED
+  RETURNED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  CANCELLED
+  REFUNDED
+}
+
+enum UserRole {
+  CUSTOMER
+  RIDER
+  SHOP_OWNER
+  ADMIN
+}
+
+model User {
+  id               String            @id @default(uuid())
+  email            String            @unique
+  phone            String?           @unique
+  name             String?
+  role             UserRole          @default(CUSTOMER)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  orders           Order[]
+  trackingSessions TrackingSession[]
+  notifications    Notification[]
+  devices          DeviceToken[]
+}
+
+model Order {
+  id              String           @id @default(uuid())
+  orderNumber     String           @unique
+  customerId      String
+  customer        User             @relation(fields: [customerId], references: id)
+  status          OrderStatus      @default(PLACED)
+  paymentStatus   PaymentStatus    @default(PENDING)
+  totalAmount     Decimal
+  currency        String           @default("INR")
+  items           OrderItem[]
+  timeline        OrderTimeline[]
+  logs            OrderLog[]
+  trackingSession TrackingSession?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([customerId])
+  @@index([status])
+}
+
+model OrderItem {
+  id        String   @id @default(uuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: id)
+  productId String
+  quantity  Int
+  price     Decimal
+  createdAt DateTime @default(now())
+}
+
+model OrderTimeline {
+  id          String      @id @default(uuid())
+  orderId     String
+  order       Order       @relation(fields: [orderId], references: id)
+  status      OrderStatus
+  title       String
+  description String?
+  timestamp   DateTime    @default(now())
+}
+
+model OrderLog {
+  id        String      @id @default(uuid())
+  orderId   String
+  order     Order       @relation(fields: [orderId], references: id)
+  oldStatus OrderStatus?
+  newStatus OrderStatus
+  timestamp DateTime    @default(now())
+  metadata  Json?
+}
+
+model TrackingSession {
+  id              String            @id @default(uuid())
+  orderId         String            @unique
+  order           Order             @relation(fields: [orderId], references: id)
+  riderId         String?
+  rider           User?             @relation(fields: [riderId], references: id)
+  status          String            @default("ACTIVE") // ACTIVE, COMPLETED
+  currentLat      Float?
+  currentLng      Float?
+  heading         Float?
+  speed           Float?
+  locationHistory LocationHistory[]
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+}
+
+model LocationHistory {
+  id        String          @id @default(uuid())
+  sessionId String
+  session   TrackingSession @relation(fields: [sessionId], references: id)
+  lat       Float
+  lng       Float
+  heading   Float?
+  speed     Float?
+  timestamp DateTime        @default(now())
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: id)
+  title     String
+  body      String
+  payload   Json?
+  isRead    bool     @default(false)
+  createdAt DateTime @default(now())
+}
+
+model DeviceToken {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: id)
+  token     String   @unique
+  platform  String? // ios, android
+  createdAt DateTime @default(now())
+}

@@ -18,7 +18,10 @@ class OfferSection extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
           child: Text(
             'Available Offers',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
         ),
         AppSpacing.vS,
@@ -40,7 +43,8 @@ class OfferSection extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.local_offer_outlined, color: AppColors.primary),
+                    const Icon(Icons.local_offer_outlined,
+                        color: AppColors.primary),
                     AppSpacing.hS,
                     Expanded(
                       child: Column(
@@ -49,7 +53,8 @@ class OfferSection extends StatelessWidget {
                         children: [
                           Text(
                             offers[index],
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 13),
                           ),
                           const Text(
                             'Use code VILLI20',

@@ -3,7 +3,13 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'settlement_model.freezed.dart';
 part 'settlement_model.g.dart';
 
-enum SettlementStatus { pending, inProgress, completed, failed, partiallyRefunded }
+enum SettlementStatus {
+  pending,
+  inProgress,
+  completed,
+  failed,
+  partiallyRefunded
+}
 
 @freezed
 class SettlementModel with _$SettlementModel {
@@ -19,5 +25,6 @@ class SettlementModel with _$SettlementModel {
     @Default([]) List<String> logs,
   }) = _SettlementModel;
 
-  factory SettlementModel.fromJson(Map<String, dynamic> json) => _$SettlementModelFromJson(json);
+  factory SettlementModel.fromJson(Map<String, dynamic> json) =>
+      _$SettlementModelFromJson(json);
 }

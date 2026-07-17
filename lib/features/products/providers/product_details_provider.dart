@@ -7,7 +7,8 @@ class ProductDetailsNotifier extends StateNotifier<ProductDetailsState> {
   final ProductRepository _repository;
   final String productId;
 
-  ProductDetailsNotifier(this._repository, this.productId) : super(const ProductDetailsState()) {
+  ProductDetailsNotifier(this._repository, this.productId)
+      : super(const ProductDetailsState()) {
     fetchProductDetails();
   }
 
@@ -18,11 +19,11 @@ class ProductDetailsNotifier extends StateNotifier<ProductDetailsState> {
       if (product != null) {
         final related = await _repository.getRelatedProducts(productId);
         state = state.copyWith(
-          isLoading: false, 
-          product: product.copyWith(relatedProducts: related)
-        );
+            isLoading: false,
+            product: product.copyWith(relatedProducts: related));
       } else {
-        state = state.copyWith(isLoading: false, errorMessage: 'Product not found');
+        state =
+            state.copyWith(isLoading: false, errorMessage: 'Product not found');
       }
     } catch (e) {
       state = state.copyWith(isLoading: false, errorMessage: e.toString());
@@ -36,6 +37,8 @@ class ProductDetailsNotifier extends StateNotifier<ProductDetailsState> {
   Future<void> refresh() => fetchProductDetails();
 }
 
-final productDetailsProvider = StateNotifierProvider.family<ProductDetailsNotifier, ProductDetailsState, String>((ref, productId) {
-  return ProductDetailsNotifier(ref.watch(productRepositoryProvider), productId);
+final productDetailsProvider = StateNotifierProvider.family<
+    ProductDetailsNotifier, ProductDetailsState, String>((ref, productId) {
+  return ProductDetailsNotifier(
+      ref.watch(productRepositoryProvider), productId);
 });

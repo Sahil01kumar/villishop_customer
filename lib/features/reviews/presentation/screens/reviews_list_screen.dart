@@ -14,7 +14,8 @@ class ReviewsListScreen extends ConsumerWidget {
   final String targetId;
   final String targetName;
 
-  const ReviewsListScreen({super.key, required this.targetId, required this.targetName});
+  const ReviewsListScreen(
+      {super.key, required this.targetId, required this.targetName});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,9 +31,13 @@ class ReviewsListScreen extends ConsumerWidget {
       body: state.isLoading
           ? const LoadingWidget()
           : state.errorMessage != null
-              ? CustomErrorWidget(message: state.errorMessage!, onRetry: () => ref.read(reviewProvider(targetId).notifier).refresh())
+              ? CustomErrorWidget(
+                  message: state.errorMessage!,
+                  onRetry: () =>
+                      ref.read(reviewProvider(targetId).notifier).refresh())
               : RefreshIndicator(
-                  onRefresh: () => ref.read(reviewProvider(targetId).notifier).refresh(),
+                  onRefresh: () =>
+                      ref.read(reviewProvider(targetId).notifier).refresh(),
                   child: CustomScrollView(
                     slivers: [
                       if (state.summary != null)
@@ -42,23 +47,23 @@ class ReviewsListScreen extends ConsumerWidget {
                             child: ReviewSummaryCard(summary: state.summary!),
                           ),
                         ),
-                      
                       SliverToBoxAdapter(
                         child: _buildFilters(context, state, ref),
                       ),
-
                       if (state.reviews.isEmpty)
                         const SliverFillRemaining(
-                          child: Center(child: Text('No reviews yet. Be the first to review!')),
+                          child: Center(
+                              child: Text(
+                                  'No reviews yet. Be the first to review!')),
                         )
                       else
                         SliverList(
                           delegate: SliverChildBuilderDelegate(
-                            (context, index) => ReviewCard(review: state.reviews[index]),
+                            (context, index) =>
+                                ReviewCard(review: state.reviews[index]),
                             childCount: state.reviews.length,
                           ),
                         ),
-                      
                       const SliverToBoxAdapter(child: SizedBox(height: 100)),
                     ],
                   ),
@@ -70,7 +75,8 @@ class ReviewsListScreen extends ConsumerWidget {
         }),
         backgroundColor: AppColors.primary,
         icon: const Icon(Icons.rate_review_outlined, color: Colors.white),
-        label: const Text('WRITE A REVIEW', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        label: const Text('WRITE A REVIEW',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
       ),
     );
   }
@@ -91,14 +97,20 @@ class ReviewsListScreen extends ConsumerWidget {
             child: ChoiceChip(
               label: Text(filter),
               selected: isSelected,
-              onSelected: (_) => ref.read(reviewProvider(targetId).notifier).updateFilter(filter),
+              onSelected: (_) => ref
+                  .read(reviewProvider(targetId).notifier)
+                  .updateFilter(filter),
               selectedColor: AppColors.primary.withAlpha(50),
               backgroundColor: Colors.white,
               labelStyle: TextStyle(
                 color: isSelected ? AppColors.primary : Colors.grey[700],
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20), side: BorderSide(color: isSelected ? AppColors.primary : Colors.grey[300]!)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  side: BorderSide(
+                      color:
+                          isSelected ? AppColors.primary : Colors.grey[300]!)),
             ),
           );
         },

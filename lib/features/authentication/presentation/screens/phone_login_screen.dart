@@ -31,7 +31,7 @@ class _PhoneLoginScreenState extends ConsumerState<PhoneLoginScreen> {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
       final phoneNumber = '+91${_phoneController.text.trim()}';
-      
+
       try {
         await ref.read(authRepositoryProvider).loginWithPhone(
           phoneNumber,
@@ -47,7 +47,8 @@ class _PhoneLoginScreenState extends ConsumerState<PhoneLoginScreen> {
           verificationFailed: (e) {
             if (mounted) {
               setState(() => _isLoading = false);
-              SnackbarHelper.showError(context, e.message ?? 'Verification failed');
+              SnackbarHelper.showError(
+                  context, e.message ?? 'Verification failed');
             }
           },
         );
@@ -89,7 +90,9 @@ class _PhoneLoginScreenState extends ConsumerState<PhoneLoginScreen> {
                 validator: AppValidators.validatePhone,
                 prefixIcon: const Padding(
                   padding: EdgeInsets.all(14.0),
-                  child: Text('+91 ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  child: Text('+91 ',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                 ),
               ),
               AppSpacing.vXL,

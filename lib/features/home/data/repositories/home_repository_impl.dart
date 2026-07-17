@@ -17,13 +17,15 @@ class HomeRepositoryImpl implements HomeRepository {
   Future<List<BannerModel>> getBanners() => _dataSource.getBanners();
 
   @override
-  Future<List<CategoryModel>> getCategories() => _categoryRepository.getCategories();
+  Future<List<CategoryModel>> getCategories() =>
+      _categoryRepository.getCategories();
 
   @override
   Future<List<ShopModel>> getPopularShops() => _dataSource.getPopularShops();
 
   @override
-  Future<List<ProductModel>> getFeaturedProducts() => _dataSource.getFeaturedProducts();
+  Future<List<ProductModel>> getFeaturedProducts() =>
+      _dataSource.getFeaturedProducts();
 
   @override
   Future<List<DealModel>> getTodayDeals() => _dataSource.getTodayDeals();

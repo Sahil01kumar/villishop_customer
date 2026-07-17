@@ -13,14 +13,14 @@ abstract class FinanceRepository {
   });
 
   Future<FinanceSummaryModel> getFinanceSummary();
-  
+
   Future<List<LedgerModel>> getLedgerEntries({
     required LedgerType type,
     String? referenceId,
   });
 
   Future<List<SettlementModel>> getPendingSettlements(String shopId);
-  
+
   // Future AI Architecture
   Future<void> performRevenueForecast();
 }

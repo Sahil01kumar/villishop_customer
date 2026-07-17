@@ -17,7 +17,8 @@ class SavedForLaterSection extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.s),
+          padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.m, vertical: AppSpacing.s),
           child: Text(
             'Saved for Later (${state.items.length})',
             style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16),

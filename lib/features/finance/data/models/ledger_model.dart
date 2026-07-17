@@ -4,6 +4,7 @@ part 'ledger_model.freezed.dart';
 part 'ledger_model.g.dart';
 
 enum LedgerType { platform, shop, customer, delivery, finance }
+
 enum EntryType { credit, debit }
 
 @freezed
@@ -20,5 +21,6 @@ class LedgerModel with _$LedgerModel {
     String? metadata, // Extra info like payment method
   }) = _LedgerModel;
 
-  factory LedgerModel.fromJson(Map<String, dynamic> json) => _$LedgerModelFromJson(json);
+  factory LedgerModel.fromJson(Map<String, dynamic> json) =>
+      _$LedgerModelFromJson(json);
 }

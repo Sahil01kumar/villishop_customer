@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
 import '../../../../core/router/app_router.dart';
+import '../../../../core/widgets/network_image_with_fallback.dart';
 import '../../../home/data/models/product_model.dart';
 import '../../data/models/sub_models/inventory_info.dart';
 import '../../../../features/cart/providers/cart_provider.dart';
@@ -74,10 +75,11 @@ class ProductListTile extends ConsumerWidget {
           child: Center(
             child: Hero(
               tag: 'product-${product.id}',
-              child: product.imageUrl.isNotEmpty
-                  ? Image.network(product.imageUrl, fit: BoxFit.contain)
-                  : Icon(Icons.shopping_bag_outlined,
-                      size: 40, color: Colors.grey.withAlpha(100)),
+              child: NetworkImageWithFallback(
+                imageUrl: product.imageUrl,
+                fit: BoxFit.contain,
+                fallbackIcon: Icons.shopping_bag_outlined,
+              ),
             ),
           ),
         ),

@@ -35,11 +35,15 @@ class CollectionCard extends StatelessWidget {
                     color: Colors.blue[50],
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Icon(Icons.collections_bookmark_outlined, color: Colors.blue[700]),
+                  child: Icon(Icons.collections_bookmark_outlined,
+                      color: Colors.blue[700]),
                 ),
                 Text(
                   '${collection.items.length} items',
-                  style: TextStyle(color: Colors.grey[600], fontSize: 12, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: Colors.grey[600],
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold),
                 ),
               ],
             ),

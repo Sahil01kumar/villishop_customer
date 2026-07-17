@@ -17,5 +17,6 @@ class PricingInfo with _$PricingInfo {
     @Default(false) bool isDynamicPricingEnabled,
   }) = _PricingInfo;
 
-  factory PricingInfo.fromJson(Map<String, dynamic> json) => _$PricingInfoFromJson(json);
+  factory PricingInfo.fromJson(Map<String, dynamic> json) =>
+      _$PricingInfoFromJson(json);
 }

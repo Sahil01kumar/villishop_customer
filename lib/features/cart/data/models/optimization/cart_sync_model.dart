@@ -15,5 +15,6 @@ class CartSyncModel with _$CartSyncModel {
     @Default(false) bool isOfflineCartAvailable,
   }) = _CartSyncModel;
 
-  factory CartSyncModel.fromJson(Map<String, dynamic> json) => _$CartSyncModelFromJson(json);
+  factory CartSyncModel.fromJson(Map<String, dynamic> json) =>
+      _$CartSyncModelFromJson(json);
 }

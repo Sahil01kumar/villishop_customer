@@ -17,7 +17,8 @@ class SectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.l, AppSpacing.m, AppSpacing.m),
+      padding: const EdgeInsets.fromLTRB(
+          AppSpacing.m, AppSpacing.l, AppSpacing.m, AppSpacing.m),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
@@ -52,7 +53,8 @@ class SectionHeader extends StatelessWidget {
             GestureDetector(
               onTap: onSeeAll,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: AppColors.primary.withAlpha(10),
                   borderRadius: BorderRadius.circular(20),
@@ -67,7 +69,8 @@ class SectionHeader extends StatelessWidget {
                         fontSize: 12,
                       ),
                     ),
-                    Icon(Icons.chevron_right_rounded, size: 16, color: AppColors.primary),
+                    Icon(Icons.chevron_right_rounded,
+                        size: 16, color: AppColors.primary),
                   ],
                 ),
               ),

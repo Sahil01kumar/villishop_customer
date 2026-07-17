@@ -42,7 +42,8 @@ class ProductPricingSection extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: AppColors.primary,
                     borderRadius: BorderRadius.circular(6),
@@ -85,11 +86,15 @@ class ProductPricingSection extends StatelessWidget {
                     children: [
                       const Text(
                         'Delivery in 10-15 mins',
-                        style: TextStyle(fontWeight: FontWeight.w900, fontSize: 14),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w900, fontSize: 14),
                       ),
                       Text(
                         'Fresh from ${product.manufacturing.manufacturer}',
-                        style: TextStyle(color: Colors.grey[600], fontSize: 12, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            color: Colors.grey[600],
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),

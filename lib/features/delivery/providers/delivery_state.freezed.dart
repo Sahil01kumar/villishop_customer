@@ -22,6 +22,8 @@ mixin _$DeliveryState {
   List<DeliverySlotModel> get availableSlots =>
       throw _privateConstructorUsedError;
   DeliverySlotModel? get selectedSlot => throw _privateConstructorUsedError;
+  DeliveryMode get deliveryMode => throw _privateConstructorUsedError;
+  int get etaMinutes => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
   double get totalConsolidatedCharge => throw _privateConstructorUsedError;
 
@@ -43,6 +45,8 @@ abstract class $DeliveryStateCopyWith<$Res> {
       List<DeliverySummaryModel> summaries,
       List<DeliverySlotModel> availableSlots,
       DeliverySlotModel? selectedSlot,
+      DeliveryMode deliveryMode,
+      int etaMinutes,
       String? errorMessage,
       double totalConsolidatedCharge});
 
@@ -68,6 +72,8 @@ class _$DeliveryStateCopyWithImpl<$Res, $Val extends DeliveryState>
     Object? summaries = null,
     Object? availableSlots = null,
     Object? selectedSlot = freezed,
+    Object? deliveryMode = null,
+    Object? etaMinutes = null,
     Object? errorMessage = freezed,
     Object? totalConsolidatedCharge = null,
   }) {
@@ -88,6 +94,14 @@ class _$DeliveryStateCopyWithImpl<$Res, $Val extends DeliveryState>
           ? _value.selectedSlot
           : selectedSlot // ignore: cast_nullable_to_non_nullable
               as DeliverySlotModel?,
+      deliveryMode: null == deliveryMode
+          ? _value.deliveryMode
+          : deliveryMode // ignore: cast_nullable_to_non_nullable
+              as DeliveryMode,
+      etaMinutes: null == etaMinutes
+          ? _value.etaMinutes
+          : etaMinutes // ignore: cast_nullable_to_non_nullable
+              as int,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -127,6 +141,8 @@ abstract class _$$DeliveryStateImplCopyWith<$Res>
       List<DeliverySummaryModel> summaries,
       List<DeliverySlotModel> availableSlots,
       DeliverySlotModel? selectedSlot,
+      DeliveryMode deliveryMode,
+      int etaMinutes,
       String? errorMessage,
       double totalConsolidatedCharge});
 
@@ -151,6 +167,8 @@ class __$$DeliveryStateImplCopyWithImpl<$Res>
     Object? summaries = null,
     Object? availableSlots = null,
     Object? selectedSlot = freezed,
+    Object? deliveryMode = null,
+    Object? etaMinutes = null,
     Object? errorMessage = freezed,
     Object? totalConsolidatedCharge = null,
   }) {
@@ -171,6 +189,14 @@ class __$$DeliveryStateImplCopyWithImpl<$Res>
           ? _value.selectedSlot
           : selectedSlot // ignore: cast_nullable_to_non_nullable
               as DeliverySlotModel?,
+      deliveryMode: null == deliveryMode
+          ? _value.deliveryMode
+          : deliveryMode // ignore: cast_nullable_to_non_nullable
+              as DeliveryMode,
+      etaMinutes: null == etaMinutes
+          ? _value.etaMinutes
+          : etaMinutes // ignore: cast_nullable_to_non_nullable
+              as int,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -191,6 +217,8 @@ class _$DeliveryStateImpl implements _DeliveryState {
       final List<DeliverySummaryModel> summaries = const [],
       final List<DeliverySlotModel> availableSlots = const [],
       this.selectedSlot,
+      this.deliveryMode = DeliveryMode.deliverNow,
+      this.etaMinutes = 12,
       this.errorMessage,
       this.totalConsolidatedCharge = 0.0})
       : _summaries = summaries,
@@ -220,6 +248,12 @@ class _$DeliveryStateImpl implements _DeliveryState {
   @override
   final DeliverySlotModel? selectedSlot;
   @override
+  @JsonKey()
+  final DeliveryMode deliveryMode;
+  @override
+  @JsonKey()
+  final int etaMinutes;
+  @override
   final String? errorMessage;
   @override
   @JsonKey()
@@ -227,7 +261,7 @@ class _$DeliveryStateImpl implements _DeliveryState {
 
   @override
   String toString() {
-    return 'DeliveryState(isLoading: $isLoading, summaries: $summaries, availableSlots: $availableSlots, selectedSlot: $selectedSlot, errorMessage: $errorMessage, totalConsolidatedCharge: $totalConsolidatedCharge)';
+    return 'DeliveryState(isLoading: $isLoading, summaries: $summaries, availableSlots: $availableSlots, selectedSlot: $selectedSlot, deliveryMode: $deliveryMode, etaMinutes: $etaMinutes, errorMessage: $errorMessage, totalConsolidatedCharge: $totalConsolidatedCharge)';
   }
 
   @override
@@ -243,6 +277,10 @@ class _$DeliveryStateImpl implements _DeliveryState {
                 .equals(other._availableSlots, _availableSlots) &&
             (identical(other.selectedSlot, selectedSlot) ||
                 other.selectedSlot == selectedSlot) &&
+            (identical(other.deliveryMode, deliveryMode) ||
+                other.deliveryMode == deliveryMode) &&
+            (identical(other.etaMinutes, etaMinutes) ||
+                other.etaMinutes == etaMinutes) &&
             (identical(other.errorMessage, errorMessage) ||
                 other.errorMessage == errorMessage) &&
             (identical(
@@ -257,6 +295,8 @@ class _$DeliveryStateImpl implements _DeliveryState {
       const DeepCollectionEquality().hash(_summaries),
       const DeepCollectionEquality().hash(_availableSlots),
       selectedSlot,
+      deliveryMode,
+      etaMinutes,
       errorMessage,
       totalConsolidatedCharge);
 
@@ -275,6 +315,8 @@ abstract class _DeliveryState implements DeliveryState {
       final List<DeliverySummaryModel> summaries,
       final List<DeliverySlotModel> availableSlots,
       final DeliverySlotModel? selectedSlot,
+      final DeliveryMode deliveryMode,
+      final int etaMinutes,
       final String? errorMessage,
       final double totalConsolidatedCharge}) = _$DeliveryStateImpl;
 
@@ -286,6 +328,10 @@ abstract class _DeliveryState implements DeliveryState {
   List<DeliverySlotModel> get availableSlots;
   @override
   DeliverySlotModel? get selectedSlot;
+  @override
+  DeliveryMode get deliveryMode;
+  @override
+  int get etaMinutes;
   @override
   String? get errorMessage;
   @override

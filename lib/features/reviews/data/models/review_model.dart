@@ -10,6 +10,7 @@ class ReviewModel with _$ReviewModel {
     required String id,
     required String userId,
     required String userName,
+    String? productId,
     String? userProfilePhoto,
     @Default(true) bool isVerifiedPurchase,
     required DateTime reviewDate,
@@ -22,7 +23,7 @@ class ReviewModel with _$ReviewModel {
     @Default(0) int helpfulCount,
     @Default(false) bool isLikedByMe,
     @Default([]) List<ReviewReplyModel> replies,
-    
+
     // AI Ready Fields
     String? aiReviewSummary,
     @Default([]) List<String> positiveKeywords,
@@ -33,7 +34,8 @@ class ReviewModel with _$ReviewModel {
     @Default(false) bool isSpam,
   }) = _ReviewModel;
 
-  factory ReviewModel.fromJson(Map<String, dynamic> json) => _$ReviewModelFromJson(json);
+  factory ReviewModel.fromJson(Map<String, dynamic> json) =>
+      _$ReviewModelFromJson(json);
 }
 
 @freezed
@@ -47,7 +49,8 @@ class ReviewReplyModel with _$ReviewReplyModel {
     @Default(false) bool isAdminReply,
   }) = _ReviewReplyModel;
 
-  factory ReviewReplyModel.fromJson(Map<String, dynamic> json) => _$ReviewReplyModelFromJson(json);
+  factory ReviewReplyModel.fromJson(Map<String, dynamic> json) =>
+      _$ReviewReplyModelFromJson(json);
 }
 
 @freezed
@@ -61,5 +64,6 @@ class ReviewAnalyticsModel with _$ReviewAnalyticsModel {
     @Default({}) Map<String, double> averageMonthlyRating,
   }) = _ReviewAnalyticsModel;
 
-  factory ReviewAnalyticsModel.fromJson(Map<String, dynamic> json) => _$ReviewAnalyticsModelFromJson(json);
+  factory ReviewAnalyticsModel.fromJson(Map<String, dynamic> json) =>
+      _$ReviewAnalyticsModelFromJson(json);
 }

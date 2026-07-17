@@ -43,7 +43,8 @@ class AddressCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 2),
-                      const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.black, size: 22),
+                      const Icon(Icons.keyboard_arrow_down_rounded,
+                          color: Colors.black, size: 22),
                     ],
                   ),
                   Text(

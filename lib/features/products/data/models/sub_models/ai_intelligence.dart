@@ -15,5 +15,6 @@ class AiIntelligence with _$AiIntelligence {
     @Default(1) int suggestedQuantity,
   }) = _AiIntelligence;
 
-  factory AiIntelligence.fromJson(Map<String, dynamic> json) => _$AiIntelligenceFromJson(json);
+  factory AiIntelligence.fromJson(Map<String, dynamic> json) =>
+      _$AiIntelligenceFromJson(json);
 }

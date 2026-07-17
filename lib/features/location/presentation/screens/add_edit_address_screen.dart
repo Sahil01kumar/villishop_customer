@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
 import '../../../../core/widgets/primary_button.dart';
 import '../../../../core/widgets/custom_text_field.dart';
+import '../../../../core/router/app_router.dart';
 import '../../data/models/address_model.dart';
 import '../../providers/location_provider.dart';
 
@@ -13,12 +15,13 @@ class AddEditAddressScreen extends ConsumerStatefulWidget {
   const AddEditAddressScreen({super.key, this.address});
 
   @override
-  ConsumerState<AddEditAddressScreen> createState() => _AddEditAddressScreenState();
+  ConsumerState<AddEditAddressScreen> createState() =>
+      _AddEditAddressScreenState();
 }
 
 class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
   final _formKey = GlobalKey<FormState>();
-  
+
   late TextEditingController _receiverController;
   late TextEditingController _phoneController;
   late TextEditingController _altPhoneController;
@@ -26,9 +29,11 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
   late TextEditingController _buildingController;
   late TextEditingController _landmarkController;
   late TextEditingController _instructionsController;
-  
+
   String _selectedLabel = 'Home';
   bool _isDefault = false;
+  double? _lat;
+  double? _lng;
 
   @override
   void initState() {
@@ -40,10 +45,13 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
     _houseController = TextEditingController(text: a?.houseNumber ?? '');
     _buildingController = TextEditingController(text: a?.building ?? '');
     _landmarkController = TextEditingController(text: a?.landmark ?? '');
-    _instructionsController = TextEditingController(text: a?.deliveryInstructions ?? '');
-    
+    _instructionsController =
+        TextEditingController(text: a?.deliveryInstructions ?? '');
+
     _selectedLabel = a?.label ?? 'Home';
     _isDefault = a?.isDefault ?? false;
+    _lat = a?.latitude;
+    _lng = a?.longitude;
   }
 
   @override
@@ -70,9 +78,10 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
         building: _buildingController.text,
         landmark: _landmarkController.text,
         deliveryInstructions: _instructionsController.text,
-        fullAddress: "${_houseController.text}, ${_buildingController.text}, ${_landmarkController.text}", // Simplified for demo
-        latitude: widget.address?.latitude ?? 26.9124, // Default to center for mock
-        longitude: widget.address?.longitude ?? 75.7873,
+        fullAddress:
+            "${_houseController.text}, ${_buildingController.text}, ${_landmarkController.text}",
+        latitude: _lat ?? 26.9124,
+        longitude: _lng ?? 75.7873,
         isDefault: _isDefault,
       );
 
@@ -90,7 +99,8 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text(widget.address == null ? 'Add New Address' : 'Edit Address', style: const TextStyle(fontWeight: FontWeight.w900)),
+        title: Text(widget.address == null ? 'Add New Address' : 'Edit Address',
+            style: const TextStyle(fontWeight: FontWeight.w900)),
         centerTitle: false,
       ),
       body: SingleChildScrollView(
@@ -100,7 +110,12 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('RECEIVER DETAILS', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.grey, fontSize: 12, letterSpacing: 1)),
+              const Text('RECEIVER DETAILS',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      color: Colors.grey,
+                      fontSize: 12,
+                      letterSpacing: 1)),
               AppSpacing.vM,
               CustomTextField(
                 label: 'Name',
@@ -133,7 +148,33 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
                 ],
               ),
               AppSpacing.vL,
-              const Text('ADDRESS DETAILS', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.grey, fontSize: 12, letterSpacing: 1)),
+              const Text('ADDRESS DETAILS',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      color: Colors.grey,
+                      fontSize: 12,
+                      letterSpacing: 1)),
+              AppSpacing.vM,
+              OutlinedButton.icon(
+                onPressed: () async {
+                  final result = await context.push(AppRoutes.mapPicker)
+                      as Map<String, dynamic>?;
+                  if (result != null) {
+                    setState(() {
+                      _lat = result['lat'] as double;
+                      _lng = result['lng'] as double;
+                      _buildingController.text = result['address'] as String;
+                    });
+                  }
+                },
+                icon: const Icon(Icons.map_outlined),
+                label: const Text('Pick precise location from Map'),
+                style: OutlinedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                ),
+              ),
               AppSpacing.vM,
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -169,13 +210,21 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
                 maxLines: 2,
               ),
               AppSpacing.vL,
-              const Text('SAVE ADDRESS AS', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.grey, fontSize: 12, letterSpacing: 1)),
+              const Text('SAVE ADDRESS AS',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      color: Colors.grey,
+                      fontSize: 12,
+                      letterSpacing: 1)),
               AppSpacing.vM,
               _buildLabelChips(),
               AppSpacing.vL,
               SwitchListTile(
-                title: const Text('Set as Default Address', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-                subtitle: const Text('Using this for all upcoming orders', style: TextStyle(fontSize: 12)),
+                title: const Text('Set as Default Address',
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                subtitle: const Text('Using this for all upcoming orders',
+                    style: TextStyle(fontSize: 12)),
                 value: _isDefault,
                 onChanged: (val) => setState(() => _isDefault = val),
                 activeThumbColor: AppColors.primary,
@@ -211,8 +260,10 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
               color: isSelected ? AppColors.primary : Colors.black87,
             ),
             backgroundColor: Colors.grey[100],
-            side: BorderSide(color: isSelected ? AppColors.primary : Colors.transparent),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            side: BorderSide(
+                color: isSelected ? AppColors.primary : Colors.transparent),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             showCheckmark: false,
           ),
         );

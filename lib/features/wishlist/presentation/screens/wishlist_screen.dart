@@ -18,7 +18,8 @@ class WishlistScreen extends ConsumerStatefulWidget {
   ConsumerState<WishlistScreen> createState() => _WishlistScreenState();
 }
 
-class _WishlistScreenState extends ConsumerState<WishlistScreen> with SingleTickerProviderStateMixin {
+class _WishlistScreenState extends ConsumerState<WishlistScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -40,7 +41,8 @@ class _WishlistScreenState extends ConsumerState<WishlistScreen> with SingleTick
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('My Favourites', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('My Favourites',
+            style: TextStyle(fontWeight: FontWeight.bold)),
         bottom: TabBar(
           controller: _tabController,
           labelColor: AppColors.primary,
@@ -69,7 +71,8 @@ class _WishlistScreenState extends ConsumerState<WishlistScreen> with SingleTick
 
   Widget _buildProductsTab(dynamic state) {
     if (state.products.isEmpty) {
-      return const EmptyWidget(message: 'No products in wishlist', icon: Icons.favorite_border);
+      return const EmptyWidget(
+          message: 'No products in wishlist', icon: Icons.favorite_border);
     }
     return ListView.separated(
       padding: const EdgeInsets.all(AppSpacing.m),
@@ -79,7 +82,9 @@ class _WishlistScreenState extends ConsumerState<WishlistScreen> with SingleTick
         final item = state.products[index];
         return WishlistProductCard(
           item: item,
-          onRemove: () => ref.read(wishlistProvider.notifier).removeFromWishlist(item.product.id),
+          onRemove: () => ref
+              .read(wishlistProvider.notifier)
+              .removeFromWishlist(item.product.id),
         );
       },
     );
@@ -87,7 +92,8 @@ class _WishlistScreenState extends ConsumerState<WishlistScreen> with SingleTick
 
   Widget _buildShopsTab(dynamic state) {
     if (state.shops.isEmpty) {
-      return const EmptyWidget(message: 'No favourite shops', icon: Icons.storefront);
+      return const EmptyWidget(
+          message: 'No favourite shops', icon: Icons.storefront);
     }
     return ListView.separated(
       padding: const EdgeInsets.all(AppSpacing.m),
@@ -97,7 +103,9 @@ class _WishlistScreenState extends ConsumerState<WishlistScreen> with SingleTick
         final item = state.shops[index];
         return FavouriteShopCard(
           item: item,
-          onRemove: () => ref.read(wishlistProvider.notifier).removeShopFromFavourites(item.shop.id),
+          onRemove: () => ref
+              .read(wishlistProvider.notifier)
+              .removeShopFromFavourites(item.shop.id),
           onTap: () => context.push('${AppRoutes.shopDetails}/${item.shop.id}'),
         );
       },
@@ -106,7 +114,9 @@ class _WishlistScreenState extends ConsumerState<WishlistScreen> with SingleTick
 
   Widget _buildCollectionsTab(dynamic state) {
     if (state.collections.isEmpty) {
-      return const EmptyWidget(message: 'No collections created', icon: Icons.collections_bookmark_outlined);
+      return const EmptyWidget(
+          message: 'No collections created',
+          icon: Icons.collections_bookmark_outlined);
     }
     return GridView.builder(
       padding: const EdgeInsets.all(AppSpacing.m),

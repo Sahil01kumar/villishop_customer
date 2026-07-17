@@ -7,7 +7,6 @@ import 'package:villishop_customer/core/router/app_router.dart';
 import 'package:villishop_customer/core/widgets/empty_widget.dart';
 import 'package:villishop_customer/core/widgets/loading_widget.dart';
 import 'package:villishop_customer/features/cart/data/models/cart_model.dart';
-import 'package:villishop_customer/features/cart/data/models/cart_summary_model.dart';
 import 'package:villishop_customer/features/cart/providers/cart_provider.dart';
 import 'package:villishop_customer/features/cart/providers/cart_state.dart';
 import 'package:villishop_customer/features/coupons/presentation/widgets/coupon_bottom_sheet.dart';
@@ -15,6 +14,14 @@ import 'package:villishop_customer/features/coupons/providers/coupon_provider.da
 import 'package:villishop_customer/features/delivery/presentation/widgets/delivery_slot_selector.dart';
 import 'package:villishop_customer/features/delivery/providers/delivery_provider.dart';
 import 'package:villishop_customer/features/location/providers/location_provider.dart';
+import 'package:villishop_customer/features/finance/providers/finance_providers.dart';
+import 'package:villishop_customer/features/checkout/presentation/widgets/invoice/bill_summary_widget.dart';
+import 'package:villishop_customer/features/checkout/presentation/widgets/invoice/free_delivery_banner.dart';
+import 'package:villishop_customer/features/checkout/presentation/widgets/invoice/savings_card.dart';
+import 'package:villishop_customer/features/checkout/presentation/widgets/checkout_progress_bar.dart';
+import 'package:villishop_customer/features/checkout/presentation/widgets/reservation_timer_widget.dart';
+import 'package:villishop_customer/features/checkout/presentation/widgets/one_tap_banner.dart';
+import 'package:villishop_customer/features/checkout/providers/checkout_provider.dart';
 import '../widgets/shop_cart_section.dart';
 import '../widgets/saved_for_later_section.dart';
 
@@ -26,24 +33,27 @@ class CartScreen extends ConsumerStatefulWidget {
 }
 
 class _CartScreenState extends ConsumerState<CartScreen> {
-
   @override
   void initState() {
     super.initState();
     _initDeliverySlots();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(checkoutProvider.notifier).updateStep(CheckoutStep.cart);
+    });
   }
 
   void _initDeliverySlots() {
     Future.microtask(() {
       final cart = ref.read(cartProvider).cart;
       final address = ref.read(locationProvider).selectedAddress;
-      
+
       if (cart.shopCarts.isNotEmpty && address != null) {
         ref.read(deliveryProvider.notifier).loadAvailableSlots(
-          shopId: cart.shopCarts.first.shopId,
-          cartValue: cart.overallSummary.subTotal - cart.overallSummary.totalDiscount,
-          addressId: address.id,
-        );
+              shopId: cart.shopCarts.first.shopId,
+              cartValue: cart.overallSummary.subTotal -
+                  cart.overallSummary.totalDiscount,
+              addressId: address.id,
+            );
       }
     });
   }
@@ -51,69 +61,106 @@ class _CartScreenState extends ConsumerState<CartScreen> {
   @override
   Widget build(BuildContext context) {
     final cartState = ref.watch(cartProvider);
-    final couponState = ref.watch(couponProvider);
     final cart = cartState.cart;
+    final grandTotal = ref.watch(grandTotalProvider);
 
-    // Listen for slot changes and update cart summary
-    ref.listen(deliveryProvider.select((s) => s.selectedSlot), (prev, next) {
-      if (next != prev) {
-        ref.read(cartProvider.notifier).updateDeliverySlot(next);
+    // Synchronize delivery fee when mode/slot changes
+    ref.listen(deliveryProvider, (prev, next) {
+      if (next.deliveryMode != prev?.deliveryMode ||
+          next.selectedSlot != prev?.selectedSlot) {
+        ref.read(cartProvider.notifier).syncWithDelivery(next);
       }
     });
 
     return Scaffold(
       backgroundColor: const Color(0xFFF7F8FA),
       appBar: AppBar(
-        title: const Text('Checkout', style: TextStyle(fontWeight: FontWeight.w900)),
+        title: const Text('Checkout',
+            style: TextStyle(fontWeight: FontWeight.w900)),
         centerTitle: false,
         backgroundColor: Colors.white,
         elevation: 0,
         scrolledUnderElevation: 0,
         actions: [
           if (cart.shopCarts.isNotEmpty)
-            TextButton(
-              onPressed: () => _showClearCartDialog(context),
-              child: const Text('Clear All', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+            Padding(
+              padding: const EdgeInsets.only(right: 16),
+              child: Center(
+                child: Row(
+                  children: [
+                    const ReservationTimerWidget(),
+                    const SizedBox(width: 8),
+                    IconButton(
+                      onPressed: () => _showClearCartDialog(context),
+                      icon: const Icon(Icons.delete_sweep_outlined,
+                          color: Colors.red),
+                      tooltip: 'Clear Cart',
+                    ),
+                  ],
+                ),
+              ),
             ),
         ],
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(4),
+          child: CheckoutProgressBar(),
+        ),
       ),
       body: cartState.isLoading
           ? const LoadingWidget()
           : cart.shopCarts.isEmpty
               ? const EmptyWidget(
-                  message: 'Your cart is empty. Start adding some village fresh items!',
+                  message:
+                      'Your cart is empty. Start adding some village fresh items!',
                   icon: Icons.shopping_basket_outlined,
                 )
               : CustomScrollView(
                   physics: const BouncingScrollPhysics(),
                   slivers: [
                     SliverPadding(
-                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.s),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.m, vertical: AppSpacing.s),
                       sliver: SliverList(
                         delegate: SliverChildBuilderDelegate(
-                          (context, index) => ShopCartSection(shopCart: cart.shopCarts[index]),
+                          (context, index) =>
+                              ShopCartSection(shopCart: cart.shopCarts[index]),
                           childCount: cart.shopCarts.length,
                         ),
                       ),
                     ),
 
-                    // Enterprise Delivery Slot Selection
+                    // Enterprise Delivery Type Selection
                     const SliverToBoxAdapter(child: DeliverySlotSelector()),
-                    
+
+                    // One-Tap Optimization
+                    const SliverToBoxAdapter(child: OneTapBanner()),
+
                     // Premium Coupon Section
-                    SliverToBoxAdapter(child: _buildCouponSection(context, cartState)),
-                    
-                    // Detailed Bill Summary
                     SliverToBoxAdapter(
-                      child: _buildOverallSummary(context, cart.overallSummary, couponState),
+                        child: _buildCouponSection(context, cartState)),
+
+                    // Detailed Bill Summary & Savings
+                    const SliverPadding(
+                      padding: EdgeInsets.symmetric(horizontal: AppSpacing.m),
+                      sliver: SliverToBoxAdapter(
+                        child: Column(
+                          children: [
+                            FreeDeliveryBanner(),
+                            BillSummaryWidget(),
+                            SavingsCard(),
+                          ],
+                        ),
+                      ),
                     ),
-                    
+
                     const SliverToBoxAdapter(child: SavedForLaterSection()),
-                    
+
                     const SliverToBoxAdapter(child: SizedBox(height: 140)),
                   ],
                 ),
-      bottomNavigationBar: cart.shopCarts.isEmpty ? null : _buildStickyCheckout(context, cart, couponState),
+      bottomNavigationBar: cart.shopCarts.isEmpty
+          ? null
+          : _buildStickyCheckout(context, cart, grandTotal),
     );
   }
 
@@ -126,7 +173,12 @@ class _CartScreenState extends ConsumerState<CartScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [BoxShadow(color: Colors.black.withAlpha(5), blurRadius: 10, offset: const Offset(0, 4))],
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withAlpha(5),
+              blurRadius: 10,
+              offset: const Offset(0, 4))
+        ],
       ),
       child: Material(
         color: Colors.transparent,
@@ -140,12 +192,19 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: (appliedCoupon == null ? AppColors.primary : Colors.green).withAlpha(15),
+                    color: (appliedCoupon == null
+                            ? AppColors.primary
+                            : Colors.green)
+                        .withAlpha(15),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    appliedCoupon == null ? Icons.confirmation_num_outlined : Icons.verified_rounded,
-                    color: appliedCoupon == null ? AppColors.primary : Colors.green,
+                    appliedCoupon == null
+                        ? Icons.confirmation_num_outlined
+                        : Icons.verified_rounded,
+                    color: appliedCoupon == null
+                        ? AppColors.primary
+                        : Colors.green,
                     size: 24,
                   ),
                 ),
@@ -155,30 +214,41 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        appliedCoupon == null ? 'Apply Coupon' : '${appliedCoupon.code} Applied!',
-                        style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
+                        appliedCoupon == null
+                            ? 'Apply Coupon'
+                            : '${appliedCoupon.code} Applied!',
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w900, fontSize: 16),
                       ),
                       Text(
-                        appliedCoupon == null 
-                            ? 'Save more with village offers' 
-                            : 'You saved ₹${couponState.calculation?.discountAmount.toStringAsFixed(0)} additionally',
-                        style: TextStyle(color: Colors.grey[600], fontSize: 12, fontWeight: FontWeight.w500),
+                        appliedCoupon == null
+                            ? 'Save more with village offers'
+                            : 'Coupon discount applied to total',
+                        style: TextStyle(
+                            color: Colors.grey[600],
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500),
                       ),
                     ],
                   ),
                 ),
                 if (appliedCoupon == null)
-                  const Icon(Icons.arrow_forward_ios_rounded, size: 14, color: Colors.grey)
+                  const Icon(Icons.arrow_forward_ios_rounded,
+                      size: 14, color: Colors.grey)
                 else
                   GestureDetector(
                     onTap: () {
-                       ref.read(couponProvider.notifier).removeCoupon();
-                       ref.read(cartProvider.notifier).updateWithCoupon(null, null);
+                      ref.read(couponProvider.notifier).removeCoupon();
+                      ref
+                          .read(cartProvider.notifier)
+                          .updateWithCoupon(null, null);
                     },
-                    child: const Text(
-                      'REMOVE', 
-                      style: TextStyle(color: Colors.red, fontWeight: FontWeight.w900, fontSize: 12, letterSpacing: 0.5)
-                    ),
+                    child: const Text('REMOVE',
+                        style: TextStyle(
+                            color: Colors.red,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 12,
+                            letterSpacing: 0.5)),
                   ),
               ],
             ),
@@ -191,7 +261,8 @@ class _CartScreenState extends ConsumerState<CartScreen> {
   void _showCouponBottomSheet(BuildContext context, CartState cartState) {
     final cart = cartState.cart;
     final shopIds = cart.shopCarts.map((s) => s.shopId).toList();
-    final productIds = cart.shopCarts.expand((s) => s.items.map((i) => i.product.id)).toList();
+    final productIds =
+        cart.shopCarts.expand((s) => s.items.map((i) => i.product.id)).toList();
 
     showModalBottomSheet(
       context: context,
@@ -199,7 +270,8 @@ class _CartScreenState extends ConsumerState<CartScreen> {
       backgroundColor: Colors.transparent,
       useRootNavigator: true,
       builder: (context) => CouponBottomSheet(
-        cartValue: cart.overallSummary.subTotal - cart.overallSummary.totalDiscount,
+        cartValue:
+            cart.overallSummary.subTotal - cart.overallSummary.totalDiscount,
         deliveryCharge: cart.overallSummary.deliveryCharge,
         shopIds: List<String>.from(shopIds),
         productIds: List<String>.from(productIds),
@@ -207,120 +279,18 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     );
   }
 
-  Widget _buildOverallSummary(BuildContext context, CartSummaryModel summary, CouponState couponState) {
-    final double subtotal = summary.subTotal;
-    final double productDiscount = summary.totalDiscount;
-    final double couponDiscount = summary.couponDiscount;
-    final double deliveryCharge = summary.deliveryCharge;
-    
-    // In production, we'd have a default base charge for strikethrough logic
-    const double baseDeliveryCharge = 29.0;
-    final double totalSavings = productDiscount + couponDiscount + (deliveryCharge == 0 ? baseDeliveryCharge : 0);
-
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-      padding: const EdgeInsets.all(AppSpacing.m),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('Bill Summary', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
-          const SizedBox(height: 16),
-          _summaryRow('Item Total (MRP)', subtotal),
-          if (productDiscount > 0) 
-            _summaryRow('Product Discount', -productDiscount, isGreen: true),
-          if (couponDiscount > 0) 
-            _summaryRow('Coupon Discount', -couponDiscount, isGreen: true),
-          
-          _summaryRow(
-            'Delivery Charge', 
-            deliveryCharge, 
-            isFree: deliveryCharge == 0,
-            originalValue: deliveryCharge == 0 ? baseDeliveryCharge : null,
-          ),
-          
-          if (summary.packagingCharge > 0)
-            _summaryRow('Handling & Packaging', summary.packagingCharge),
-            
-          _summaryRow('Taxes & GST', summary.totalTax),
-          
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 12.0),
-            child: Divider(height: 1),
-          ),
-          
-          _summaryRow('Grand Total', summary.grandTotal, isBold: true),
-          
-          if (totalSavings > 0)
-            Container(
-              margin: const EdgeInsets.only(top: 16),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(color: Colors.green.withAlpha(15), borderRadius: BorderRadius.circular(12)),
-              child: Row(
-                children: [
-                  const Icon(Icons.celebration_rounded, color: Colors.green, size: 20),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      'Yay! You saved ₹${totalSavings.toStringAsFixed(0)} on this order',
-                      style: const TextStyle(color: Colors.green, fontWeight: FontWeight.w900, fontSize: 13),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget _summaryRow(String label, double value, {bool isGreen = false, bool isBold = false, bool isFree = false, double? originalValue}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label, style: TextStyle(
-            fontSize: isBold ? 16 : 14,
-            fontWeight: isBold ? FontWeight.w900 : FontWeight.w500,
-            color: isBold ? Colors.black : Colors.grey[700],
-          )),
-          if (isFree)
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (originalValue != null)
-                  Text(
-                    '₹${originalValue.toStringAsFixed(0)}',
-                    style: const TextStyle(color: Colors.grey, fontSize: 13, decoration: TextDecoration.lineThrough, fontWeight: FontWeight.bold),
-                  ),
-                const SizedBox(width: 6),
-                const Text('FREE', style: TextStyle(color: Colors.green, fontWeight: FontWeight.w900, fontSize: 14)),
-              ],
-            )
-          else
-            Text(
-              '${value < 0 ? "-" : ""}₹${value.abs().toStringAsFixed(2)}',
-              style: TextStyle(
-                fontSize: isBold ? 16 : 14,
-                fontWeight: isBold ? FontWeight.w900 : FontWeight.w900,
-                color: isGreen ? Colors.green : Colors.black,
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStickyCheckout(BuildContext context, CartModel cart, CouponState couponState) {
+  Widget _buildStickyCheckout(
+      BuildContext context, CartModel cart, double grandTotal) {
     return Container(
       padding: const EdgeInsets.fromLTRB(AppSpacing.m, 12, AppSpacing.m, 32),
       decoration: BoxDecoration(
         color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black.withAlpha(8), blurRadius: 20, offset: const Offset(0, -10))],
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withAlpha(8),
+              blurRadius: 20,
+              offset: const Offset(0, -10))
+        ],
       ),
       child: Row(
         children: [
@@ -328,24 +298,40 @@ class _CartScreenState extends ConsumerState<CartScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('₹${cart.overallSummary.grandTotal.toStringAsFixed(0)}', 
-                  style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 24, letterSpacing: -1)),
-              const Text('VIEW DETAILED BILL', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w900, fontSize: 10, letterSpacing: 0.5)),
+              Text('₹${grandTotal.toStringAsFixed(0)}',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 24,
+                      letterSpacing: -1)),
+              const Text('VIEW DETAILED BILL',
+                  style: TextStyle(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 10,
+                      letterSpacing: 0.5)),
             ],
           ),
           const Spacer(),
           ElevatedButton(
-            onPressed: () => context.push(AppRoutes.orderReview),
+            onPressed: () {
+              ref
+                  .read(checkoutProvider.notifier)
+                  .updateStep(CheckoutStep.address);
+              context.push(AppRoutes.orderReview);
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
               foregroundColor: Colors.white,
               minimumSize: const Size(180, 56),
               elevation: 0,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16)),
             ),
             child: const Row(
               children: [
-                Text('Next: Review', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
+                Text('Next: Review',
+                    style:
+                        TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
                 SizedBox(width: 8),
                 Icon(Icons.arrow_forward_ios_rounded, size: 14),
               ],
@@ -361,16 +347,22 @@ class _CartScreenState extends ConsumerState<CartScreen> {
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        title: const Text('Clear Cart?', style: TextStyle(fontWeight: FontWeight.w900)),
-        content: const Text('Are you sure you want to remove all items from your cart?'),
+        title: const Text('Clear Cart?',
+            style: TextStyle(fontWeight: FontWeight.w900)),
+        content: const Text(
+            'Are you sure you want to remove all items from your cart?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('CANCEL')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('CANCEL')),
           TextButton(
             onPressed: () {
               ref.read(cartProvider.notifier).clearCart();
               Navigator.pop(context);
             },
-            child: const Text('CLEAR', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+            child: const Text('CLEAR',
+                style:
+                    TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
           ),
         ],
       ),

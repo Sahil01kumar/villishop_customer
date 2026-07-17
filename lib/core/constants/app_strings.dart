@@ -3,7 +3,7 @@ class AppStrings {
 
   static const String appName = 'VilliShop';
   static const String appTagline = '10 Minute Village Delivery';
-  
+
   // Common
   static const String retry = 'Retry';
   static const String cancel = 'Cancel';

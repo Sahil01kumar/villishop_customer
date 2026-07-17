@@ -43,6 +43,7 @@ class FinanceNotifier extends StateNotifier<FinanceState> {
   }
 }
 
-final financeProvider = StateNotifierProvider<FinanceNotifier, FinanceState>((ref) {
+final financeProvider =
+    StateNotifierProvider<FinanceNotifier, FinanceState>((ref) {
   return FinanceNotifier(ref.watch(financeRepositoryProvider));
 });

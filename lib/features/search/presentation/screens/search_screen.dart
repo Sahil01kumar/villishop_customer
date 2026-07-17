@@ -39,7 +39,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         title: CustomSearchBar(
           controller: _searchController,
           hint: 'Search "milk", "bread"...',
-          onChanged: (val) => ref.read(searchProvider.notifier).onQueryChanged(val),
+          onChanged: (val) =>
+              ref.read(searchProvider.notifier).onQueryChanged(val),
           suffixIcon: query.isNotEmpty
               ? IconButton(
                   icon: const Icon(Icons.close, color: Colors.grey),
@@ -62,7 +63,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 _searchController.text = val;
                 ref.read(searchProvider.notifier).onQueryChanged(val);
               },
-              onClearHistory: () => ref.read(searchProvider.notifier).clearHistory(),
+              onClearHistory: () =>
+                  ref.read(searchProvider.notifier).clearHistory(),
             )
           : searchState.isLoading
               ? const LoadingWidget()
@@ -103,52 +105,70 @@ class _InitialSearchView extends StatelessWidget {
             children: [
               Text(
                 'Recent Searches',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ),
               TextButton(
                 onPressed: onClearHistory,
-                child: const Text('Clear', style: TextStyle(color: Colors.red, fontSize: 13)),
+                child: const Text('Clear',
+                    style: TextStyle(color: Colors.red, fontSize: 13)),
               ),
             ],
           ),
           Wrap(
             spacing: 8,
-            children: recent.map((s) => ActionChip(
-              label: Text(s),
-              onPressed: () => onSelect(s),
-              backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20), side: BorderSide(color: Colors.grey.withAlpha(50))),
-            )).toList(),
+            children: recent
+                .map((s) => ActionChip(
+                      label: Text(s),
+                      onPressed: () => onSelect(s),
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          side: BorderSide(color: Colors.grey.withAlpha(50))),
+                    ))
+                .toList(),
           ),
           AppSpacing.vL,
         ],
         Text(
           'Trending Searches',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+          style: Theme.of(context)
+              .textTheme
+              .titleMedium
+              ?.copyWith(fontWeight: FontWeight.bold),
         ),
         AppSpacing.vM,
         Wrap(
           spacing: 12,
           runSpacing: 12,
-          children: trending.map((s) => InkWell(
-            onTap: () => onSelect(s),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: BoxDecoration(
-                color: AppColors.primary.withAlpha(10),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: AppColors.primary.withAlpha(30)),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(Icons.trending_up, size: 16, color: AppColors.primary),
-                  AppSpacing.hS,
-                  Text(s, style: const TextStyle(fontWeight: FontWeight.w600)),
-                ],
-              ),
-            ),
-          )).toList(),
+          children: trending
+              .map((s) => InkWell(
+                    onTap: () => onSelect(s),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withAlpha(10),
+                        borderRadius: BorderRadius.circular(10),
+                        border:
+                            Border.all(color: AppColors.primary.withAlpha(30)),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.trending_up,
+                              size: 16, color: AppColors.primary),
+                          AppSpacing.hS,
+                          Text(s,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.w600)),
+                        ],
+                      ),
+                    ),
+                  ))
+              .toList(),
         ),
       ],
     );
@@ -171,7 +191,10 @@ class _SearchResultsView extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
             child: Text(
               'Shops',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(fontWeight: FontWeight.bold),
             ),
           ),
           AppSpacing.vS,
@@ -191,7 +214,10 @@ class _SearchResultsView extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
             child: Text(
               'Products',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(fontWeight: FontWeight.bold),
             ),
           ),
           AppSpacing.vS,
@@ -206,7 +232,8 @@ class _SearchResultsView extends StatelessWidget {
               childAspectRatio: 0.7,
             ),
             itemCount: products.length,
-            itemBuilder: (context, index) => ProductCard(product: products[index]),
+            itemBuilder: (context, index) =>
+                ProductCard(product: products[index]),
           ),
         ],
       ],

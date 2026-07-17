@@ -13,5 +13,6 @@ class FavouriteShopModel with _$FavouriteShopModel {
     @Default(false) bool isRecentlyVisited,
   }) = _FavouriteShopModel;
 
-  factory FavouriteShopModel.fromJson(Map<String, dynamic> json) => _$FavouriteShopModelFromJson(json);
+  factory FavouriteShopModel.fromJson(Map<String, dynamic> json) =>
+      _$FavouriteShopModelFromJson(json);
 }

@@ -20,5 +20,6 @@ class NutritionInfo with _$NutritionInfo {
     @Default([]) List<String> allergens,
   }) = _NutritionInfo;
 
-  factory NutritionInfo.fromJson(Map<String, dynamic> json) => _$NutritionInfoFromJson(json);
+  factory NutritionInfo.fromJson(Map<String, dynamic> json) =>
+      _$NutritionInfoFromJson(json);
 }

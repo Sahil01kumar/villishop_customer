@@ -15,5 +15,6 @@ class RatingDistributionModel with _$RatingDistributionModel {
     @Default(0.0) double averageRating,
   }) = _RatingDistributionModel;
 
-  factory RatingDistributionModel.fromJson(Map<String, dynamic> json) => _$RatingDistributionModelFromJson(json);
+  factory RatingDistributionModel.fromJson(Map<String, dynamic> json) =>
+      _$RatingDistributionModelFromJson(json);
 }

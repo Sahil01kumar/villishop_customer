@@ -11,6 +11,8 @@ class DeliveryState with _$DeliveryState {
     @Default([]) List<DeliverySummaryModel> summaries,
     @Default([]) List<DeliverySlotModel> availableSlots,
     DeliverySlotModel? selectedSlot,
+    @Default(DeliveryMode.deliverNow) DeliveryMode deliveryMode,
+    @Default(12) int etaMinutes,
     String? errorMessage,
     @Default(0.0) double totalConsolidatedCharge,
   }) = _DeliveryState;

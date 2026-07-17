@@ -12,5 +12,6 @@ class SubscriptionInfo with _$SubscriptionInfo {
     @Default(true) bool canRepeatLastOrder,
   }) = _SubscriptionInfo;
 
-  factory SubscriptionInfo.fromJson(Map<String, dynamic> json) => _$SubscriptionInfoFromJson(json);
+  factory SubscriptionInfo.fromJson(Map<String, dynamic> json) =>
+      _$SubscriptionInfoFromJson(json);
 }

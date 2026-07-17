@@ -3,13 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'payment_method_model.freezed.dart';
 part 'payment_method_model.g.dart';
 
-enum PaymentType { 
-  upi, 
-  card, 
-  netbanking, 
-  wallet, 
-  cod 
-}
+enum PaymentType { upi, card, netbanking, wallet, cod }
 
 @freezed
 class PaymentMethodModel with _$PaymentMethodModel {
@@ -28,5 +22,6 @@ class PaymentMethodModel with _$PaymentMethodModel {
     String? badge,
   }) = _PaymentMethodModel;
 
-  factory PaymentMethodModel.fromJson(Map<String, dynamic> json) => _$PaymentMethodModelFromJson(json);
+  factory PaymentMethodModel.fromJson(Map<String, dynamic> json) =>
+      _$PaymentMethodModelFromJson(json);
 }
