@@ -7,6 +7,7 @@ part 'storage_info.g.dart';
 class StorageInfo with _$StorageInfo {
   const factory StorageInfo({
     String? storageTemperature,
+    String? storageInstructions,
     @Default(false) bool isColdStorageRequired,
     @Default(false) bool isRefrigerated,
     @Default(false) bool isFrozen,

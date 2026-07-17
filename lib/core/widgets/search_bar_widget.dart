@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_dimensions.dart';
 import '../constants/app_strings.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class CustomSearchBar extends StatelessWidget {
   final TextEditingController? controller;
@@ -50,6 +51,6 @@ class CustomSearchBar extends StatelessWidget {
               const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
         ),
       ),
-    );
+    ).animate().fadeIn(duration: 400.ms).slideX(begin: -0.05, end: 0);
   }
 }

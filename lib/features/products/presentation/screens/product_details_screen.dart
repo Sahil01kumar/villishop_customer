@@ -99,6 +99,12 @@ class ProductDetailsScreen extends ConsumerWidget {
 
             _buildStorageInfo(product),
 
+            _buildExpiryInfo(product),
+
+            const Divider(thickness: 8, color: Color(0xFFF3F4F6)),
+
+            _buildProductTrust(product),
+
             const Divider(thickness: 8, color: Color(0xFFF3F4F6)),
 
             ManufacturerInfoSection(product: product),
@@ -176,9 +182,65 @@ class ProductDetailsScreen extends ConsumerWidget {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
           const SizedBox(height: 4),
           Text(
-            'Keep in a cool and dry place. Shelf life: 7 days from packaging.',
+            product.storage.storageInstructions ??
+                'Keep in a cool and dry place. Shelf life: 7 days from packaging.',
             style: TextStyle(color: Colors.grey[700], fontSize: 13),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildExpiryInfo(ProductModel product) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.m, vertical: AppSpacing.s),
+      child: Row(
+        children: [
+          const Icon(Icons.history_toggle_off_rounded,
+              size: 18, color: Colors.grey),
+          const SizedBox(width: 8),
+          Text(
+            'Best before 6 months from packaging',
+            style: TextStyle(
+                color: Colors.grey[800],
+                fontSize: 13,
+                fontWeight: FontWeight.w600),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProductTrust(ProductModel product) {
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.m),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Our Trust Guarantee',
+              style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
+          AppSpacing.vM,
+          Row(
+            children: [
+              _trustItem(Icons.verified_user_rounded, 'Authentic'),
+              _trustItem(Icons.eco_rounded, 'Pure'),
+              _trustItem(Icons.local_shipping_rounded, 'Safe Delivery'),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _trustItem(IconData icon, String label) {
+    return Expanded(
+      child: Column(
+        children: [
+          Icon(icon, color: AppColors.primary, size: 28),
+          const SizedBox(height: 4),
+          Text(label,
+              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
         ],
       ),
     );

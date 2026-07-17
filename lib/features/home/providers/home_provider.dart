@@ -21,6 +21,9 @@ class HomeState with _$HomeState {
     @Default([]) List<ShopModel> popularShops,
     @Default([]) List<ProductModel> featuredProducts,
     @Default([]) List<DealModel> todayDeals,
+    @Default([]) List<ProductModel> bestSellers,
+    @Default([]) List<ProductModel> newArrivals,
+    @Default([]) List<ProductModel> seasonalCollection,
     String? errorMessage,
   }) = _HomeState;
 }
@@ -51,6 +54,9 @@ class HomeController extends StateNotifier<HomeState> {
         _repository.getPopularShops(),
         _repository.getFeaturedProducts(),
         _repository.getTodayDeals(),
+        _repository.getBestSellers(),
+        _repository.getNewArrivals(),
+        _repository.getSeasonalCollection(),
       ]);
 
       state = state.copyWith(
@@ -60,6 +66,9 @@ class HomeController extends StateNotifier<HomeState> {
         popularShops: results[2] as List<ShopModel>,
         featuredProducts: results[3] as List<ProductModel>,
         todayDeals: results[4] as List<DealModel>,
+        bestSellers: results[5] as List<ProductModel>,
+        newArrivals: results[6] as List<ProductModel>,
+        seasonalCollection: results[7] as List<ProductModel>,
       );
     } catch (e) {
       state = state.copyWith(isLoading: false, errorMessage: e.toString());

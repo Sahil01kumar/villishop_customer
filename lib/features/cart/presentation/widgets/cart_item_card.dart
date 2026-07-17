@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:villishop_customer/core/constants/app_dimensions.dart';
-import 'package:villishop_customer/core/widgets/network_image_with_fallback.dart';
-import 'package:villishop_customer/features/cart/data/models/cart_item_model.dart';
-import 'package:villishop_customer/features/cart/providers/cart_provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+
+import '../../data/models/cart_item_model.dart';
+import '../../providers/cart_provider.dart';
 import 'quantity_stepper.dart';
 
 class CartItemCard extends ConsumerWidget {
@@ -46,24 +47,30 @@ class CartItemCard extends ConsumerWidget {
             color: Colors.white, size: 28),
       ),
       child: Container(
-        padding: const EdgeInsets.all(AppSpacing.m),
+        padding: const EdgeInsets.all(16),
         decoration: const BoxDecoration(color: Colors.white),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // Image
             Container(
-              height: 70,
-              width: 70,
+              height: 72,
+              width: 72,
               decoration: BoxDecoration(
                 color: const Color(0xFFF8F9FB),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: Colors.grey.withAlpha(20)),
               ),
-              child: NetworkImageWithFallback(
-                imageUrl: product.imageUrl,
-                fit: BoxFit.contain,
-                fallbackIcon: Icons.shopping_bag_outlined,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: CachedNetworkImage(
+                  imageUrl: product.imageUrl,
+                  fit: BoxFit.contain,
+                  placeholder: (context, url) => Container(color: Colors.white),
+                  errorWidget: (context, url, error) => const Icon(
+                      Icons.shopping_bag_outlined,
+                      color: Colors.grey),
+                ),
               ),
             ),
             const SizedBox(width: 16),
@@ -85,7 +92,7 @@ class CartItemCard extends ConsumerWidget {
                     style: TextStyle(
                         color: Colors.grey[600],
                         fontSize: 12,
-                        fontWeight: FontWeight.bold),
+                        fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(height: 8),
                   Row(
@@ -117,7 +124,7 @@ class CartItemCard extends ConsumerWidget {
             QuantityStepper(product: product),
           ],
         ),
-      ),
+      ).animate().fadeIn(duration: 400.ms).slideX(begin: 0.05, end: 0),
     );
   }
 }

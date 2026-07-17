@@ -22,6 +22,10 @@ mixin _$HomeState {
   List<ShopModel> get popularShops => throw _privateConstructorUsedError;
   List<ProductModel> get featuredProducts => throw _privateConstructorUsedError;
   List<DealModel> get todayDeals => throw _privateConstructorUsedError;
+  List<ProductModel> get bestSellers => throw _privateConstructorUsedError;
+  List<ProductModel> get newArrivals => throw _privateConstructorUsedError;
+  List<ProductModel> get seasonalCollection =>
+      throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
 
   /// Create a copy of HomeState
@@ -43,6 +47,9 @@ abstract class $HomeStateCopyWith<$Res> {
       List<ShopModel> popularShops,
       List<ProductModel> featuredProducts,
       List<DealModel> todayDeals,
+      List<ProductModel> bestSellers,
+      List<ProductModel> newArrivals,
+      List<ProductModel> seasonalCollection,
       String? errorMessage});
 }
 
@@ -67,6 +74,9 @@ class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
     Object? popularShops = null,
     Object? featuredProducts = null,
     Object? todayDeals = null,
+    Object? bestSellers = null,
+    Object? newArrivals = null,
+    Object? seasonalCollection = null,
     Object? errorMessage = freezed,
   }) {
     return _then(_value.copyWith(
@@ -94,6 +104,18 @@ class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
           ? _value.todayDeals
           : todayDeals // ignore: cast_nullable_to_non_nullable
               as List<DealModel>,
+      bestSellers: null == bestSellers
+          ? _value.bestSellers
+          : bestSellers // ignore: cast_nullable_to_non_nullable
+              as List<ProductModel>,
+      newArrivals: null == newArrivals
+          ? _value.newArrivals
+          : newArrivals // ignore: cast_nullable_to_non_nullable
+              as List<ProductModel>,
+      seasonalCollection: null == seasonalCollection
+          ? _value.seasonalCollection
+          : seasonalCollection // ignore: cast_nullable_to_non_nullable
+              as List<ProductModel>,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -117,6 +139,9 @@ abstract class _$$HomeStateImplCopyWith<$Res>
       List<ShopModel> popularShops,
       List<ProductModel> featuredProducts,
       List<DealModel> todayDeals,
+      List<ProductModel> bestSellers,
+      List<ProductModel> newArrivals,
+      List<ProductModel> seasonalCollection,
       String? errorMessage});
 }
 
@@ -139,6 +164,9 @@ class __$$HomeStateImplCopyWithImpl<$Res>
     Object? popularShops = null,
     Object? featuredProducts = null,
     Object? todayDeals = null,
+    Object? bestSellers = null,
+    Object? newArrivals = null,
+    Object? seasonalCollection = null,
     Object? errorMessage = freezed,
   }) {
     return _then(_$HomeStateImpl(
@@ -166,6 +194,18 @@ class __$$HomeStateImplCopyWithImpl<$Res>
           ? _value._todayDeals
           : todayDeals // ignore: cast_nullable_to_non_nullable
               as List<DealModel>,
+      bestSellers: null == bestSellers
+          ? _value._bestSellers
+          : bestSellers // ignore: cast_nullable_to_non_nullable
+              as List<ProductModel>,
+      newArrivals: null == newArrivals
+          ? _value._newArrivals
+          : newArrivals // ignore: cast_nullable_to_non_nullable
+              as List<ProductModel>,
+      seasonalCollection: null == seasonalCollection
+          ? _value._seasonalCollection
+          : seasonalCollection // ignore: cast_nullable_to_non_nullable
+              as List<ProductModel>,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -184,12 +224,18 @@ class _$HomeStateImpl implements _HomeState {
       final List<ShopModel> popularShops = const [],
       final List<ProductModel> featuredProducts = const [],
       final List<DealModel> todayDeals = const [],
+      final List<ProductModel> bestSellers = const [],
+      final List<ProductModel> newArrivals = const [],
+      final List<ProductModel> seasonalCollection = const [],
       this.errorMessage})
       : _banners = banners,
         _categories = categories,
         _popularShops = popularShops,
         _featuredProducts = featuredProducts,
-        _todayDeals = todayDeals;
+        _todayDeals = todayDeals,
+        _bestSellers = bestSellers,
+        _newArrivals = newArrivals,
+        _seasonalCollection = seasonalCollection;
 
   @override
   @JsonKey()
@@ -240,12 +286,40 @@ class _$HomeStateImpl implements _HomeState {
     return EqualUnmodifiableListView(_todayDeals);
   }
 
+  final List<ProductModel> _bestSellers;
+  @override
+  @JsonKey()
+  List<ProductModel> get bestSellers {
+    if (_bestSellers is EqualUnmodifiableListView) return _bestSellers;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_bestSellers);
+  }
+
+  final List<ProductModel> _newArrivals;
+  @override
+  @JsonKey()
+  List<ProductModel> get newArrivals {
+    if (_newArrivals is EqualUnmodifiableListView) return _newArrivals;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_newArrivals);
+  }
+
+  final List<ProductModel> _seasonalCollection;
+  @override
+  @JsonKey()
+  List<ProductModel> get seasonalCollection {
+    if (_seasonalCollection is EqualUnmodifiableListView)
+      return _seasonalCollection;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_seasonalCollection);
+  }
+
   @override
   final String? errorMessage;
 
   @override
   String toString() {
-    return 'HomeState(isLoading: $isLoading, banners: $banners, categories: $categories, popularShops: $popularShops, featuredProducts: $featuredProducts, todayDeals: $todayDeals, errorMessage: $errorMessage)';
+    return 'HomeState(isLoading: $isLoading, banners: $banners, categories: $categories, popularShops: $popularShops, featuredProducts: $featuredProducts, todayDeals: $todayDeals, bestSellers: $bestSellers, newArrivals: $newArrivals, seasonalCollection: $seasonalCollection, errorMessage: $errorMessage)';
   }
 
   @override
@@ -264,6 +338,12 @@ class _$HomeStateImpl implements _HomeState {
                 .equals(other._featuredProducts, _featuredProducts) &&
             const DeepCollectionEquality()
                 .equals(other._todayDeals, _todayDeals) &&
+            const DeepCollectionEquality()
+                .equals(other._bestSellers, _bestSellers) &&
+            const DeepCollectionEquality()
+                .equals(other._newArrivals, _newArrivals) &&
+            const DeepCollectionEquality()
+                .equals(other._seasonalCollection, _seasonalCollection) &&
             (identical(other.errorMessage, errorMessage) ||
                 other.errorMessage == errorMessage));
   }
@@ -277,6 +357,9 @@ class _$HomeStateImpl implements _HomeState {
       const DeepCollectionEquality().hash(_popularShops),
       const DeepCollectionEquality().hash(_featuredProducts),
       const DeepCollectionEquality().hash(_todayDeals),
+      const DeepCollectionEquality().hash(_bestSellers),
+      const DeepCollectionEquality().hash(_newArrivals),
+      const DeepCollectionEquality().hash(_seasonalCollection),
       errorMessage);
 
   /// Create a copy of HomeState
@@ -296,6 +379,9 @@ abstract class _HomeState implements HomeState {
       final List<ShopModel> popularShops,
       final List<ProductModel> featuredProducts,
       final List<DealModel> todayDeals,
+      final List<ProductModel> bestSellers,
+      final List<ProductModel> newArrivals,
+      final List<ProductModel> seasonalCollection,
       final String? errorMessage}) = _$HomeStateImpl;
 
   @override
@@ -310,6 +396,12 @@ abstract class _HomeState implements HomeState {
   List<ProductModel> get featuredProducts;
   @override
   List<DealModel> get todayDeals;
+  @override
+  List<ProductModel> get bestSellers;
+  @override
+  List<ProductModel> get newArrivals;
+  @override
+  List<ProductModel> get seasonalCollection;
   @override
   String? get errorMessage;
 

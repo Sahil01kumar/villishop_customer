@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../data/models/category_model.dart';
 
@@ -22,34 +24,45 @@ class CategoryItem extends StatelessWidget {
             child: Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    AppColors.primary.withAlpha(15),
-                    AppColors.primary.withAlpha(5),
-                  ],
-                ),
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: AppColors.primary.withAlpha(20)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withAlpha(5),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+                border: Border.all(color: Colors.grey.withAlpha(20)),
               ),
-              child: Center(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
                 child: Hero(
                   tag: 'cat-${category.id}',
-                  child: Text(
-                    category.image,
-                    style: const TextStyle(fontSize: 34),
+                  child: CachedNetworkImage(
+                    imageUrl: category.image,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Container(
+                      color: AppColors.primary.withAlpha(5),
+                      child: const Center(
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => Container(
+                      color: AppColors.primary.withAlpha(5),
+                      child: const Icon(Icons.category_outlined, color: AppColors.primary),
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 8),
           Text(
             category.name,
             style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w900,
+              fontSize: 11,
+              fontWeight: FontWeight.w800,
               color: Colors.black87,
               height: 1.1,
             ),
@@ -59,6 +72,6 @@ class CategoryItem extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ).animate().fadeIn(duration: 400.ms).scale(begin: const Offset(0.95, 0.95));
   }
 }

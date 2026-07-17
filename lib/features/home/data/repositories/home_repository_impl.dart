@@ -29,4 +29,16 @@ class HomeRepositoryImpl implements HomeRepository {
 
   @override
   Future<List<DealModel>> getTodayDeals() => _dataSource.getTodayDeals();
+
+  @override
+  Future<List<ProductModel>> getBestSellers() =>
+      _dataSource.getFeaturedProducts();
+
+  @override
+  Future<List<ProductModel>> getNewArrivals() =>
+      _dataSource.getFeaturedProducts();
+
+  @override
+  Future<List<ProductModel>> getSeasonalCollection() =>
+      _dataSource.getFeaturedProducts();
 }

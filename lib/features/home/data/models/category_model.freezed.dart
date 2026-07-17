@@ -27,6 +27,7 @@ mixin _$CategoryModel {
   String get image => throw _privateConstructorUsedError;
   String? get icon => throw _privateConstructorUsedError;
   String? get banner => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError;
   String? get slug => throw _privateConstructorUsedError;
   int get displayOrder => throw _privateConstructorUsedError;
   int get priority => throw _privateConstructorUsedError;
@@ -34,11 +35,13 @@ mixin _$CategoryModel {
   bool get isActive => throw _privateConstructorUsedError;
   bool get isTrending => throw _privateConstructorUsedError;
   bool get isFeatured => throw _privateConstructorUsedError;
+  bool get isPopular => throw _privateConstructorUsedError;
   bool get isSeasonal => throw _privateConstructorUsedError;
   bool get isFestival => throw _privateConstructorUsedError;
   bool get isRecommended => throw _privateConstructorUsedError;
   bool get isPremium => throw _privateConstructorUsedError; // Taxonomy Ready
   int get productCount => throw _privateConstructorUsedError;
+  int get subCategoryCount => throw _privateConstructorUsedError;
   String? get departmentId =>
       throw _privateConstructorUsedError; // AI Ready Architecture
   double get aiRecommendationScore => throw _privateConstructorUsedError;
@@ -71,6 +74,7 @@ abstract class $CategoryModelCopyWith<$Res> {
       String image,
       String? icon,
       String? banner,
+      String? description,
       String? slug,
       int displayOrder,
       int priority,
@@ -78,11 +82,13 @@ abstract class $CategoryModelCopyWith<$Res> {
       bool isActive,
       bool isTrending,
       bool isFeatured,
+      bool isPopular,
       bool isSeasonal,
       bool isFestival,
       bool isRecommended,
       bool isPremium,
       int productCount,
+      int subCategoryCount,
       String? departmentId,
       double aiRecommendationScore,
       double aiTrendingScore,
@@ -113,6 +119,7 @@ class _$CategoryModelCopyWithImpl<$Res, $Val extends CategoryModel>
     Object? image = null,
     Object? icon = freezed,
     Object? banner = freezed,
+    Object? description = freezed,
     Object? slug = freezed,
     Object? displayOrder = null,
     Object? priority = null,
@@ -120,11 +127,13 @@ class _$CategoryModelCopyWithImpl<$Res, $Val extends CategoryModel>
     Object? isActive = null,
     Object? isTrending = null,
     Object? isFeatured = null,
+    Object? isPopular = null,
     Object? isSeasonal = null,
     Object? isFestival = null,
     Object? isRecommended = null,
     Object? isPremium = null,
     Object? productCount = null,
+    Object? subCategoryCount = null,
     Object? departmentId = freezed,
     Object? aiRecommendationScore = null,
     Object? aiTrendingScore = null,
@@ -161,6 +170,10 @@ class _$CategoryModelCopyWithImpl<$Res, $Val extends CategoryModel>
           ? _value.banner
           : banner // ignore: cast_nullable_to_non_nullable
               as String?,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
       slug: freezed == slug
           ? _value.slug
           : slug // ignore: cast_nullable_to_non_nullable
@@ -189,6 +202,10 @@ class _$CategoryModelCopyWithImpl<$Res, $Val extends CategoryModel>
           ? _value.isFeatured
           : isFeatured // ignore: cast_nullable_to_non_nullable
               as bool,
+      isPopular: null == isPopular
+          ? _value.isPopular
+          : isPopular // ignore: cast_nullable_to_non_nullable
+              as bool,
       isSeasonal: null == isSeasonal
           ? _value.isSeasonal
           : isSeasonal // ignore: cast_nullable_to_non_nullable
@@ -208,6 +225,10 @@ class _$CategoryModelCopyWithImpl<$Res, $Val extends CategoryModel>
       productCount: null == productCount
           ? _value.productCount
           : productCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      subCategoryCount: null == subCategoryCount
+          ? _value.subCategoryCount
+          : subCategoryCount // ignore: cast_nullable_to_non_nullable
               as int,
       departmentId: freezed == departmentId
           ? _value.departmentId
@@ -253,6 +274,7 @@ abstract class _$$CategoryModelImplCopyWith<$Res>
       String image,
       String? icon,
       String? banner,
+      String? description,
       String? slug,
       int displayOrder,
       int priority,
@@ -260,11 +282,13 @@ abstract class _$$CategoryModelImplCopyWith<$Res>
       bool isActive,
       bool isTrending,
       bool isFeatured,
+      bool isPopular,
       bool isSeasonal,
       bool isFestival,
       bool isRecommended,
       bool isPremium,
       int productCount,
+      int subCategoryCount,
       String? departmentId,
       double aiRecommendationScore,
       double aiTrendingScore,
@@ -293,6 +317,7 @@ class __$$CategoryModelImplCopyWithImpl<$Res>
     Object? image = null,
     Object? icon = freezed,
     Object? banner = freezed,
+    Object? description = freezed,
     Object? slug = freezed,
     Object? displayOrder = null,
     Object? priority = null,
@@ -300,11 +325,13 @@ class __$$CategoryModelImplCopyWithImpl<$Res>
     Object? isActive = null,
     Object? isTrending = null,
     Object? isFeatured = null,
+    Object? isPopular = null,
     Object? isSeasonal = null,
     Object? isFestival = null,
     Object? isRecommended = null,
     Object? isPremium = null,
     Object? productCount = null,
+    Object? subCategoryCount = null,
     Object? departmentId = freezed,
     Object? aiRecommendationScore = null,
     Object? aiTrendingScore = null,
@@ -341,6 +368,10 @@ class __$$CategoryModelImplCopyWithImpl<$Res>
           ? _value.banner
           : banner // ignore: cast_nullable_to_non_nullable
               as String?,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
       slug: freezed == slug
           ? _value.slug
           : slug // ignore: cast_nullable_to_non_nullable
@@ -369,6 +400,10 @@ class __$$CategoryModelImplCopyWithImpl<$Res>
           ? _value.isFeatured
           : isFeatured // ignore: cast_nullable_to_non_nullable
               as bool,
+      isPopular: null == isPopular
+          ? _value.isPopular
+          : isPopular // ignore: cast_nullable_to_non_nullable
+              as bool,
       isSeasonal: null == isSeasonal
           ? _value.isSeasonal
           : isSeasonal // ignore: cast_nullable_to_non_nullable
@@ -388,6 +423,10 @@ class __$$CategoryModelImplCopyWithImpl<$Res>
       productCount: null == productCount
           ? _value.productCount
           : productCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      subCategoryCount: null == subCategoryCount
+          ? _value.subCategoryCount
+          : subCategoryCount // ignore: cast_nullable_to_non_nullable
               as int,
       departmentId: freezed == departmentId
           ? _value.departmentId
@@ -428,6 +467,7 @@ class _$CategoryModelImpl implements _CategoryModel {
       required this.image,
       this.icon,
       this.banner,
+      this.description,
       this.slug,
       this.displayOrder = 0,
       this.priority = 0,
@@ -435,11 +475,13 @@ class _$CategoryModelImpl implements _CategoryModel {
       this.isActive = true,
       this.isTrending = false,
       this.isFeatured = false,
+      this.isPopular = false,
       this.isSeasonal = false,
       this.isFestival = false,
       this.isRecommended = false,
       this.isPremium = false,
       this.productCount = 0,
+      this.subCategoryCount = 0,
       this.departmentId,
       this.aiRecommendationScore = 0.0,
       this.aiTrendingScore = 0.0,
@@ -468,6 +510,8 @@ class _$CategoryModelImpl implements _CategoryModel {
   @override
   final String? banner;
   @override
+  final String? description;
+  @override
   final String? slug;
   @override
   @JsonKey()
@@ -489,6 +533,9 @@ class _$CategoryModelImpl implements _CategoryModel {
   final bool isFeatured;
   @override
   @JsonKey()
+  final bool isPopular;
+  @override
+  @JsonKey()
   final bool isSeasonal;
   @override
   @JsonKey()
@@ -503,6 +550,9 @@ class _$CategoryModelImpl implements _CategoryModel {
   @override
   @JsonKey()
   final int productCount;
+  @override
+  @JsonKey()
+  final int subCategoryCount;
   @override
   final String? departmentId;
 // AI Ready Architecture
@@ -536,7 +586,7 @@ class _$CategoryModelImpl implements _CategoryModel {
 
   @override
   String toString() {
-    return 'CategoryModel(id: $id, name: $name, parentId: $parentId, level: $level, image: $image, icon: $icon, banner: $banner, slug: $slug, displayOrder: $displayOrder, priority: $priority, isVisible: $isVisible, isActive: $isActive, isTrending: $isTrending, isFeatured: $isFeatured, isSeasonal: $isSeasonal, isFestival: $isFestival, isRecommended: $isRecommended, isPremium: $isPremium, productCount: $productCount, departmentId: $departmentId, aiRecommendationScore: $aiRecommendationScore, aiTrendingScore: $aiTrendingScore, aiSeasonalRanking: $aiSeasonalRanking, subCategories: $subCategories, metadata: $metadata)';
+    return 'CategoryModel(id: $id, name: $name, parentId: $parentId, level: $level, image: $image, icon: $icon, banner: $banner, description: $description, slug: $slug, displayOrder: $displayOrder, priority: $priority, isVisible: $isVisible, isActive: $isActive, isTrending: $isTrending, isFeatured: $isFeatured, isPopular: $isPopular, isSeasonal: $isSeasonal, isFestival: $isFestival, isRecommended: $isRecommended, isPremium: $isPremium, productCount: $productCount, subCategoryCount: $subCategoryCount, departmentId: $departmentId, aiRecommendationScore: $aiRecommendationScore, aiTrendingScore: $aiTrendingScore, aiSeasonalRanking: $aiSeasonalRanking, subCategories: $subCategories, metadata: $metadata)';
   }
 
   @override
@@ -552,6 +602,8 @@ class _$CategoryModelImpl implements _CategoryModel {
             (identical(other.image, image) || other.image == image) &&
             (identical(other.icon, icon) || other.icon == icon) &&
             (identical(other.banner, banner) || other.banner == banner) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
             (identical(other.slug, slug) || other.slug == slug) &&
             (identical(other.displayOrder, displayOrder) ||
                 other.displayOrder == displayOrder) &&
@@ -565,6 +617,8 @@ class _$CategoryModelImpl implements _CategoryModel {
                 other.isTrending == isTrending) &&
             (identical(other.isFeatured, isFeatured) ||
                 other.isFeatured == isFeatured) &&
+            (identical(other.isPopular, isPopular) ||
+                other.isPopular == isPopular) &&
             (identical(other.isSeasonal, isSeasonal) ||
                 other.isSeasonal == isSeasonal) &&
             (identical(other.isFestival, isFestival) ||
@@ -575,6 +629,8 @@ class _$CategoryModelImpl implements _CategoryModel {
                 other.isPremium == isPremium) &&
             (identical(other.productCount, productCount) ||
                 other.productCount == productCount) &&
+            (identical(other.subCategoryCount, subCategoryCount) ||
+                other.subCategoryCount == subCategoryCount) &&
             (identical(other.departmentId, departmentId) ||
                 other.departmentId == departmentId) &&
             (identical(other.aiRecommendationScore, aiRecommendationScore) ||
@@ -599,6 +655,7 @@ class _$CategoryModelImpl implements _CategoryModel {
         image,
         icon,
         banner,
+        description,
         slug,
         displayOrder,
         priority,
@@ -606,11 +663,13 @@ class _$CategoryModelImpl implements _CategoryModel {
         isActive,
         isTrending,
         isFeatured,
+        isPopular,
         isSeasonal,
         isFestival,
         isRecommended,
         isPremium,
         productCount,
+        subCategoryCount,
         departmentId,
         aiRecommendationScore,
         aiTrendingScore,
@@ -644,6 +703,7 @@ abstract class _CategoryModel implements CategoryModel {
       required final String image,
       final String? icon,
       final String? banner,
+      final String? description,
       final String? slug,
       final int displayOrder,
       final int priority,
@@ -651,11 +711,13 @@ abstract class _CategoryModel implements CategoryModel {
       final bool isActive,
       final bool isTrending,
       final bool isFeatured,
+      final bool isPopular,
       final bool isSeasonal,
       final bool isFestival,
       final bool isRecommended,
       final bool isPremium,
       final int productCount,
+      final int subCategoryCount,
       final String? departmentId,
       final double aiRecommendationScore,
       final double aiTrendingScore,
@@ -681,6 +743,8 @@ abstract class _CategoryModel implements CategoryModel {
   @override
   String? get banner;
   @override
+  String? get description;
+  @override
   String? get slug;
   @override
   int get displayOrder;
@@ -695,6 +759,8 @@ abstract class _CategoryModel implements CategoryModel {
   @override
   bool get isFeatured;
   @override
+  bool get isPopular;
+  @override
   bool get isSeasonal;
   @override
   bool get isFestival;
@@ -704,6 +770,8 @@ abstract class _CategoryModel implements CategoryModel {
   bool get isPremium; // Taxonomy Ready
   @override
   int get productCount;
+  @override
+  int get subCategoryCount;
   @override
   String? get departmentId; // AI Ready Architecture
   @override

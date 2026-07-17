@@ -39,6 +39,12 @@ class ProfileScreen extends ConsumerWidget {
             children: [
               _buildProfileHeader(context, user),
               _buildStatsBar(user),
+
+              if (user.membership.type == MembershipType.normal)
+                _buildPremiumUpsell(context),
+
+              _buildLoyaltyCard(context),
+
               const Divider(thickness: 8, color: Color(0xFFF3F4F6)),
               _buildSection(context, 'Ordering', [
                 _menuItem(Icons.receipt_long_outlined, 'Order History', () {
@@ -53,7 +59,9 @@ class ProfileScreen extends ConsumerWidget {
               _buildSection(context, 'Payments & Rewards', [
                 _menuItem(Icons.account_balance_wallet_outlined, 'Villi Wallet',
                     () => context.push(AppRoutes.wallet)),
-                _menuItem(Icons.card_giftcard_outlined, 'Refer & Earn', () {}),
+                _menuItem(Icons.card_giftcard_outlined, 'Refer & Earn',
+                    () => _showReferralDialog(context)),
+                _menuItem(Icons.stars_rounded, 'Loyalty Rewards', () {}),
                 _menuItem(Icons.payment_outlined, 'Saved Payments', () {}),
               ]),
               const Divider(thickness: 8, color: Color(0xFFF3F4F6)),
@@ -251,6 +259,172 @@ class ProfileScreen extends ConsumerWidget {
                     TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildPremiumUpsell(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: 8),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF1A1A1A), Color(0xFF333333)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withAlpha(20),
+              blurRadius: 10,
+              offset: const Offset(0, 5))
+        ],
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Upgrade to Premium',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 18),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Get FREE delivery on all orders above ₹99 and exclusive village offers.',
+                  style: TextStyle(
+                      color: Colors.white.withAlpha(180),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 16),
+          ElevatedButton(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFFFD700),
+              foregroundColor: Colors.black,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+              elevation: 0,
+            ),
+            child: const Text('JOIN',
+                style: TextStyle(fontWeight: FontWeight.w900, fontSize: 13)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLoyaltyCard(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: 8),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.indigo.shade50,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.indigo.withAlpha(10)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: const BoxDecoration(
+              color: Colors.indigo,
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.stars_rounded, color: Colors.white, size: 24),
+          ),
+          const SizedBox(width: 16),
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'VilliShop Rewards',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 16,
+                      color: Colors.indigo),
+                ),
+                Text(
+                  'Earn points on every order and redeem for village fresh gifts.',
+                  style: TextStyle(
+                      color: Colors.indigo,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showReferralDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.card_giftcard_rounded,
+                size: 64, color: AppColors.primary),
+            const SizedBox(height: 24),
+            const Text('Refer & Earn ₹100',
+                style: TextStyle(fontWeight: FontWeight.w900, fontSize: 20)),
+            const SizedBox(height: 12),
+            Text(
+              'Share VilliShop with your friends and get ₹100 when they place their first order!',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.grey[600], fontSize: 14),
+            ),
+            const SizedBox(height: 32),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey.withAlpha(30)),
+              ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('VILLI500',
+                      style:
+                          TextStyle(fontWeight: FontWeight.w900, fontSize: 18)),
+                  Icon(Icons.copy_rounded, size: 20, color: AppColors.primary),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                ),
+                child: const Text('SHARE LINK',
+                    style: TextStyle(fontWeight: FontWeight.w900)),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../../../../core/constants/app_colors.dart';
+
 import '../../../../core/widgets/shimmer_widget.dart';
 import '../../../../core/router/app_router.dart';
 import '../../providers/category_provider.dart';
@@ -33,9 +36,8 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
         final index = next.parentCategories
             .indexWhere((c) => c.id == next.selectedParent!.id);
         if (index != -1 && _sidebarController.hasClients) {
-          // Approximate height of each sidebar item is 14 vertical padding * 2 + icon 46 + gap 6 + text 10 ~ 90px
           _sidebarController.animateTo(
-            index * 90.0,
+            index * 100.0, // Fixed height for sidebar items
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeOut,
           );
@@ -77,7 +79,7 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
   Widget _buildSidebar(
       BuildContext context, WidgetRef ref, CategoryState state) {
     return Container(
-      width: 95,
+      width: 90,
       decoration: BoxDecoration(
         color: const Color(0xFFF8F9FB),
         border: Border(right: BorderSide(color: Colors.grey.withAlpha(20))),
@@ -96,7 +98,7 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               curve: Curves.easeInOut,
-              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 4),
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 4),
               decoration: BoxDecoration(
                 color: isSelected ? Colors.white : Colors.transparent,
                 border: Border(
@@ -109,25 +111,50 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
               child: Column(
                 children: [
                   Container(
-                    width: 46,
-                    height: 46,
+                    width: 54,
+                    height: 54,
                     decoration: BoxDecoration(
                       color: isSelected
                           ? AppColors.primary.withAlpha(10)
-                          : Colors.transparent,
-                      shape: BoxShape.circle,
+                          : Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: isSelected
+                          ? null
+                          : [
+                              BoxShadow(
+                                  color: Colors.black.withAlpha(5),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 2))
+                            ],
                     ),
-                    alignment: Alignment.center,
-                    child: Text(category.image,
-                        style: const TextStyle(fontSize: 26)),
+                    padding: const EdgeInsets.all(4),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: category.image.startsWith('http')
+                          ? CachedNetworkImage(
+                              imageUrl: category.image,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => Container(
+                                color: Colors.grey[100],
+                              ),
+                              errorWidget: (context, url, error) => const Icon(
+                                Icons.category_outlined,
+                                color: AppColors.primary,
+                                size: 24,
+                              ),
+                            )
+                          : Center(
+                              child: Text(category.image,
+                                  style: const TextStyle(fontSize: 24))),
+                    ),
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 8),
                   Text(
                     category.name,
                     style: TextStyle(
                       fontSize: 10,
                       fontWeight:
-                          isSelected ? FontWeight.w900 : FontWeight.w600,
+                          isSelected ? FontWeight.w900 : FontWeight.w700,
                       color: isSelected ? AppColors.primary : Colors.black54,
                     ),
                     textAlign: TextAlign.center,
@@ -152,7 +179,7 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
       children: [
         if (state.selectedParent!.subCategories.isNotEmpty)
           Container(
-            height: 54,
+            height: 56,
             color: Colors.white,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
@@ -176,7 +203,7 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
                     labelStyle: TextStyle(
                       fontSize: 12,
                       fontWeight:
-                          isSelected ? FontWeight.w900 : FontWeight.w600,
+                          isSelected ? FontWeight.w900 : FontWeight.w700,
                       color: isSelected ? AppColors.primary : Colors.black87,
                     ),
                     backgroundColor: Colors.grey[100],
@@ -209,24 +236,24 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
                                   fontWeight: FontWeight.bold)),
                         ],
                       ),
-                    )
-                  : LayoutBuilder(builder: (context, constraints) {
-                      return GridView.builder(
-                        padding: const EdgeInsets.all(12),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 12,
-                          crossAxisSpacing: 12,
-                          childAspectRatio: 0.54,
-                        ),
-                        itemCount: state.products.length,
-                        itemBuilder: (context, index) {
-                          return ProductGridCard(
-                              product: state.products[index]);
-                        },
-                      );
-                    }),
+                    ).animate().fadeIn()
+                  : GridView.builder(
+                      padding: const EdgeInsets.all(12),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 12,
+                        crossAxisSpacing: 12,
+                        childAspectRatio: 0.55,
+                      ),
+                      itemCount: state.products.length,
+                      itemBuilder: (context, index) {
+                        return ProductGridCard(product: state.products[index])
+                            .animate()
+                            .fadeIn(delay: (index * 50).ms)
+                            .scale(begin: const Offset(0.95, 0.95));
+                      },
+                    ),
         ),
       ],
     );
@@ -241,7 +268,7 @@ class _CategoriesSkeleton extends StatelessWidget {
     return Row(
       children: [
         Container(
-          width: 95,
+          width: 90,
           color: const Color(0xFFF8F9FB),
           child: ListView.builder(
             itemCount: 8,
@@ -249,7 +276,7 @@ class _CategoriesSkeleton extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 16, horizontal: 10),
               child: Column(
                 children: [
-                  ShimmerWidget.circular(width: 46, height: 46),
+                  ShimmerWidget.circular(width: 50, height: 50),
                   SizedBox(height: 8),
                   ShimmerWidget.rectangular(height: 10, width: 60),
                 ],

@@ -10,4 +10,7 @@ abstract class HomeRepository {
   Future<List<ShopModel>> getPopularShops();
   Future<List<ProductModel>> getFeaturedProducts();
   Future<List<DealModel>> getTodayDeals();
+  Future<List<ProductModel>> getBestSellers();
+  Future<List<ProductModel>> getNewArrivals();
+  Future<List<ProductModel>> getSeasonalCollection();
 }

@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:villishop_customer/core/constants/app_colors.dart';
 import 'package:villishop_customer/core/constants/app_dimensions.dart';
 import 'package:villishop_customer/core/router/app_router.dart';
-import 'package:villishop_customer/core/widgets/empty_widget.dart';
+
 import 'package:villishop_customer/core/widgets/loading_widget.dart';
 import 'package:villishop_customer/features/cart/data/models/cart_model.dart';
 import 'package:villishop_customer/features/cart/providers/cart_provider.dart';
@@ -24,6 +24,9 @@ import 'package:villishop_customer/features/checkout/presentation/widgets/one_ta
 import 'package:villishop_customer/features/checkout/providers/checkout_provider.dart';
 import '../widgets/shop_cart_section.dart';
 import '../widgets/saved_for_later_section.dart';
+import '../widgets/premium_empty_cart.dart';
+import '../../../home/providers/home_provider.dart';
+import '../../../products/presentation/widgets/product_grid_card.dart';
 
 class CartScreen extends ConsumerStatefulWidget {
   const CartScreen({super.key});
@@ -109,11 +112,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
       body: cartState.isLoading
           ? const LoadingWidget()
           : cart.shopCarts.isEmpty
-              ? const EmptyWidget(
-                  message:
-                      'Your cart is empty. Start adding some village fresh items!',
-                  icon: Icons.shopping_basket_outlined,
-                )
+              ? const PremiumEmptyCart()
               : CustomScrollView(
                   physics: const BouncingScrollPhysics(),
                   slivers: [
@@ -138,6 +137,9 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                     // Premium Coupon Section
                     SliverToBoxAdapter(
                         child: _buildCouponSection(context, cartState)),
+
+                    // Recommended Items
+                    SliverToBoxAdapter(child: _buildRecommendedInCart(ref)),
 
                     // Detailed Bill Summary & Savings
                     const SliverPadding(
@@ -368,4 +370,43 @@ class _CartScreenState extends ConsumerState<CartScreen> {
       ),
     );
   }
+
+  Widget _buildRecommendedInCart(WidgetRef ref) {
+    final homeState = ref.watch(homeProvider);
+    final recommended = homeState.featuredProducts;
+
+    if (recommended.isEmpty) return const SizedBox.shrink();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.l, AppSpacing.m, AppSpacing.m),
+          child: Text(
+            'Before you checkout',
+            style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
+          ),
+        ),
+        SizedBox(
+          height: 250,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+            itemCount: recommended.length,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: SizedBox(
+                  width: 150,
+                  child: ProductGridCard(product: recommended[index]),
+                ),
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 24),
+      ],
+    );
+  }
 }
+

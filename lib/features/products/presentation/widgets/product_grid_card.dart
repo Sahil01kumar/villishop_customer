@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/router/app_router.dart';
-import '../../../../core/widgets/network_image_with_fallback.dart';
 import '../../../home/data/models/product_model.dart';
 import '../../data/models/sub_models/inventory_info.dart';
 import '../../../cart/presentation/widgets/quantity_stepper.dart';
@@ -53,11 +53,17 @@ class ProductGridCard extends ConsumerWidget {
                     ),
                     child: Center(
                       child: Hero(
-                        tag: 'product-${product.id}',
-                        child: NetworkImageWithFallback(
+                        tag: 'product-grid-${product.id}',
+                        child: CachedNetworkImage(
                           imageUrl: product.imageUrl,
                           fit: BoxFit.contain,
-                          fallbackIcon: Icons.shopping_basket_outlined,
+                          placeholder: (context, url) => Container(
+                            color: Colors.grey[100],
+                          ),
+                          errorWidget: (context, url, error) => const Icon(
+                            Icons.shopping_basket_outlined,
+                            color: Colors.grey,
+                          ),
                         ),
                       ),
                     ),
@@ -95,21 +101,8 @@ class ProductGridCard extends ConsumerWidget {
                     child: _WishlistButton(product: product),
                   ),
 
-                  // Special Badges (Bestseller/Trending)
-                  if (product.inventory.isBestseller ||
-                      product.inventory.isTrending)
-                    Positioned(
-                      bottom: 8,
-                      left: 8,
-                      child: _buildMiniBadge(
-                        product.inventory.isBestseller
-                            ? 'BESTSELLER'
-                            : 'TRENDING',
-                        product.inventory.isBestseller
-                            ? Colors.orange
-                            : Colors.purple,
-                      ),
-                    ),
+                  // Special Badges (Bestseller/Trending/Organic/New)
+                  _buildMiniBadgeRow(),
 
                   // Out of Stock Overlay
                   if (isOutOfStock)
@@ -203,7 +196,7 @@ class ProductGridCard extends ConsumerWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              if (hasDiscount)
+                              if (hasDiscount) ...[
                                 Text(
                                   '₹${product.pricing.mrp.toStringAsFixed(0)}',
                                   style: const TextStyle(
@@ -212,6 +205,14 @@ class ProductGridCard extends ConsumerWidget {
                                       decoration: TextDecoration.lineThrough,
                                       fontWeight: FontWeight.bold),
                                 ),
+                                Text(
+                                  'Save ₹${(product.pricing.mrp - product.pricing.sellingPrice).toStringAsFixed(0)}',
+                                  style: const TextStyle(
+                                      color: Colors.green,
+                                      fontSize: 8,
+                                      fontWeight: FontWeight.w900),
+                                ),
+                              ],
                               Text(
                                 '₹${product.pricing.sellingPrice.toStringAsFixed(0)}',
                                 style: const TextStyle(
@@ -222,7 +223,7 @@ class ProductGridCard extends ConsumerWidget {
                         ),
                         if (!isOutOfStock)
                           QuantityStepper(
-                              product: product, width: 60, height: 26)
+                              product: product, width: 64, height: 28)
                         else
                           const Text('OFFLINE',
                               style: TextStyle(
@@ -241,14 +242,37 @@ class ProductGridCard extends ConsumerWidget {
     );
   }
 
-  Widget _buildMiniBadge(String text, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-      decoration:
-          BoxDecoration(color: color, borderRadius: BorderRadius.circular(4)),
-      child: Text(text,
-          style: const TextStyle(
-              color: Colors.white, fontSize: 7, fontWeight: FontWeight.w900)),
+  Widget _buildMiniBadgeRow() {
+    String? label;
+    Color color = Colors.orange;
+
+    if (product.inventory.isNewArrival) {
+      label = 'NEW';
+      color = Colors.blue;
+    } else if (product.healthLabels.isOrganic) {
+      label = 'ORGANIC';
+      color = Colors.green;
+    } else if (product.inventory.isBestseller) {
+      label = 'BESTSELLER';
+      color = Colors.orange;
+    } else if (product.inventory.isTrending) {
+      label = 'TRENDING';
+      color = Colors.purple;
+    }
+
+    if (label == null) return const SizedBox.shrink();
+
+    return Positioned(
+      bottom: 8,
+      left: 8,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+        decoration:
+            BoxDecoration(color: color, borderRadius: BorderRadius.circular(4)),
+        child: Text(label,
+            style: const TextStyle(
+                color: Colors.white, fontSize: 7, fontWeight: FontWeight.w900)),
+      ),
     );
   }
 }
@@ -268,7 +292,7 @@ class _WishlistButton extends ConsumerWidget {
       child: Container(
         padding: const EdgeInsets.all(4),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Colors.white.withAlpha(200),
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
@@ -280,7 +304,7 @@ class _WishlistButton extends ConsumerWidget {
         child: Icon(
           isWishlisted ? Icons.favorite : Icons.favorite_border,
           size: 14,
-          color: isWishlisted ? Colors.red : Colors.grey,
+          color: isWishlisted ? Colors.red : Colors.grey.shade700,
         ),
       ),
     );

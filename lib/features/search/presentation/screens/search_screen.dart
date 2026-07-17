@@ -8,6 +8,7 @@ import '../../../../core/widgets/empty_widget.dart';
 import '../../../home/presentation/widgets/product_card.dart';
 import '../../../home/presentation/widgets/shop_card.dart';
 import '../../providers/search_provider.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
@@ -128,7 +129,10 @@ class _InitialSearchView extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20),
                           side: BorderSide(color: Colors.grey.withAlpha(50))),
                     ))
-                .toList(),
+                .toList()
+                .animate(interval: 50.ms)
+                .fadeIn()
+                .scale(),
           ),
           AppSpacing.vL,
         ],
@@ -168,7 +172,10 @@ class _InitialSearchView extends StatelessWidget {
                       ),
                     ),
                   ))
-              .toList(),
+              .toList()
+              .animate(interval: 50.ms)
+              .fadeIn()
+              .slideX(begin: 0.1, end: 0),
         ),
       ],
     );
@@ -204,7 +211,10 @@ class _SearchResultsView extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.only(right: AppSpacing.m),
               itemCount: shops.length,
-              itemBuilder: (context, index) => ShopCard(shop: shops[index]),
+              itemBuilder: (context, index) => ShopCard(shop: shops[index])
+                  .animate()
+                  .fadeIn(delay: (index * 50).ms)
+                  .slideX(begin: 0.2, end: 0),
             ),
           ),
           AppSpacing.vL,
@@ -233,7 +243,10 @@ class _SearchResultsView extends StatelessWidget {
             ),
             itemCount: products.length,
             itemBuilder: (context, index) =>
-                ProductCard(product: products[index]),
+                ProductCard(product: products[index])
+                    .animate()
+                    .fadeIn(delay: (index * 50).ms)
+                    .scale(begin: const Offset(0.9, 0.9), end: const Offset(1, 1)),
           ),
         ],
       ],

@@ -1,30 +1,36 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:villishop_customer/core/constants/app_colors.dart';
 import 'package:villishop_customer/core/constants/app_dimensions.dart';
-import 'package:villishop_customer/core/widgets/search_bar_widget.dart';
+
 import 'package:villishop_customer/core/widgets/error_widget.dart';
 import 'package:villishop_customer/core/widgets/shimmer_widget.dart';
 import 'package:villishop_customer/core/router/app_router.dart';
 import 'package:villishop_customer/features/location/providers/location_provider.dart';
 import 'package:villishop_customer/features/location/presentation/widgets/location_selector_sheet.dart';
+import 'package:villishop_customer/core/widgets/rotating_hint_search_bar.dart';
 
 import '../widgets/section_header.dart';
-import '../widgets/category_item.dart';
+
 import '../widgets/shop_card.dart';
 import '../widgets/product_card.dart';
-import '../widgets/home_banner.dart';
+
 import '../widgets/address_card.dart';
 import '../../providers/home_provider.dart';
 import '../../../main/providers/navigation_provider.dart';
 import '../../../authentication/providers/auth_provider.dart';
-import '../../../categories/providers/category_provider.dart';
+
 
 import '../widgets/active_order_card.dart';
 import '../widgets/home_trust_banner.dart';
-import '../../../../core/realtime/mock/mock_notification_service.dart';
+import '../widgets/home_flash_sale.dart';
+import '../widgets/home_category_grid.dart';
+import '../widgets/home_brand_grid.dart';
+import '../widgets/home_promotion_section.dart';
+import '../widgets/home_quick_categories.dart';
+import '../widgets/home_hero_banner.dart';
+import '../../../products/providers/recent_products_provider.dart';
 import 'package:villishop_customer/features/cart/providers/cart_provider.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -40,7 +46,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // Use listenManual to avoid 'ref.listen in build' issues in complex widget trees
     _locationSubscription = ref.listenManual(
       locationProvider.select((s) => s.selectedAddress),
       (prev, next) {
@@ -93,51 +98,57 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
                       SliverToBoxAdapter(
                         child: Padding(
-                          padding: const EdgeInsets.fromLTRB(
-                              AppSpacing.m, 0, AppSpacing.m, AppSpacing.m),
-                          child: HomeBanner(banners: homeState.banners),
+                          padding: const EdgeInsets.only(bottom: AppSpacing.m),
+                          child: HomeHeroBanner(banners: homeState.banners),
                         ),
                       ),
 
+                      const SliverToBoxAdapter(
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: AppSpacing.m),
+                          child: HomeQuickCategories(),
+                        ),
+                      ),
+
+                      // Premium Category Grid
                       SliverToBoxAdapter(
-                        child: _buildCategorySection(homeState),
+                        child:
+                            HomeCategoryGrid(categories: homeState.categories),
                       ),
 
-                      // Module 8.5 Test Button
-                      if (kDebugMode)
-                        SliverToBoxAdapter(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: AppSpacing.m),
-                            child: OutlinedButton(
-                              onPressed: () {
-                                ref
-                                    .read(mockNotificationServiceProvider)
-                                    .triggerMockNotification(
-                                      title: 'Test Order Update',
-                                      message:
-                                          'Your village order is arriving in 5 mins!',
-                                      orderId: 'active_order',
-                                    );
-                              },
-                              child: const Text('TRIGGER MOCK NOTIFICATION'),
-                            ),
-                          ),
-                        ),
-
+                      // Flash Sale
                       if (homeState.todayDeals.isNotEmpty)
                         SliverToBoxAdapter(
-                          child: _buildProductSection(
-                            title: "Village Best Deals",
-                            subtitle: 'Freshly harvested, pocket-friendly',
+                          child: HomeFlashSale(
                             products: homeState.todayDeals
                                 .map((d) => d.product)
                                 .toList(),
                           ),
                         ),
 
+                      // Phase 2 Promotion
+                      const SliverToBoxAdapter(child: HomePromotionSection()),
+
+                      // Promotional Content (Phase 2)
+                      const SliverToBoxAdapter(child: HomeBrandGrid()),
+
+                      // Trust Banner
                       const SliverToBoxAdapter(child: HomeTrustBanner()),
 
+                      // Recently Viewed (Phase 2 Enhancement)
+                      const SliverToBoxAdapter(child: _RecentlyViewedSection()),
+
+                      // Daily Essentials (Phase 2)
+                      if (homeState.featuredProducts.isNotEmpty)
+                        SliverToBoxAdapter(
+                          child: _buildProductSection(
+                            title: 'Daily Essentials',
+                            subtitle: 'Fresh every morning',
+                            products: homeState.featuredProducts,
+                          ),
+                        ),
+
+                      // Nearby Shops
                       SliverToBoxAdapter(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,7 +159,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               onSeeAll: () => context.push(AppRoutes.shops),
                             ),
                             SizedBox(
-                              height: 250,
+                              height: 260,
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
                                 physics: const BouncingScrollPhysics(),
@@ -169,6 +180,37 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ),
                       ),
 
+                      // Bestsellers (Phase 2)
+                      if (homeState.bestSellers.isNotEmpty)
+                        SliverToBoxAdapter(
+                          child: _buildProductSection(
+                            title: 'Best Sellers',
+                            subtitle: 'Loved by your neighbors',
+                            products: homeState.bestSellers,
+                          ),
+                        ),
+
+                      // Seasonal Collection (Phase 2)
+                      if (homeState.seasonalCollection.isNotEmpty)
+                        SliverToBoxAdapter(
+                          child: _buildProductSection(
+                            title: 'Seasonal Fresh',
+                            subtitle: 'Best of this season',
+                            products: homeState.seasonalCollection,
+                          ),
+                        ),
+
+                      // New Arrivals (Phase 2)
+                      if (homeState.newArrivals.isNotEmpty)
+                        SliverToBoxAdapter(
+                          child: _buildProductSection(
+                            title: 'New Arrivals',
+                            subtitle: 'Just landed in the village',
+                            products: homeState.newArrivals,
+                          ),
+                        ),
+
+                      // Recommended Products
                       SliverToBoxAdapter(
                         child: _buildProductSection(
                           title: 'Recommended for You',
@@ -236,9 +278,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           color: Colors.white,
           padding: const EdgeInsets.fromLTRB(
               AppSpacing.m, 0, AppSpacing.m, AppSpacing.m),
-          child: CustomSearchBar(
-            hint: 'Search milk, eggs, or fresh vegetables...',
-            readOnly: true,
+          child: RotatingHintSearchBar(
+            hints: const [
+              'Search "milk"',
+              'Search "fresh eggs"',
+              'Search "organic atta"',
+              'Search "seasonal fruits"',
+              'Search "dairy fresh"',
+            ],
             onTap: () => context.push(AppRoutes.search),
           ),
         ),
@@ -315,44 +362,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               : null,
         ),
       ),
-    );
-  }
-
-  Widget _buildCategorySection(HomeState homeState) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SectionHeader(
-          title: 'Shop by Category',
-          subtitle: 'Pure & fresh from village',
-          onSeeAll: () => ref.read(navigationIndexProvider.notifier).state = 1,
-        ),
-        SizedBox(
-          height: 240,
-          child: GridView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-            scrollDirection: Axis.horizontal,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: 12,
-              crossAxisSpacing: 16,
-              childAspectRatio: 1.2,
-            ),
-            itemCount: homeState.categories.length,
-            itemBuilder: (context, index) {
-              final category = homeState.categories[index];
-              return CategoryItem(
-                category: category,
-                onTap: () {
-                  ref.read(pendingCategoryIdProvider.notifier).state =
-                      category.id;
-                  ref.read(navigationIndexProvider.notifier).state = 1;
-                },
-              );
-            },
-          ),
-        ),
-      ],
     );
   }
 
@@ -453,6 +462,42 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 }
 
+class _RecentlyViewedSection extends ConsumerWidget {
+  const _RecentlyViewedSection();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final recentProducts = ref.watch(recentProductsProvider);
+
+    if (recentProducts.isEmpty) return const SizedBox.shrink();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SectionHeader(
+          title: 'Recently Viewed',
+          subtitle: 'Items you might need again',
+        ),
+        SizedBox(
+          height: 250,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+            itemCount: recentProducts.length,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.only(right: AppSpacing.m),
+                child: ProductCard(product: recentProducts[index]),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class _AddressShimmer extends StatelessWidget {
   const _AddressShimmer();
 
@@ -484,38 +529,83 @@ class _HomeSkeleton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 60),
-          const Padding(
-            padding: EdgeInsets.all(AppSpacing.m),
+          // Location Shimmer
+          Padding(
+            padding: const EdgeInsets.all(AppSpacing.m),
             child: Row(
               children: [
-                ShimmerWidget.circular(width: 40, height: 40),
+                const ShimmerWidget.circular(width: 40, height: 40),
                 AppSpacing.hM,
-                Expanded(child: ShimmerWidget.rectangular(height: 20)),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ShimmerWidget.rectangular(height: 12, width: MediaQuery.of(context).size.width * 0.3),
+                      const SizedBox(height: 6),
+                      ShimmerWidget.rectangular(height: 16, width: MediaQuery.of(context).size.width * 0.5),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
+          // Search Bar Shimmer
           const Padding(
-            padding: EdgeInsets.all(AppSpacing.m),
-            child: ShimmerWidget.rounded(width: double.infinity, height: 50),
+            padding: EdgeInsets.symmetric(horizontal: AppSpacing.m),
+            child: ShimmerWidget.rounded(width: double.infinity, height: 54),
           ),
+          AppSpacing.vL,
+          // Banner Shimmer
           const Padding(
-            padding: EdgeInsets.all(AppSpacing.m),
-            child: ShimmerWidget.rounded(width: double.infinity, height: 150),
+            padding: EdgeInsets.symmetric(horizontal: AppSpacing.m),
+            child: ShimmerWidget.rounded(width: double.infinity, height: 180),
           ),
-          ...List.generate(
-              3,
-              (index) => const Padding(
-                    padding: EdgeInsets.all(AppSpacing.m),
-                    child: Row(
-                      children: [
-                        ShimmerWidget.rounded(width: 140, height: 200),
-                        SizedBox(width: 16),
-                        ShimmerWidget.rounded(width: 140, height: 200),
-                      ],
-                    ),
-                  )),
+          AppSpacing.vL,
+          // Category Grid Shimmer
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+            child: GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 5,
+                mainAxisSpacing: 16,
+                crossAxisSpacing: 10,
+                childAspectRatio: 0.7,
+              ),
+              itemCount: 10,
+              itemBuilder: (context, index) => const Column(
+                children: [
+                  ShimmerWidget.circular(width: 56, height: 56),
+                  SizedBox(height: 8),
+                  ShimmerWidget.rectangular(height: 8, width: 40),
+                ],
+              ),
+            ),
+          ),
+          AppSpacing.vL,
+          // Section Title Shimmer
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+            child: ShimmerWidget.rectangular(height: 24, width: MediaQuery.of(context).size.width * 0.4),
+          ),
+          AppSpacing.vM,
+          // Product Horizontal Shimmer
+          SizedBox(
+            height: 240,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+              itemCount: 4,
+              itemBuilder: (context, index) => const Padding(
+                padding: EdgeInsets.only(right: 16),
+                child: ShimmerWidget.rounded(width: 156, height: 240),
+              ),
+            ),
+          ),
         ],
       ),
     );

@@ -21,6 +21,7 @@ StorageInfo _$StorageInfoFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$StorageInfo {
   String? get storageTemperature => throw _privateConstructorUsedError;
+  String? get storageInstructions => throw _privateConstructorUsedError;
   bool get isColdStorageRequired => throw _privateConstructorUsedError;
   bool get isRefrigerated => throw _privateConstructorUsedError;
   bool get isFrozen => throw _privateConstructorUsedError;
@@ -45,6 +46,7 @@ abstract class $StorageInfoCopyWith<$Res> {
   @useResult
   $Res call(
       {String? storageTemperature,
+      String? storageInstructions,
       bool isColdStorageRequired,
       bool isRefrigerated,
       bool isFrozen,
@@ -68,6 +70,7 @@ class _$StorageInfoCopyWithImpl<$Res, $Val extends StorageInfo>
   @override
   $Res call({
     Object? storageTemperature = freezed,
+    Object? storageInstructions = freezed,
     Object? isColdStorageRequired = null,
     Object? isRefrigerated = null,
     Object? isFrozen = null,
@@ -78,6 +81,10 @@ class _$StorageInfoCopyWithImpl<$Res, $Val extends StorageInfo>
       storageTemperature: freezed == storageTemperature
           ? _value.storageTemperature
           : storageTemperature // ignore: cast_nullable_to_non_nullable
+              as String?,
+      storageInstructions: freezed == storageInstructions
+          ? _value.storageInstructions
+          : storageInstructions // ignore: cast_nullable_to_non_nullable
               as String?,
       isColdStorageRequired: null == isColdStorageRequired
           ? _value.isColdStorageRequired
@@ -113,6 +120,7 @@ abstract class _$$StorageInfoImplCopyWith<$Res>
   @useResult
   $Res call(
       {String? storageTemperature,
+      String? storageInstructions,
       bool isColdStorageRequired,
       bool isRefrigerated,
       bool isFrozen,
@@ -134,6 +142,7 @@ class __$$StorageInfoImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? storageTemperature = freezed,
+    Object? storageInstructions = freezed,
     Object? isColdStorageRequired = null,
     Object? isRefrigerated = null,
     Object? isFrozen = null,
@@ -144,6 +153,10 @@ class __$$StorageInfoImplCopyWithImpl<$Res>
       storageTemperature: freezed == storageTemperature
           ? _value.storageTemperature
           : storageTemperature // ignore: cast_nullable_to_non_nullable
+              as String?,
+      storageInstructions: freezed == storageInstructions
+          ? _value.storageInstructions
+          : storageInstructions // ignore: cast_nullable_to_non_nullable
               as String?,
       isColdStorageRequired: null == isColdStorageRequired
           ? _value.isColdStorageRequired
@@ -174,6 +187,7 @@ class __$$StorageInfoImplCopyWithImpl<$Res>
 class _$StorageInfoImpl implements _StorageInfo {
   const _$StorageInfoImpl(
       {this.storageTemperature,
+      this.storageInstructions,
       this.isColdStorageRequired = false,
       this.isRefrigerated = false,
       this.isFrozen = false,
@@ -185,6 +199,8 @@ class _$StorageInfoImpl implements _StorageInfo {
 
   @override
   final String? storageTemperature;
+  @override
+  final String? storageInstructions;
   @override
   @JsonKey()
   final bool isColdStorageRequired;
@@ -203,7 +219,7 @@ class _$StorageInfoImpl implements _StorageInfo {
 
   @override
   String toString() {
-    return 'StorageInfo(storageTemperature: $storageTemperature, isColdStorageRequired: $isColdStorageRequired, isRefrigerated: $isRefrigerated, isFrozen: $isFrozen, keepAwayFromSunlight: $keepAwayFromSunlight, isFragile: $isFragile)';
+    return 'StorageInfo(storageTemperature: $storageTemperature, storageInstructions: $storageInstructions, isColdStorageRequired: $isColdStorageRequired, isRefrigerated: $isRefrigerated, isFrozen: $isFrozen, keepAwayFromSunlight: $keepAwayFromSunlight, isFragile: $isFragile)';
   }
 
   @override
@@ -213,6 +229,8 @@ class _$StorageInfoImpl implements _StorageInfo {
             other is _$StorageInfoImpl &&
             (identical(other.storageTemperature, storageTemperature) ||
                 other.storageTemperature == storageTemperature) &&
+            (identical(other.storageInstructions, storageInstructions) ||
+                other.storageInstructions == storageInstructions) &&
             (identical(other.isColdStorageRequired, isColdStorageRequired) ||
                 other.isColdStorageRequired == isColdStorageRequired) &&
             (identical(other.isRefrigerated, isRefrigerated) ||
@@ -230,6 +248,7 @@ class _$StorageInfoImpl implements _StorageInfo {
   int get hashCode => Object.hash(
       runtimeType,
       storageTemperature,
+      storageInstructions,
       isColdStorageRequired,
       isRefrigerated,
       isFrozen,
@@ -255,6 +274,7 @@ class _$StorageInfoImpl implements _StorageInfo {
 abstract class _StorageInfo implements StorageInfo {
   const factory _StorageInfo(
       {final String? storageTemperature,
+      final String? storageInstructions,
       final bool isColdStorageRequired,
       final bool isRefrigerated,
       final bool isFrozen,
@@ -266,6 +286,8 @@ abstract class _StorageInfo implements StorageInfo {
 
   @override
   String? get storageTemperature;
+  @override
+  String? get storageInstructions;
   @override
   bool get isColdStorageRequired;
   @override

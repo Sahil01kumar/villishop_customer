@@ -15,6 +15,7 @@ class CategoryModel with _$CategoryModel {
     required String image,
     String? icon,
     String? banner,
+    String? description,
     String? slug,
     @Default(0) int displayOrder,
     @Default(0) int priority,
@@ -22,6 +23,7 @@ class CategoryModel with _$CategoryModel {
     @Default(true) bool isActive,
     @Default(false) bool isTrending,
     @Default(false) bool isFeatured,
+    @Default(false) bool isPopular,
     @Default(false) bool isSeasonal,
     @Default(false) bool isFestival,
     @Default(false) bool isRecommended,
@@ -29,6 +31,7 @@ class CategoryModel with _$CategoryModel {
 
     // Taxonomy Ready
     @Default(0) int productCount,
+    @Default(0) int subCategoryCount,
     String? departmentId,
 
     // AI Ready Architecture
