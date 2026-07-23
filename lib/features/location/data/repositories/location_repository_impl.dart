@@ -152,6 +152,83 @@ class LocationRepositoryImpl implements LocationRepository {
     return (distanceInMeters / 1000) <= 20.0;
   }
 
+  @override
+  Future<List<String>> searchPlaces(String query) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    if (query.isEmpty) return [];
+
+    // Mocked data including villages and pin codes
+    final List<String> mocks = [
+      'Jaipur, Rajasthan',
+      'Khetri, Jhunjhunu, Rajasthan',
+      'Chirawa, Jhunjhunu, Rajasthan',
+      'Jhunjhunu, Rajasthan',
+      'Sikar, Rajasthan',
+      'Malviya Nagar, Jaipur',
+      'Vaishali Nagar, Jaipur',
+      'C-Scheme, Jaipur',
+      '302017, Malviya Nagar',
+      '333036, Khetri',
+      '333026, Chirawa',
+    ];
+
+    return mocks
+        .where((s) => s.toLowerCase().contains(query.toLowerCase()))
+        .toList();
+  }
+
+  @override
+  Future<Position?> getPositionFromAddress(String address) async {
+    try {
+      final List<Location> locations = await locationFromAddress(address);
+      if (locations.isNotEmpty) {
+        final loc = locations.first;
+        return Position(
+          latitude: loc.latitude,
+          longitude: loc.longitude,
+          timestamp: DateTime.now(),
+          accuracy: 0,
+          altitude: 0,
+          heading: 0,
+          speed: 0,
+          speedAccuracy: 0,
+          altitudeAccuracy: 0,
+          headingAccuracy: 0,
+        );
+      }
+    } catch (e) {
+      debugPrint("Forward geocoding error: $e");
+      // Mock fallback for testing
+      if (address.contains('Jaipur')) {
+        return Position(
+            latitude: 26.9124,
+            longitude: 75.7873,
+            timestamp: DateTime.now(),
+            accuracy: 0,
+            altitude: 0,
+            heading: 0,
+            speed: 0,
+            speedAccuracy: 0,
+            altitudeAccuracy: 0,
+            headingAccuracy: 0);
+      }
+      if (address.contains('Khetri')) {
+        return Position(
+            latitude: 28.1,
+            longitude: 75.9,
+            timestamp: DateTime.now(),
+            accuracy: 0,
+            altitude: 0,
+            heading: 0,
+            speed: 0,
+            speedAccuracy: 0,
+            altitudeAccuracy: 0,
+            headingAccuracy: 0);
+      }
+    }
+    return null;
+  }
+
   Future<void> _saveToPrefs(List<AddressModel> addresses) async {
     final String encoded =
         jsonEncode(addresses.map((a) => a.toJson()).toList());

@@ -14,6 +14,8 @@ class OrderRepositoryImpl implements OrderRepository {
   List<OrderModel> _orders = [];
 
   final _orderStreamController = StreamController<OrderModel?>.broadcast();
+  final _allOrdersStreamController =
+      StreamController<List<OrderModel>>.broadcast();
 
   OrderRepositoryImpl([this._prefs]) {
     _loadOrdersFromPrefs();
@@ -26,6 +28,7 @@ class OrderRepositoryImpl implements OrderRepository {
       try {
         final List<dynamic> list = jsonDecode(jsonStr);
         _orders = list.map((item) => OrderModel.fromJson(item)).toList();
+        _allOrdersStreamController.add(_orders);
       } catch (_) {}
     }
   }
@@ -51,6 +54,7 @@ class OrderRepositoryImpl implements OrderRepository {
 
     // Emit initial state
     _orderStreamController.add(order);
+    _allOrdersStreamController.add(_orders);
 
     return order;
   }
@@ -70,7 +74,13 @@ class OrderRepositoryImpl implements OrderRepository {
   }
 
   @override
-  Future<void> updateOrderStatus(
+  Stream<List<OrderModel>> watchCustomerOrders(String customerId) {
+    return _allOrdersStreamController.stream.map(
+        (orders) => orders.where((o) => o.customerId == customerId).toList());
+  }
+
+  @override
+  Future<OrderModel?> updateOrderStatus(
       String orderId, OrderLifecycleState newState) async {
     final index = _orders.indexWhere((o) => o.orderId == orderId);
     if (index != -1) {
@@ -85,7 +95,10 @@ class OrderRepositoryImpl implements OrderRepository {
 
       // Notify observers
       _orderStreamController.add(updatedOrder);
+      _allOrdersStreamController.add(_orders);
+      return updatedOrder;
     }
+    return null;
   }
 
   @override

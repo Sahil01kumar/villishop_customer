@@ -50,21 +50,25 @@ class CouponCard extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: Colors.grey[100],
-                              borderRadius: BorderRadius.circular(4),
-                              border: Border.all(color: Colors.grey[300]!),
-                            ),
-                            child: Text(
-                              coupon.code,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w900, fontSize: 14),
+                          Flexible(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[100],
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(color: Colors.grey[300]!),
+                              ),
+                              child: Text(
+                                coupon.code,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w900, fontSize: 14),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ),
-                          const Spacer(),
+                          const SizedBox(width: 8),
                           TextButton(
                             onPressed: onApply,
                             child: Text(

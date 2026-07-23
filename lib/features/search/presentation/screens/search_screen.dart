@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_dimensions.dart';
 import '../../../../core/widgets/search_bar_widget.dart';
@@ -8,7 +10,7 @@ import '../../../../core/widgets/empty_widget.dart';
 import '../../../home/presentation/widgets/product_card.dart';
 import '../../../home/presentation/widgets/shop_card.dart';
 import '../../providers/search_provider.dart';
-import 'package:flutter_animate/flutter_animate.dart';
+import '../../../../core/widgets/floating_cart_bar.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
@@ -32,32 +34,51 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     final query = searchState.query ?? '';
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        automaticallyImplyLeading: true,
-        title: CustomSearchBar(
-          controller: _searchController,
-          hint: 'Search "milk", "bread"...',
-          onChanged: (val) =>
-              ref.read(searchProvider.notifier).onQueryChanged(val),
-          suffixIcon: query.isNotEmpty
-              ? IconButton(
-                  icon: const Icon(Icons.close, color: Colors.grey),
-                  onPressed: () {
-                    _searchController.clear();
-                    ref.read(searchProvider.notifier).onQueryChanged('');
-                  },
-                )
-              : IconButton(
-                  icon: const Icon(Icons.mic_none, color: AppColors.primary),
-                  onPressed: () {},
+        scrolledUnderElevation: 0,
+        automaticallyImplyLeading: false,
+        titleSpacing: 0,
+        title: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+          child: Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
+                onPressed: () => context.pop(),
+              ),
+              Expanded(
+                child: CustomSearchBar(
+                  controller: _searchController,
+                  hint: 'Search milk, bread, butter...',
+                  onChanged: (val) =>
+                      ref.read(searchProvider.notifier).onQueryChanged(val),
+                  suffixIcon: query.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.close_rounded,
+                              color: Colors.grey),
+                          onPressed: () {
+                            _searchController.clear();
+                            ref
+                                .read(searchProvider.notifier)
+                                .onQueryChanged('');
+                          },
+                        )
+                      : IconButton(
+                          icon: const Icon(Icons.mic_none_rounded,
+                              color: AppColors.primary),
+                          onPressed: () {},
+                        ),
                 ),
+              ),
+            ],
+          ),
         ),
       ),
       body: query.isEmpty
-          ? _InitialSearchView(
+          ? _InitialProductSearchView(
               recent: searchState.recentSearches,
               trending: searchState.trendingSearches,
               onSelect: (val) {
@@ -71,24 +92,28 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               ? const LoadingWidget()
               : (searchState.products.isEmpty && searchState.shops.isEmpty)
                   ? const EmptyWidget(
-                      message: 'No results found for your search',
+                      title: 'No Items Found',
+                      message:
+                          'Try searching for something else like "Milk" or "Eggs".',
                       icon: Icons.search_off_outlined,
                     )
-                  : _SearchResultsView(
+                  : _SearchResultsSliverView(
                       products: searchState.products,
                       shops: searchState.shops,
                     ),
+      floatingActionButton: const FloatingCartBar(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
 
-class _InitialSearchView extends StatelessWidget {
+class _InitialProductSearchView extends StatelessWidget {
   final List<String> recent;
   final List<String> trending;
   final Function(String) onSelect;
   final VoidCallback onClearHistory;
 
-  const _InitialSearchView({
+  const _InitialProductSearchView({
     required this.recent,
     required this.trending,
     required this.onSelect,
@@ -99,22 +124,23 @@ class _InitialSearchView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.m),
+      physics: const BouncingScrollPhysics(),
       children: [
         if (recent.isNotEmpty) ...[
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
+              const Text(
                 'Recent Searches',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium
-                    ?.copyWith(fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
               ),
               TextButton(
                 onPressed: onClearHistory,
                 child: const Text('Clear',
-                    style: TextStyle(color: Colors.red, fontSize: 13)),
+                    style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold)),
               ),
             ],
           ),
@@ -129,19 +155,13 @@ class _InitialSearchView extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20),
                           side: BorderSide(color: Colors.grey.withAlpha(50))),
                     ))
-                .toList()
-                .animate(interval: 50.ms)
-                .fadeIn()
-                .scale(),
+                .toList(),
           ),
           AppSpacing.vL,
         ],
-        Text(
-          'Trending Searches',
-          style: Theme.of(context)
-              .textTheme
-              .titleMedium
-              ?.copyWith(fontWeight: FontWeight.bold),
+        const Text(
+          'Trending Products',
+          style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
         ),
         AppSpacing.vM,
         Wrap(
@@ -150,9 +170,10 @@ class _InitialSearchView extends StatelessWidget {
           children: trending
               .map((s) => InkWell(
                     onTap: () => onSelect(s),
+                    borderRadius: BorderRadius.circular(10),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
+                          horizontal: 16, vertical: 10),
                       decoration: BoxDecoration(
                         color: AppColors.primary.withAlpha(10),
                         borderRadius: BorderRadius.circular(10),
@@ -162,93 +183,94 @@ class _InitialSearchView extends StatelessWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(Icons.trending_up,
+                          const Icon(Icons.trending_up_rounded,
                               size: 16, color: AppColors.primary),
                           AppSpacing.hS,
                           Text(s,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.w600)),
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w700, fontSize: 13)),
                         ],
                       ),
                     ),
                   ))
-              .toList()
-              .animate(interval: 50.ms)
-              .fadeIn()
-              .slideX(begin: 0.1, end: 0),
+              .toList(),
         ),
       ],
     );
   }
 }
 
-class _SearchResultsView extends StatelessWidget {
+class _SearchResultsSliverView extends StatelessWidget {
   final List<dynamic> products;
   final List<dynamic> shops;
 
-  const _SearchResultsView({required this.products, required this.shops});
+  const _SearchResultsSliverView({required this.products, required this.shops});
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.m),
-      children: [
+    return CustomScrollView(
+      physics: const BouncingScrollPhysics(),
+      slivers: [
         if (shops.isNotEmpty) ...[
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-            child: Text(
-              'Shops',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium
-                  ?.copyWith(fontWeight: FontWeight.bold),
+          const SliverPadding(
+            padding: EdgeInsets.fromLTRB(
+                AppSpacing.m, AppSpacing.m, AppSpacing.m, AppSpacing.s),
+            sliver: SliverToBoxAdapter(
+              child: Text(
+                'Shops',
+                style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
+              ),
             ),
           ),
-          AppSpacing.vS,
-          SizedBox(
-            height: 200,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.only(right: AppSpacing.m),
-              itemCount: shops.length,
-              itemBuilder: (context, index) => ShopCard(shop: shops[index])
-                  .animate()
-                  .fadeIn(delay: (index * 50).ms)
-                  .slideX(begin: 0.2, end: 0),
+          SliverToBoxAdapter(
+            child: SizedBox(
+              height: 240,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+                itemCount: shops.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: AppSpacing.m),
+                    child: ShopCard(shop: shops[index]),
+                  );
+                },
+              ),
             ),
           ),
-          AppSpacing.vL,
+          const SliverToBoxAdapter(child: AppSpacing.vL),
         ],
         if (products.isNotEmpty) ...[
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-            child: Text(
-              'Products',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium
-                  ?.copyWith(fontWeight: FontWeight.bold),
+          const SliverPadding(
+            padding: EdgeInsets.fromLTRB(
+                AppSpacing.m, 0, AppSpacing.m, AppSpacing.s),
+            sliver: SliverToBoxAdapter(
+              child: Text(
+                'Products',
+                style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
+              ),
             ),
           ),
-          AppSpacing.vS,
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
+          SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: 12,
-              crossAxisSpacing: 12,
-              childAspectRatio: 0.7,
-            ),
-            itemCount: products.length,
-            itemBuilder: (context, index) =>
-                ProductCard(product: products[index])
+            sliver: SliverGrid(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 12,
+                crossAxisSpacing: 12,
+                childAspectRatio: 0.58,
+              ),
+              delegate: SliverChildBuilderDelegate(
+                (context, index) => ProductCard(product: products[index])
                     .animate()
                     .fadeIn(delay: (index * 50).ms)
-                    .scale(begin: const Offset(0.9, 0.9), end: const Offset(1, 1)),
+                    .scale(begin: const Offset(0.95, 0.95)),
+                childCount: products.length,
+              ),
+            ),
           ),
         ],
+        const SliverToBoxAdapter(child: SizedBox(height: 120)),
       ],
     );
   }

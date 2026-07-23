@@ -30,8 +30,9 @@ class AddressListScreen extends ConsumerWidget {
           ? _buildSkeletonList()
           : state.addresses.isEmpty
               ? const EmptyWidget(
+                  title: 'No Saved Addresses',
                   message:
-                      'No addresses saved yet. Add your village address to get started.',
+                      'Add your village address to get started with fresh deliveries.',
                   icon: Icons.location_on_outlined,
                 )
               : ListView.builder(

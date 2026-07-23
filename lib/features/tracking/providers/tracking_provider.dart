@@ -14,6 +14,11 @@ final trackingRepositoryProvider = Provider<TrackingRepository>((ref) {
 final trackingProvider =
     StreamProvider.family<OrderTrackingModel, String>((ref, orderId) {
   final repository = ref.watch(trackingRepositoryProvider);
+  
+  ref.onDispose(() {
+    repository.stopTracking(orderId);
+  });
+
   return repository.getTrackingStream(orderId);
 });
 

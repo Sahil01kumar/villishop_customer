@@ -1,7 +1,12 @@
 enum OrderLifecycleState {
   orderPlaced,
+  confirmed,
+  preparing,
+  packed,
   deliveryPartnerAssigned,
+  pickedUp,
   onTheWay,
+  nearby,
   delivered,
   cancelled,
   failed,
@@ -14,10 +19,20 @@ extension OrderLifecycleStateX on OrderLifecycleState {
     switch (this) {
       case OrderLifecycleState.orderPlaced:
         return 'Order Placed';
+      case OrderLifecycleState.confirmed:
+        return 'Store Accepted';
+      case OrderLifecycleState.preparing:
+        return 'Preparing';
+      case OrderLifecycleState.packed:
+        return 'Packing';
       case OrderLifecycleState.deliveryPartnerAssigned:
-        return 'Partner Assigned';
+        return 'Rider Assigned';
+      case OrderLifecycleState.pickedUp:
+        return 'Picked Up';
       case OrderLifecycleState.onTheWay:
         return 'On The Way';
+      case OrderLifecycleState.nearby:
+        return 'Nearby';
       case OrderLifecycleState.delivered:
         return 'Delivered';
       case OrderLifecycleState.cancelled:

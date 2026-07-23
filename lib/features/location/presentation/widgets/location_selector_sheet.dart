@@ -52,10 +52,9 @@ class LocationSelectorSheet extends ConsumerWidget {
           const SizedBox(height: 16),
           TextField(
             readOnly: true,
-            onTap: () {
+            onTap: () async {
               Navigator.pop(context);
-              context.push(AppRoutes
-                  .search); // Reusing search or specific address search
+              await context.push(AppRoutes.addressSearch);
             },
             decoration: InputDecoration(
               hintText: 'Search for area, street name...',
@@ -93,21 +92,7 @@ class LocationSelectorSheet extends ConsumerWidget {
             color: Colors.blue,
             onTap: () async {
               Navigator.pop(context);
-              final result = await context.push(AppRoutes.mapPicker)
-                  as Map<String, dynamic>?;
-              if (result != null) {
-                final lat = result['lat'] as double;
-                final lng = result['lng'] as double;
-                final address = result['address'] as String;
-
-                ref.read(locationProvider.notifier).selectAddress(AddressModel(
-                      id: 'picked_${DateTime.now().millisecondsSinceEpoch}',
-                      label: 'Selected Location',
-                      fullAddress: address,
-                      latitude: lat,
-                      longitude: lng,
-                    ));
-              }
+              await context.push(AppRoutes.mapPicker);
             },
           ),
           const Padding(

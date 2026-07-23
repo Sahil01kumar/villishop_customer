@@ -49,46 +49,6 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<UserCredential> signInWithEmailPassword(
-      String email, String password) async {
-    try {
-      return await _firebaseAuth.signInWithEmailAndPassword(
-          email: email, password: password);
-    } on FirebaseAuthException catch (e) {
-      throw AuthFailure(e.message ?? 'Login failed');
-    }
-  }
-
-  @override
-  Future<UserCredential> signUpWithEmailPassword(
-      String email, String password) async {
-    try {
-      return await _firebaseAuth.createUserWithEmailAndPassword(
-          email: email, password: password);
-    } on FirebaseAuthException catch (e) {
-      throw AuthFailure(e.message ?? 'Signup failed');
-    }
-  }
-
-  @override
-  Future<void> sendPasswordResetEmail(String email) async {
-    try {
-      await _firebaseAuth.sendPasswordResetEmail(email: email);
-    } on FirebaseAuthException catch (e) {
-      throw AuthFailure(e.message ?? 'Failed to send password reset email');
-    }
-  }
-
-  @override
-  Future<void> sendEmailVerification() async {
-    try {
-      await _firebaseAuth.currentUser?.sendEmailVerification();
-    } on FirebaseAuthException catch (e) {
-      throw AuthFailure(e.message ?? 'Failed to send email verification');
-    }
-  }
-
-  @override
   Future<UserCredential> signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
@@ -122,6 +82,7 @@ class AuthRepositoryImpl implements AuthRepository {
     final user = _firebaseAuth.currentUser;
     if (user != null) {
       // In a real app, fetch these from Firestore
+      // For now, we assume profile is complete if displayName is present
       return UserModel(
         id: user.uid,
         phoneNumber: user.phoneNumber ?? '',
@@ -137,24 +98,28 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<void> updateDisplayName(String name) async {
-    try {
-      await _firebaseAuth.currentUser?.updateDisplayName(name);
-    } on FirebaseAuthException catch (e) {
-      throw AuthFailure(e.message ?? 'Failed to update name');
-    }
-  }
-
-  @override
   Future<void> updateProfile(UserModel userModel) async {
     try {
       final user = _firebaseAuth.currentUser;
       if (user != null) {
         await user.updateDisplayName(userModel.name);
-        // Save other fields to Firestore in production
+        // In production, save other fields to Firestore
       }
     } on FirebaseAuthException catch (e) {
       throw AuthFailure(e.message ?? 'Failed to update profile');
     }
+  }
+
+  @override
+  Future<bool> checkUserExists(String phoneNumber) async {
+    // In a real app, check Firestore if a user with this phone exists.
+    // For dummy purposes, let's say anyone with a name is an existing user.
+    final user = _firebaseAuth.currentUser;
+    if (user != null &&
+        user.displayName != null &&
+        user.displayName!.isNotEmpty) {
+      return true;
+    }
+    return false;
   }
 }

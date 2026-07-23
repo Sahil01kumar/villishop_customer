@@ -9,6 +9,7 @@ import '../../../../core/router/app_router.dart';
 import '../../data/models/order_model.dart';
 import '../../providers/order_success_provider.dart';
 import '../../../../core/services/pdf_service.dart';
+import '../../../../core/widgets/brand_logo.dart';
 
 class OrderSuccessScreen extends ConsumerWidget {
   final OrderModel order;
@@ -33,26 +34,27 @@ class OrderSuccessScreen extends ConsumerWidget {
                   const EdgeInsets.fromLTRB(AppSpacing.m, 60, AppSpacing.m, 32),
               child: Column(
                 children: [
+                  const Center(child: BrandLogo(height: 100, width: 100)),
+                  const SizedBox(height: 24),
                   Center(
                     child: Lottie.asset(
                       'assets/lottie/success_anim.json',
-                      height: 150,
+                      height: 100,
                       repeat: false,
                       errorBuilder: (context, error, stackTrace) => const Icon(
                           Icons.check_circle,
-                          size: 80,
+                          size: 60,
                           color: Colors.green),
                     ),
-                  )
-                      .animate()
-                      .scale(duration: 400.ms, curve: Curves.easeOutBack),
+                  ),
                   const SizedBox(height: 16),
                   const Text(
                     'Order Placed Successfully!',
                     style: TextStyle(
                         fontWeight: FontWeight.w900,
                         fontSize: 24,
-                        letterSpacing: -0.5),
+                        letterSpacing: -0.5,
+                        color: Color(0xFF0B5D1E)),
                   ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.2, end: 0),
                   const SizedBox(height: 8),
                   Text(
@@ -371,7 +373,7 @@ class OrderSuccessScreen extends ConsumerWidget {
       label: Text(label,
           style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.green,
+        backgroundColor: const Color(0xFF0B5D1E),
         foregroundColor: Colors.white,
         minimumSize: const Size(double.infinity, 56),
         elevation: 0,

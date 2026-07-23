@@ -75,7 +75,9 @@ class OffersScreen extends ConsumerWidget {
                       if (state.coupons.isEmpty)
                         const SliverToBoxAdapter(
                           child: EmptyWidget(
-                              message: 'No coupons available right now'),
+                            title: 'No Coupons Available',
+                            message: 'Check back later for exciting discounts.',
+                          ),
                         )
                       else
                         SliverPadding(
@@ -101,7 +103,10 @@ class OffersScreen extends ConsumerWidget {
                       if (state.offers.isEmpty)
                         const SliverToBoxAdapter(
                           child: EmptyWidget(
-                              message: 'No specialized offers found'),
+                            title: 'No Active Offers',
+                            message:
+                                'We are working on bringing the best village deals for you.',
+                          ),
                         )
                       else
                         SliverPadding(

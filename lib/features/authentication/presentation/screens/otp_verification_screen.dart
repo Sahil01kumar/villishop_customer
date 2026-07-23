@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_dimensions.dart';
 import '../../../../core/widgets/primary_button.dart';
 import '../../../../core/widgets/custom_text_field.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../core/helpers/snackbar_helper.dart';
 import '../../providers/auth_provider.dart';
-import '../../../../core/router/app_router.dart';
+import '../../../../core/widgets/branding_footer.dart';
+import '../../../../core/widgets/brand_logo.dart';
 
 class OTPVerificationScreen extends ConsumerStatefulWidget {
   final String verificationId;
@@ -39,11 +39,11 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
       try {
-        await ref.read(authRepositoryProvider).verifyOTP(
+        await ref.read(authProvider.notifier).verifyOTP(
               widget.verificationId,
               _otpController.text.trim(),
             );
-        if (mounted) context.go(AppRoutes.home);
+        // Navigation is handled by router redirect
       } catch (e) {
         if (mounted) {
           setState(() => _isLoading = false);
@@ -56,21 +56,32 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Verify OTP')),
-      body: Padding(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: const Text('Verify OTP'),
+        backgroundColor: Colors.white,
+        elevation: 0,
+      ),
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(AppSpacing.l),
         child: Form(
           key: _formKey,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
+              const SizedBox(height: 20),
+              const Center(
+                child: BrandLogo(height: 100, width: 100),
+              ),
+              AppSpacing.vL,
+              const Text(
                 'Verification Code',
-                style: Theme.of(context).textTheme.displaySmall,
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
               ),
               AppSpacing.vS,
               Text(
                 'Enter the 6-digit code sent to ${widget.phoneNumber}',
+                textAlign: TextAlign.center,
                 style: const TextStyle(color: Colors.grey),
               ),
               AppSpacing.vXL,
@@ -84,7 +95,7 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
               ),
               AppSpacing.vXL,
               PrimaryButton(
-                text: 'Verify & Continue',
+                text: 'VERIFY & CONTINUE',
                 onPressed: _onVerifyOTP,
                 isLoading: _isLoading,
               ),
@@ -92,13 +103,15 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
               Center(
                 child: TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Edit Phone Number'),
+                  child: const Text('Edit Phone Number',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
                 ),
               ),
             ],
           ),
         ),
       ),
+      bottomNavigationBar: const BrandingFooter(),
     );
   }
 }

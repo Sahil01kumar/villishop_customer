@@ -33,9 +33,13 @@ class OrdersScreen extends ConsumerWidget {
       body: ordersAsync.when(
         data: (orders) {
           if (orders.isEmpty) {
-            return const EmptyWidget(
-              message: 'No orders yet. Start your village shopping journey!',
+            return EmptyWidget(
+              title: 'No Orders Yet',
+              message:
+                  'Start your village shopping journey by adding items to your cart!',
               icon: Icons.receipt_long_outlined,
+              actionText: 'Browse Products',
+              onAction: () => context.go(AppRoutes.home),
             );
           }
 
@@ -55,14 +59,16 @@ class OrdersScreen extends ConsumerWidget {
                   const SizedBox(height: 24),
                 ],
                 if (completedOrders.isNotEmpty) ...[
-                  const _SectionTitle(title: 'Completed Orders'),
+                  const _SectionTitle(title: 'Order History'),
                   ...completedOrders.map((o) => _OrderCard(order: o)),
                 ],
                 if (activeOrders.isEmpty && completedOrders.isEmpty)
                   const EmptyWidget(
-                    message: 'No order history found.',
+                    title: 'No Order History',
+                    message: 'You have no active or previous orders.',
                     icon: Icons.history_rounded,
                   ),
+                const SizedBox(height: 100),
               ],
             ),
           );
@@ -102,8 +108,22 @@ class _OrderCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final itemsCount =
         order.shopOrders.fold(0, (sum, so) => sum + so.items.length);
-    final dateStr = DateFormat('dd MMM yyyy, hh:mm a').format(order.createdAt);
     final isDelivered = order.lifecycleState == OrderLifecycleState.delivered;
+    
+    String dateLabel;
+    if (isDelivered && order.deliveredAt != null) {
+      final now = DateTime.now();
+      final deliveredAt = order.deliveredAt!;
+      if (deliveredAt.year == now.year &&
+          deliveredAt.month == now.month &&
+          deliveredAt.day == now.day) {
+        dateLabel = 'Delivered Today';
+      } else {
+        dateLabel = 'Delivered on ${DateFormat('dd MMM, hh:mm a').format(deliveredAt)}';
+      }
+    } else {
+      dateLabel = DateFormat('dd MMM yyyy, hh:mm a').format(order.createdAt);
+    }
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -174,10 +194,14 @@ class _OrderCard extends ConsumerWidget {
                 const Divider(height: 32),
                 Row(
                   children: [
-                    const Icon(Icons.access_time_rounded,
-                        size: 14, color: Colors.grey),
+                    Icon(
+                        isDelivered
+                            ? Icons.check_circle_rounded
+                            : Icons.access_time_rounded,
+                        size: 14,
+                        color: isDelivered ? Colors.green : Colors.grey),
                     const SizedBox(width: 4),
-                    Text(dateStr,
+                    Text(dateLabel,
                         style: const TextStyle(
                             color: Colors.black54,
                             fontSize: 12,
@@ -188,16 +212,6 @@ class _OrderCard extends ConsumerWidget {
                         'ETA: ${order.deliverySlotSnapshot.estimatedMinutes} mins',
                         style: const TextStyle(
                             color: Colors.green,
-                            fontWeight: FontWeight.w900,
-                            fontSize: 12),
-                      )
-                    else
-                      Text(
-                        isDelivered
-                            ? 'Delivered'
-                            : order.lifecycleState.displayName,
-                        style: TextStyle(
-                            color: isDelivered ? Colors.green : Colors.red,
                             fontWeight: FontWeight.w900,
                             fontSize: 12),
                       ),
@@ -224,10 +238,11 @@ class _OrderCard extends ConsumerWidget {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               content: Text('Items added to cart'),
               backgroundColor: Colors.black));
+          context.go(AppRoutes.cart);
         })),
         const SizedBox(width: 8),
         Expanded(
-            child: _actionButton('Bill', Icons.receipt_long_rounded, () {
+            child: _actionButton('Invoice', Icons.receipt_long_rounded, () {
           PdfService.generateAndDownloadInvoice(order);
         })),
         const SizedBox(width: 8),
@@ -284,11 +299,26 @@ class _StatusBadge extends StatelessWidget {
       case OrderLifecycleState.orderPlaced:
         color = Colors.blue;
         break;
+      case OrderLifecycleState.confirmed:
+        color = Colors.cyan;
+        break;
+      case OrderLifecycleState.preparing:
+        color = Colors.amber;
+        break;
+      case OrderLifecycleState.packed:
+        color = Colors.teal;
+        break;
       case OrderLifecycleState.deliveryPartnerAssigned:
         color = Colors.orange;
         break;
+      case OrderLifecycleState.pickedUp:
+        color = Colors.deepPurple;
+        break;
       case OrderLifecycleState.onTheWay:
         color = Colors.indigo;
+        break;
+      case OrderLifecycleState.nearby:
+        color = Colors.lightGreen;
         break;
       case OrderLifecycleState.delivered:
         color = Colors.green;

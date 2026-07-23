@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../providers/map_infrastructure_provider.dart';
 import '../providers/map_state_provider.dart';
 import '../providers/location_service_provider.dart';
@@ -27,6 +28,8 @@ class EnterpriseTrackingMap extends ConsumerStatefulWidget {
 }
 
 class _EnterpriseTrackingMapState extends ConsumerState<EnterpriseTrackingMap> {
+  bool _isMapReady = false;
+
   @override
   void initState() {
     super.initState();
@@ -57,7 +60,7 @@ class _EnterpriseTrackingMapState extends ConsumerState<EnterpriseTrackingMap> {
     });
 
     if (locationStatus == LocationServiceStatus.loading) {
-      return const Center(child: LoadingWidget());
+      return const _MapLoadingOverlay();
     }
 
     if (locationStatus == LocationServiceStatus.disabled ||
@@ -76,7 +79,7 @@ class _EnterpriseTrackingMapState extends ConsumerState<EnterpriseTrackingMap> {
         GoogleMap(
           initialCameraPosition: CameraPosition(
             target: widget.initialCameraPosition,
-            zoom: 15,
+            zoom: 16,
           ),
           style: isDarkMode ? MapTheme.darkTheme : MapTheme.silverTheme,
           markers: markers,
@@ -87,6 +90,8 @@ class _EnterpriseTrackingMapState extends ConsumerState<EnterpriseTrackingMap> {
                 .read(mapInfrastructureProvider.notifier)
                 .setController(controller);
 
+            setState(() => _isMapReady = true);
+
             if (widget.autoFitBounds && markers.isNotEmpty) {
               final points = markers.map((m) => m.position).toList();
               MapCameraEngine(controller).fitBounds(points);
@@ -95,7 +100,7 @@ class _EnterpriseTrackingMapState extends ConsumerState<EnterpriseTrackingMap> {
           myLocationEnabled: true,
           myLocationButtonEnabled: false,
           zoomControlsEnabled: false,
-          compassEnabled: true,
+          compassEnabled: false,
           mapToolbarEnabled: false,
           indoorViewEnabled: true,
           onCameraMoveStarted: () {
@@ -103,10 +108,11 @@ class _EnterpriseTrackingMapState extends ConsumerState<EnterpriseTrackingMap> {
             ref.read(mapInfrastructureProvider.notifier).setAutoFollow(false);
           },
         ),
+        if (!_isMapReady) const _MapLoadingOverlay(),
         if (widget.showControls)
           Positioned(
             right: 16,
-            bottom: 100,
+            top: MediaQuery.of(context).padding.top + 80,
             child: Column(
               children: [
                 _MapControlButton(
@@ -176,7 +182,7 @@ class _EnterpriseTrackingMapState extends ConsumerState<EnterpriseTrackingMap> {
                   },
                 ),
               ],
-            ),
+            ).animate().fadeIn(delay: 1.seconds),
           ),
       ],
     );
@@ -225,6 +231,34 @@ class _EnterpriseTrackingMapState extends ConsumerState<EnterpriseTrackingMap> {
   }
 }
 
+class _MapLoadingOverlay extends StatelessWidget {
+  const _MapLoadingOverlay();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: const Color(0xFFF8F9FB),
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const LoadingWidget(size: 50),
+            const SizedBox(height: 24),
+            Text(
+              'Initializing Live Tracking...',
+              style: TextStyle(
+                  color: Colors.grey[600],
+                  fontWeight: FontWeight.w900,
+                  fontSize: 14,
+                  letterSpacing: 0.5),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _MapControlButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onPressed;
@@ -238,12 +272,25 @@ class _MapControlButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FloatingActionButton.small(
-      heroTag: null,
-      onPressed: onPressed,
-      backgroundColor: isActive ? Colors.black : Colors.white,
-      foregroundColor: isActive ? Colors.white : Colors.black,
-      child: Icon(icon),
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(10),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: FloatingActionButton.small(
+        heroTag: null,
+        onPressed: onPressed,
+        elevation: 0,
+        backgroundColor: isActive ? Colors.black : Colors.white,
+        foregroundColor: isActive ? Colors.white : Colors.black,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Icon(icon, size: 20),
+      ),
     );
   }
 }

@@ -28,6 +28,13 @@ mixin _$ShopModel {
   String get imageUrl => throw _privateConstructorUsedError;
   String get distance => throw _privateConstructorUsedError;
   String get minOrder => throw _privateConstructorUsedError;
+  int get totalReviews => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError;
+  String? get storeTiming => throw _privateConstructorUsedError;
+  String? get address => throw _privateConstructorUsedError;
+  bool get isFavourite => throw _privateConstructorUsedError;
+  List<OfferModel> get offers => throw _privateConstructorUsedError;
+  List<String> get policies => throw _privateConstructorUsedError;
 
   /// Serializes this ShopModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -52,7 +59,14 @@ abstract class $ShopModelCopyWith<$Res> {
       String deliveryTime,
       String imageUrl,
       String distance,
-      String minOrder});
+      String minOrder,
+      int totalReviews,
+      String? description,
+      String? storeTiming,
+      String? address,
+      bool isFavourite,
+      List<OfferModel> offers,
+      List<String> policies});
 }
 
 /// @nodoc
@@ -78,6 +92,13 @@ class _$ShopModelCopyWithImpl<$Res, $Val extends ShopModel>
     Object? imageUrl = null,
     Object? distance = null,
     Object? minOrder = null,
+    Object? totalReviews = null,
+    Object? description = freezed,
+    Object? storeTiming = freezed,
+    Object? address = freezed,
+    Object? isFavourite = null,
+    Object? offers = null,
+    Object? policies = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -112,6 +133,34 @@ class _$ShopModelCopyWithImpl<$Res, $Val extends ShopModel>
           ? _value.minOrder
           : minOrder // ignore: cast_nullable_to_non_nullable
               as String,
+      totalReviews: null == totalReviews
+          ? _value.totalReviews
+          : totalReviews // ignore: cast_nullable_to_non_nullable
+              as int,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
+      storeTiming: freezed == storeTiming
+          ? _value.storeTiming
+          : storeTiming // ignore: cast_nullable_to_non_nullable
+              as String?,
+      address: freezed == address
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
+              as String?,
+      isFavourite: null == isFavourite
+          ? _value.isFavourite
+          : isFavourite // ignore: cast_nullable_to_non_nullable
+              as bool,
+      offers: null == offers
+          ? _value.offers
+          : offers // ignore: cast_nullable_to_non_nullable
+              as List<OfferModel>,
+      policies: null == policies
+          ? _value.policies
+          : policies // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ) as $Val);
   }
 }
@@ -132,7 +181,14 @@ abstract class _$$ShopModelImplCopyWith<$Res>
       String deliveryTime,
       String imageUrl,
       String distance,
-      String minOrder});
+      String minOrder,
+      int totalReviews,
+      String? description,
+      String? storeTiming,
+      String? address,
+      bool isFavourite,
+      List<OfferModel> offers,
+      List<String> policies});
 }
 
 /// @nodoc
@@ -156,6 +212,13 @@ class __$$ShopModelImplCopyWithImpl<$Res>
     Object? imageUrl = null,
     Object? distance = null,
     Object? minOrder = null,
+    Object? totalReviews = null,
+    Object? description = freezed,
+    Object? storeTiming = freezed,
+    Object? address = freezed,
+    Object? isFavourite = null,
+    Object? offers = null,
+    Object? policies = null,
   }) {
     return _then(_$ShopModelImpl(
       id: null == id
@@ -190,6 +253,34 @@ class __$$ShopModelImplCopyWithImpl<$Res>
           ? _value.minOrder
           : minOrder // ignore: cast_nullable_to_non_nullable
               as String,
+      totalReviews: null == totalReviews
+          ? _value.totalReviews
+          : totalReviews // ignore: cast_nullable_to_non_nullable
+              as int,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
+      storeTiming: freezed == storeTiming
+          ? _value.storeTiming
+          : storeTiming // ignore: cast_nullable_to_non_nullable
+              as String?,
+      address: freezed == address
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
+              as String?,
+      isFavourite: null == isFavourite
+          ? _value.isFavourite
+          : isFavourite // ignore: cast_nullable_to_non_nullable
+              as bool,
+      offers: null == offers
+          ? _value._offers
+          : offers // ignore: cast_nullable_to_non_nullable
+              as List<OfferModel>,
+      policies: null == policies
+          ? _value._policies
+          : policies // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ));
   }
 }
@@ -205,7 +296,16 @@ class _$ShopModelImpl implements _ShopModel {
       required this.deliveryTime,
       required this.imageUrl,
       required this.distance,
-      required this.minOrder});
+      required this.minOrder,
+      this.totalReviews = 0,
+      this.description,
+      this.storeTiming,
+      this.address,
+      this.isFavourite = false,
+      final List<OfferModel> offers = const [],
+      final List<String> policies = const []})
+      : _offers = offers,
+        _policies = policies;
 
   factory _$ShopModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ShopModelImplFromJson(json);
@@ -226,10 +326,39 @@ class _$ShopModelImpl implements _ShopModel {
   final String distance;
   @override
   final String minOrder;
+  @override
+  @JsonKey()
+  final int totalReviews;
+  @override
+  final String? description;
+  @override
+  final String? storeTiming;
+  @override
+  final String? address;
+  @override
+  @JsonKey()
+  final bool isFavourite;
+  final List<OfferModel> _offers;
+  @override
+  @JsonKey()
+  List<OfferModel> get offers {
+    if (_offers is EqualUnmodifiableListView) return _offers;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_offers);
+  }
+
+  final List<String> _policies;
+  @override
+  @JsonKey()
+  List<String> get policies {
+    if (_policies is EqualUnmodifiableListView) return _policies;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_policies);
+  }
 
   @override
   String toString() {
-    return 'ShopModel(id: $id, name: $name, category: $category, rating: $rating, deliveryTime: $deliveryTime, imageUrl: $imageUrl, distance: $distance, minOrder: $minOrder)';
+    return 'ShopModel(id: $id, name: $name, category: $category, rating: $rating, deliveryTime: $deliveryTime, imageUrl: $imageUrl, distance: $distance, minOrder: $minOrder, totalReviews: $totalReviews, description: $description, storeTiming: $storeTiming, address: $address, isFavourite: $isFavourite, offers: $offers, policies: $policies)';
   }
 
   @override
@@ -249,13 +378,39 @@ class _$ShopModelImpl implements _ShopModel {
             (identical(other.distance, distance) ||
                 other.distance == distance) &&
             (identical(other.minOrder, minOrder) ||
-                other.minOrder == minOrder));
+                other.minOrder == minOrder) &&
+            (identical(other.totalReviews, totalReviews) ||
+                other.totalReviews == totalReviews) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
+            (identical(other.storeTiming, storeTiming) ||
+                other.storeTiming == storeTiming) &&
+            (identical(other.address, address) || other.address == address) &&
+            (identical(other.isFavourite, isFavourite) ||
+                other.isFavourite == isFavourite) &&
+            const DeepCollectionEquality().equals(other._offers, _offers) &&
+            const DeepCollectionEquality().equals(other._policies, _policies));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, category, rating,
-      deliveryTime, imageUrl, distance, minOrder);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      name,
+      category,
+      rating,
+      deliveryTime,
+      imageUrl,
+      distance,
+      minOrder,
+      totalReviews,
+      description,
+      storeTiming,
+      address,
+      isFavourite,
+      const DeepCollectionEquality().hash(_offers),
+      const DeepCollectionEquality().hash(_policies));
 
   /// Create a copy of ShopModel
   /// with the given fields replaced by the non-null parameter values.
@@ -282,7 +437,14 @@ abstract class _ShopModel implements ShopModel {
       required final String deliveryTime,
       required final String imageUrl,
       required final String distance,
-      required final String minOrder}) = _$ShopModelImpl;
+      required final String minOrder,
+      final int totalReviews,
+      final String? description,
+      final String? storeTiming,
+      final String? address,
+      final bool isFavourite,
+      final List<OfferModel> offers,
+      final List<String> policies}) = _$ShopModelImpl;
 
   factory _ShopModel.fromJson(Map<String, dynamic> json) =
       _$ShopModelImpl.fromJson;
@@ -303,6 +465,20 @@ abstract class _ShopModel implements ShopModel {
   String get distance;
   @override
   String get minOrder;
+  @override
+  int get totalReviews;
+  @override
+  String? get description;
+  @override
+  String? get storeTiming;
+  @override
+  String? get address;
+  @override
+  bool get isFavourite;
+  @override
+  List<OfferModel> get offers;
+  @override
+  List<String> get policies;
 
   /// Create a copy of ShopModel
   /// with the given fields replaced by the non-null parameter values.

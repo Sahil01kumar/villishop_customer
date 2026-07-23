@@ -22,6 +22,8 @@ BannerModel _$BannerModelFromJson(Map<String, dynamic> json) {
 mixin _$BannerModel {
   String get id => throw _privateConstructorUsedError;
   String get imageUrl => throw _privateConstructorUsedError;
+  String? get title => throw _privateConstructorUsedError;
+  String? get subtitle => throw _privateConstructorUsedError;
   String? get deepLink => throw _privateConstructorUsedError;
 
   /// Serializes this BannerModel to a JSON map.
@@ -40,7 +42,12 @@ abstract class $BannerModelCopyWith<$Res> {
           BannerModel value, $Res Function(BannerModel) then) =
       _$BannerModelCopyWithImpl<$Res, BannerModel>;
   @useResult
-  $Res call({String id, String imageUrl, String? deepLink});
+  $Res call(
+      {String id,
+      String imageUrl,
+      String? title,
+      String? subtitle,
+      String? deepLink});
 }
 
 /// @nodoc
@@ -60,6 +67,8 @@ class _$BannerModelCopyWithImpl<$Res, $Val extends BannerModel>
   $Res call({
     Object? id = null,
     Object? imageUrl = null,
+    Object? title = freezed,
+    Object? subtitle = freezed,
     Object? deepLink = freezed,
   }) {
     return _then(_value.copyWith(
@@ -71,6 +80,14 @@ class _$BannerModelCopyWithImpl<$Res, $Val extends BannerModel>
           ? _value.imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
               as String,
+      title: freezed == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String?,
+      subtitle: freezed == subtitle
+          ? _value.subtitle
+          : subtitle // ignore: cast_nullable_to_non_nullable
+              as String?,
       deepLink: freezed == deepLink
           ? _value.deepLink
           : deepLink // ignore: cast_nullable_to_non_nullable
@@ -87,7 +104,12 @@ abstract class _$$BannerModelImplCopyWith<$Res>
       __$$BannerModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String id, String imageUrl, String? deepLink});
+  $Res call(
+      {String id,
+      String imageUrl,
+      String? title,
+      String? subtitle,
+      String? deepLink});
 }
 
 /// @nodoc
@@ -105,6 +127,8 @@ class __$$BannerModelImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? imageUrl = null,
+    Object? title = freezed,
+    Object? subtitle = freezed,
     Object? deepLink = freezed,
   }) {
     return _then(_$BannerModelImpl(
@@ -116,6 +140,14 @@ class __$$BannerModelImplCopyWithImpl<$Res>
           ? _value.imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
               as String,
+      title: freezed == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String?,
+      subtitle: freezed == subtitle
+          ? _value.subtitle
+          : subtitle // ignore: cast_nullable_to_non_nullable
+              as String?,
       deepLink: freezed == deepLink
           ? _value.deepLink
           : deepLink // ignore: cast_nullable_to_non_nullable
@@ -128,7 +160,11 @@ class __$$BannerModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$BannerModelImpl implements _BannerModel {
   const _$BannerModelImpl(
-      {required this.id, required this.imageUrl, this.deepLink});
+      {required this.id,
+      required this.imageUrl,
+      this.title,
+      this.subtitle,
+      this.deepLink});
 
   factory _$BannerModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$BannerModelImplFromJson(json);
@@ -138,11 +174,15 @@ class _$BannerModelImpl implements _BannerModel {
   @override
   final String imageUrl;
   @override
+  final String? title;
+  @override
+  final String? subtitle;
+  @override
   final String? deepLink;
 
   @override
   String toString() {
-    return 'BannerModel(id: $id, imageUrl: $imageUrl, deepLink: $deepLink)';
+    return 'BannerModel(id: $id, imageUrl: $imageUrl, title: $title, subtitle: $subtitle, deepLink: $deepLink)';
   }
 
   @override
@@ -153,13 +193,17 @@ class _$BannerModelImpl implements _BannerModel {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.imageUrl, imageUrl) ||
                 other.imageUrl == imageUrl) &&
+            (identical(other.title, title) || other.title == title) &&
+            (identical(other.subtitle, subtitle) ||
+                other.subtitle == subtitle) &&
             (identical(other.deepLink, deepLink) ||
                 other.deepLink == deepLink));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, imageUrl, deepLink);
+  int get hashCode =>
+      Object.hash(runtimeType, id, imageUrl, title, subtitle, deepLink);
 
   /// Create a copy of BannerModel
   /// with the given fields replaced by the non-null parameter values.
@@ -181,6 +225,8 @@ abstract class _BannerModel implements BannerModel {
   const factory _BannerModel(
       {required final String id,
       required final String imageUrl,
+      final String? title,
+      final String? subtitle,
       final String? deepLink}) = _$BannerModelImpl;
 
   factory _BannerModel.fromJson(Map<String, dynamic> json) =
@@ -190,6 +236,10 @@ abstract class _BannerModel implements BannerModel {
   String get id;
   @override
   String get imageUrl;
+  @override
+  String? get title;
+  @override
+  String? get subtitle;
   @override
   String? get deepLink;
 

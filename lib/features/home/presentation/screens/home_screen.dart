@@ -3,24 +3,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:villishop_customer/core/constants/app_colors.dart';
 import 'package:villishop_customer/core/constants/app_dimensions.dart';
-
 import 'package:villishop_customer/core/widgets/error_widget.dart';
 import 'package:villishop_customer/core/widgets/shimmer_widget.dart';
 import 'package:villishop_customer/core/router/app_router.dart';
 import 'package:villishop_customer/features/location/providers/location_provider.dart';
+import 'package:villishop_customer/features/orders/providers/active_order_provider.dart';
+import 'package:villishop_customer/features/orders/domain/entities/order_lifecycle_state.dart';
 import 'package:villishop_customer/features/location/presentation/widgets/location_selector_sheet.dart';
 import 'package:villishop_customer/core/widgets/rotating_hint_search_bar.dart';
+import 'package:villishop_customer/features/main/providers/navigation_provider.dart';
 
 import '../widgets/section_header.dart';
-
 import '../widgets/shop_card.dart';
 import '../widgets/product_card.dart';
-
 import '../widgets/address_card.dart';
 import '../../providers/home_provider.dart';
-import '../../../main/providers/navigation_provider.dart';
 import '../../../authentication/providers/auth_provider.dart';
-
 
 import '../widgets/active_order_card.dart';
 import '../widgets/home_trust_banner.dart';
@@ -31,7 +29,7 @@ import '../widgets/home_promotion_section.dart';
 import '../widgets/home_quick_categories.dart';
 import '../widgets/home_hero_banner.dart';
 import '../../../products/providers/recent_products_provider.dart';
-import 'package:villishop_customer/features/cart/providers/cart_provider.dart';
+import '../../../../core/widgets/floating_cart_bar.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -41,16 +39,27 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  ProviderSubscription? _locationSubscription;
+  late ProviderSubscription _locationSubscription;
+  late ProviderSubscription _orderSubscription;
 
   @override
   void initState() {
     super.initState();
     _locationSubscription = ref.listenManual(
-      locationProvider.select((s) => s.selectedAddress),
+      locationProvider.select(
+          (s) => '${s.selectedAddress?.id}_${s.selectedAddress?.fullAddress}'),
       (prev, next) {
-        if (prev?.id != next?.id || (prev?.latitude != next?.latitude)) {
+        if (prev != next) {
           ref.read(homeProvider.notifier).fetchHomeData();
+        }
+      },
+    );
+
+    _orderSubscription = ref.listenManual(
+      activeOrderProvider.select((o) => o?.lifecycleState),
+      (prev, next) {
+        if (next == OrderLifecycleState.delivered) {
+          ref.read(homeProvider.notifier).fetchHomeData(silent: true);
         }
       },
     );
@@ -58,15 +67,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   void dispose() {
-    _locationSubscription?.close();
+    _locationSubscription.close();
+    _orderSubscription.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final homeState = ref.watch(homeProvider);
-    final locationState = ref.watch(locationProvider);
-    final cartCount = ref.watch(cartCountProvider);
+    final isServiceable =
+        ref.watch(locationProvider.select((s) => s.isServiceable));
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -86,15 +96,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   child: CustomScrollView(
                     physics: const BouncingScrollPhysics(),
                     slivers: [
-                      _buildAppBar(context, locationState),
-
-                      // Active Order Card (Blinkit/Zepto Style)
-                      const SliverToBoxAdapter(child: ActiveOrderCard()),
-
-                      if (!locationState.isServiceable)
-                        SliverToBoxAdapter(
-                          child: _buildServiceabilityBanner(context),
-                        ),
+                      _buildAppBar(context),
 
                       SliverToBoxAdapter(
                         child: Padding(
@@ -102,6 +104,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           child: HomeHeroBanner(banners: homeState.banners),
                         ),
                       ),
+
+                      // Active Order Card - MOVED LOWER and redesigned
+                      const SliverToBoxAdapter(child: ActiveOrderCard()),
+
+                      if (!isServiceable)
+                        SliverToBoxAdapter(
+                          child: _buildServiceabilityBanner(context),
+                        ),
 
                       const SliverToBoxAdapter(
                         child: Padding(
@@ -126,19 +136,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           ),
                         ),
 
-                      // Phase 2 Promotion
+                      // Promotion Section
                       const SliverToBoxAdapter(child: HomePromotionSection()),
 
-                      // Promotional Content (Phase 2)
+                      // Brands
                       const SliverToBoxAdapter(child: HomeBrandGrid()),
 
                       // Trust Banner
                       const SliverToBoxAdapter(child: HomeTrustBanner()),
 
-                      // Recently Viewed (Phase 2 Enhancement)
+                      // Recently Viewed
                       const SliverToBoxAdapter(child: _RecentlyViewedSection()),
 
-                      // Daily Essentials (Phase 2)
+                      // Daily Essentials
                       if (homeState.featuredProducts.isNotEmpty)
                         SliverToBoxAdapter(
                           child: _buildProductSection(
@@ -159,7 +169,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               onSeeAll: () => context.push(AppRoutes.shops),
                             ),
                             SizedBox(
-                              height: 260,
+                              height: 280,
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
                                 physics: const BouncingScrollPhysics(),
@@ -180,33 +190,36 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ),
                       ),
 
-                      // Bestsellers (Phase 2)
+                      // Bestsellers
                       if (homeState.bestSellers.isNotEmpty)
                         SliverToBoxAdapter(
                           child: _buildProductSection(
                             title: 'Best Sellers',
                             subtitle: 'Loved by your neighbors',
                             products: homeState.bestSellers,
+                            heroContext: 'bestsellers',
                           ),
                         ),
 
-                      // Seasonal Collection (Phase 2)
+                      // Seasonal Collection
                       if (homeState.seasonalCollection.isNotEmpty)
                         SliverToBoxAdapter(
                           child: _buildProductSection(
                             title: 'Seasonal Fresh',
                             subtitle: 'Best of this season',
                             products: homeState.seasonalCollection,
+                            heroContext: 'seasonal',
                           ),
                         ),
 
-                      // New Arrivals (Phase 2)
+                      // New Arrivals
                       if (homeState.newArrivals.isNotEmpty)
                         SliverToBoxAdapter(
                           child: _buildProductSection(
                             title: 'New Arrivals',
                             subtitle: 'Just landed in the village',
                             products: homeState.newArrivals,
+                            heroContext: 'newarrivals',
                           ),
                         ),
 
@@ -216,6 +229,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           title: 'Recommended for You',
                           subtitle: 'Handpicked items based on your needs',
                           products: homeState.featuredProducts,
+                          heroContext: 'recommended',
                         ),
                       ),
 
@@ -223,13 +237,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ],
                   ),
                 ),
-      floatingActionButton:
-          cartCount > 0 ? _buildFloatingCart(cartCount) : null,
+      floatingActionButton: const FloatingCartBar(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
-  Widget _buildAppBar(BuildContext context, LocationState locationState) {
+  Widget _buildAppBar(BuildContext context) {
+    final locationLoading =
+        ref.watch(locationProvider.select((s) => s.isLoading));
+    final selectedAddress =
+        ref.watch(locationProvider.select((s) => s.selectedAddress));
+    final permissionStatus =
+        ref.watch(locationProvider.select((s) => s.permissionStatus));
+
     return SliverAppBar(
       floating: true,
       pinned: true,
@@ -249,17 +269,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               child: Row(
                 children: [
                   Expanded(
-                    child: locationState.isLoading ||
-                            (locationState.selectedAddress == null &&
-                                locationState.permissionStatus ==
+                    child: locationLoading ||
+                            (selectedAddress == null &&
+                                permissionStatus ==
                                     LocationPermissionStatus.granted)
                         ? const _AddressShimmer()
                         : AddressCard(
-                            label: locationState.selectedAddress?.label ??
-                                'Set Location',
-                            address:
-                                locationState.selectedAddress?.fullAddress ??
-                                    'Click to pick village address',
+                            label: selectedAddress?.label ?? 'Set Location',
+                            address: selectedAddress?.fullAddress ??
+                                'Click to pick village address',
                             onTap: () => _showLocationSelector(context),
                           ),
                   ),
@@ -345,22 +363,30 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final user = ref
         .watch(authProvider)
         .maybeWhen(authenticated: (u) => u, orElse: () => null);
+    final userProfilePic = user?.profilePicture;
+    final hasProfilePic = userProfilePic != null && userProfilePic.isNotEmpty;
+
     return GestureDetector(
-      onTap: () => context.push(AppRoutes.profile),
+      onTap: () {
+        ref.read(navigationIndexProvider.notifier).state = 4;
+        context.go(AppRoutes.profile);
+      },
       child: Container(
         padding: const EdgeInsets.all(2),
         decoration: BoxDecoration(
             color: AppColors.primary.withAlpha(20), shape: BoxShape.circle),
-        child: CircleAvatar(
-          radius: 20,
-          backgroundColor: Colors.white,
-          backgroundImage: user?.profilePicture != null
-              ? NetworkImage(user!.profilePicture!)
-              : null,
-          child: user?.profilePicture == null
-              ? const Icon(Icons.person_outline, color: AppColors.primary)
-              : null,
-        ),
+        child: hasProfilePic
+            ? CircleAvatar(
+                radius: 20,
+                backgroundColor: Colors.white,
+                backgroundImage: NetworkImage(userProfilePic),
+              )
+            : Image.asset(
+                'assets/images/logo.png',
+                height: 40,
+                width: 40,
+                fit: BoxFit.contain,
+              ),
       ),
     );
   }
@@ -368,13 +394,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget _buildProductSection(
       {required String title,
       required String subtitle,
-      required List<dynamic> products}) {
+      required List<dynamic> products,
+      String heroContext = 'home'}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionHeader(title: title, subtitle: subtitle, onSeeAll: () {}),
         SizedBox(
-          height: 280,
+          height: 300,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             physics: const BouncingScrollPhysics(),
@@ -383,72 +410,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             itemBuilder: (context, index) {
               return Padding(
                 padding: const EdgeInsets.only(right: AppSpacing.m),
-                child: ProductCard(product: products[index]),
+                child: ProductCard(
+                  product: products[index],
+                  heroContext: heroContext,
+                ),
               );
             },
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildFloatingCart(int count) {
-    final cart = ref.watch(cartProvider).cart;
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      height: 60,
-      decoration: BoxDecoration(
-        color: AppColors.primary,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-              color: AppColors.primary.withAlpha(80),
-              blurRadius: 15,
-              offset: const Offset(0, 8)),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () => ref.read(navigationIndexProvider.notifier).state = 2,
-          borderRadius: BorderRadius.circular(16),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('$count ITEMS',
-                        style: const TextStyle(
-                            color: Colors.white70,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 10)),
-                    Text(
-                        '₹${cart.overallSummary.grandTotal.toStringAsFixed(0)}',
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w900,
-                            fontSize: 18,
-                            letterSpacing: -0.5)),
-                  ],
-                ),
-                const Spacer(),
-                const Text('VIEW CART',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w900,
-                        fontSize: 14,
-                        letterSpacing: 1.1)),
-                const SizedBox(width: 8),
-                const Icon(Icons.shopping_bag_outlined,
-                    color: Colors.white, size: 22),
-              ],
-            ),
-          ),
-        ),
-      ),
     );
   }
 
@@ -479,7 +449,7 @@ class _RecentlyViewedSection extends ConsumerWidget {
           subtitle: 'Items you might need again',
         ),
         SizedBox(
-          height: 250,
+          height: 300,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             physics: const BouncingScrollPhysics(),
@@ -488,7 +458,10 @@ class _RecentlyViewedSection extends ConsumerWidget {
             itemBuilder: (context, index) {
               return Padding(
                 padding: const EdgeInsets.only(right: AppSpacing.m),
-                child: ProductCard(product: recentProducts[index]),
+                child: ProductCard(
+                  product: recentProducts[index],
+                  heroContext: 'recent',
+                ),
               );
             },
           ),
@@ -528,6 +501,7 @@ class _HomeSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      physics: const NeverScrollableScrollPhysics(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -543,9 +517,13 @@ class _HomeSkeleton extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ShimmerWidget.rectangular(height: 12, width: MediaQuery.of(context).size.width * 0.3),
+                      ShimmerWidget.rectangular(
+                          height: 12,
+                          width: MediaQuery.of(context).size.width * 0.3),
                       const SizedBox(height: 6),
-                      ShimmerWidget.rectangular(height: 16, width: MediaQuery.of(context).size.width * 0.5),
+                      ShimmerWidget.rectangular(
+                          height: 16,
+                          width: MediaQuery.of(context).size.width * 0.5),
                     ],
                   ),
                 ),
@@ -590,7 +568,8 @@ class _HomeSkeleton extends StatelessWidget {
           // Section Title Shimmer
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-            child: ShimmerWidget.rectangular(height: 24, width: MediaQuery.of(context).size.width * 0.4),
+            child: ShimmerWidget.rectangular(
+                height: 24, width: MediaQuery.of(context).size.width * 0.4),
           ),
           AppSpacing.vM,
           // Product Horizontal Shimmer

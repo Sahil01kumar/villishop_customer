@@ -6,7 +6,7 @@ import '../../../../core/widgets/search_bar_widget.dart';
 import '../../../../core/widgets/loading_widget.dart';
 import '../../../../core/widgets/error_widget.dart';
 import '../../../../core/widgets/empty_widget.dart';
-import '../widgets/product_grid_card.dart';
+import '../../../home/presentation/widgets/product_card.dart';
 import '../widgets/product_list_tile.dart';
 import '../../providers/product_catalog_provider.dart';
 
@@ -68,7 +68,11 @@ class ProductCatalogScreen extends ConsumerWidget {
                             .refresh(),
                       )
                     : state.products.isEmpty
-                        ? const EmptyWidget(message: 'No products found')
+                        ? const EmptyWidget(
+                            title: 'No Products',
+                            message:
+                                'We couldn\'t find any products in this category at this shop.',
+                          )
                         : _buildProductGrid(state),
           ),
         ],
@@ -161,11 +165,11 @@ class ProductCatalogScreen extends ConsumerWidget {
           crossAxisCount: 2,
           mainAxisSpacing: AppSpacing.m,
           crossAxisSpacing: AppSpacing.m,
-          childAspectRatio: 0.65,
+          childAspectRatio: 0.62,
         ),
         itemCount: state.products.length,
         itemBuilder: (context, index) =>
-            ProductGridCard(product: state.products[index]),
+            ProductCard(product: state.products[index], width: double.infinity),
       );
     } else {
       return ListView.separated(

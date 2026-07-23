@@ -27,6 +27,7 @@ mixin _$LocationState {
   String? get errorMessage => throw _privateConstructorUsedError;
   bool get isServiceable => throw _privateConstructorUsedError;
   bool get isLiveTracking => throw _privateConstructorUsedError;
+  ZoneModel? get activeZone => throw _privateConstructorUsedError;
 
   /// Create a copy of LocationState
   /// with the given fields replaced by the non-null parameter values.
@@ -51,9 +52,11 @@ abstract class $LocationStateCopyWith<$Res> {
       LocationPermissionStatus permissionStatus,
       String? errorMessage,
       bool isServiceable,
-      bool isLiveTracking});
+      bool isLiveTracking,
+      ZoneModel? activeZone});
 
   $AddressModelCopyWith<$Res>? get selectedAddress;
+  $ZoneModelCopyWith<$Res>? get activeZone;
 }
 
 /// @nodoc
@@ -81,6 +84,7 @@ class _$LocationStateCopyWithImpl<$Res, $Val extends LocationState>
     Object? errorMessage = freezed,
     Object? isServiceable = null,
     Object? isLiveTracking = null,
+    Object? activeZone = freezed,
   }) {
     return _then(_value.copyWith(
       isLoading: null == isLoading
@@ -123,6 +127,10 @@ class _$LocationStateCopyWithImpl<$Res, $Val extends LocationState>
           ? _value.isLiveTracking
           : isLiveTracking // ignore: cast_nullable_to_non_nullable
               as bool,
+      activeZone: freezed == activeZone
+          ? _value.activeZone
+          : activeZone // ignore: cast_nullable_to_non_nullable
+              as ZoneModel?,
     ) as $Val);
   }
 
@@ -137,6 +145,20 @@ class _$LocationStateCopyWithImpl<$Res, $Val extends LocationState>
 
     return $AddressModelCopyWith<$Res>(_value.selectedAddress!, (value) {
       return _then(_value.copyWith(selectedAddress: value) as $Val);
+    });
+  }
+
+  /// Create a copy of LocationState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $ZoneModelCopyWith<$Res>? get activeZone {
+    if (_value.activeZone == null) {
+      return null;
+    }
+
+    return $ZoneModelCopyWith<$Res>(_value.activeZone!, (value) {
+      return _then(_value.copyWith(activeZone: value) as $Val);
     });
   }
 }
@@ -159,10 +181,13 @@ abstract class _$$LocationStateImplCopyWith<$Res>
       LocationPermissionStatus permissionStatus,
       String? errorMessage,
       bool isServiceable,
-      bool isLiveTracking});
+      bool isLiveTracking,
+      ZoneModel? activeZone});
 
   @override
   $AddressModelCopyWith<$Res>? get selectedAddress;
+  @override
+  $ZoneModelCopyWith<$Res>? get activeZone;
 }
 
 /// @nodoc
@@ -188,6 +213,7 @@ class __$$LocationStateImplCopyWithImpl<$Res>
     Object? errorMessage = freezed,
     Object? isServiceable = null,
     Object? isLiveTracking = null,
+    Object? activeZone = freezed,
   }) {
     return _then(_$LocationStateImpl(
       isLoading: null == isLoading
@@ -230,6 +256,10 @@ class __$$LocationStateImplCopyWithImpl<$Res>
           ? _value.isLiveTracking
           : isLiveTracking // ignore: cast_nullable_to_non_nullable
               as bool,
+      activeZone: freezed == activeZone
+          ? _value.activeZone
+          : activeZone // ignore: cast_nullable_to_non_nullable
+              as ZoneModel?,
     ));
   }
 }
@@ -249,7 +279,8 @@ class _$LocationStateImpl
       this.permissionStatus = LocationPermissionStatus.initial,
       this.errorMessage,
       this.isServiceable = true,
-      this.isLiveTracking = false})
+      this.isLiveTracking = false,
+      this.activeZone})
       : _addresses = addresses,
         _recentAddresses = recentAddresses;
 
@@ -291,10 +322,12 @@ class _$LocationStateImpl
   @override
   @JsonKey()
   final bool isLiveTracking;
+  @override
+  final ZoneModel? activeZone;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'LocationState(isLoading: $isLoading, addresses: $addresses, recentAddresses: $recentAddresses, selectedAddress: $selectedAddress, currentPosition: $currentPosition, currentAddressName: $currentAddressName, permissionStatus: $permissionStatus, errorMessage: $errorMessage, isServiceable: $isServiceable, isLiveTracking: $isLiveTracking)';
+    return 'LocationState(isLoading: $isLoading, addresses: $addresses, recentAddresses: $recentAddresses, selectedAddress: $selectedAddress, currentPosition: $currentPosition, currentAddressName: $currentAddressName, permissionStatus: $permissionStatus, errorMessage: $errorMessage, isServiceable: $isServiceable, isLiveTracking: $isLiveTracking, activeZone: $activeZone)';
   }
 
   @override
@@ -311,7 +344,8 @@ class _$LocationStateImpl
       ..add(DiagnosticsProperty('permissionStatus', permissionStatus))
       ..add(DiagnosticsProperty('errorMessage', errorMessage))
       ..add(DiagnosticsProperty('isServiceable', isServiceable))
-      ..add(DiagnosticsProperty('isLiveTracking', isLiveTracking));
+      ..add(DiagnosticsProperty('isLiveTracking', isLiveTracking))
+      ..add(DiagnosticsProperty('activeZone', activeZone));
   }
 
   @override
@@ -338,7 +372,9 @@ class _$LocationStateImpl
             (identical(other.isServiceable, isServiceable) ||
                 other.isServiceable == isServiceable) &&
             (identical(other.isLiveTracking, isLiveTracking) ||
-                other.isLiveTracking == isLiveTracking));
+                other.isLiveTracking == isLiveTracking) &&
+            (identical(other.activeZone, activeZone) ||
+                other.activeZone == activeZone));
   }
 
   @override
@@ -353,7 +389,8 @@ class _$LocationStateImpl
       permissionStatus,
       errorMessage,
       isServiceable,
-      isLiveTracking);
+      isLiveTracking,
+      activeZone);
 
   /// Create a copy of LocationState
   /// with the given fields replaced by the non-null parameter values.
@@ -375,7 +412,8 @@ abstract class _LocationState implements LocationState {
       final LocationPermissionStatus permissionStatus,
       final String? errorMessage,
       final bool isServiceable,
-      final bool isLiveTracking}) = _$LocationStateImpl;
+      final bool isLiveTracking,
+      final ZoneModel? activeZone}) = _$LocationStateImpl;
 
   @override
   bool get isLoading;
@@ -397,6 +435,8 @@ abstract class _LocationState implements LocationState {
   bool get isServiceable;
   @override
   bool get isLiveTracking;
+  @override
+  ZoneModel? get activeZone;
 
   /// Create a copy of LocationState
   /// with the given fields replaced by the non-null parameter values.

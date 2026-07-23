@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_dimensions.dart';
-import '../widgets/section_header.dart';
 import '../widgets/product_card.dart';
 import '../../data/models/product_model.dart';
 
@@ -57,33 +56,59 @@ class _HomeFlashSaleState extends State<HomeFlashSale> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+          padding: const EdgeInsets.fromLTRB(
+              AppSpacing.m, AppSpacing.l, AppSpacing.m, AppSpacing.m),
           child: Row(
             children: [
               const Expanded(
-                child: SectionHeader(
-                  title: 'Flash Sale',
-                  subtitle: 'Ends in',
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Flash Sale',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -0.5,
+                        color: Colors.black,
+                      ),
+                    ),
+                    Text(
+                      'Ends in',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: Colors.red.withAlpha(20),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: Colors.red.withAlpha(50)),
                 ),
                 child: Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.timer_outlined, color: Colors.red, size: 16),
+                    const Icon(Icons.timer_outlined,
+                        color: Colors.red, size: 16),
                     const SizedBox(width: 6),
-                    Text(
-                      _formatDuration(_timeLeft),
-                      style: const TextStyle(
-                        color: Colors.red,
-                        fontWeight: FontWeight.w900,
-                        fontSize: 14,
-                        fontFeatures: [FontFeature.tabularFigures()],
+                    Flexible(
+                      child: Text(
+                        _formatDuration(_timeLeft),
+                        style: const TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 14,
+                          fontFeatures: [FontFeature.tabularFigures()],
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
@@ -93,7 +118,7 @@ class _HomeFlashSaleState extends State<HomeFlashSale> {
           ),
         ),
         SizedBox(
-          height: 280,
+          height: 300,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             physics: const BouncingScrollPhysics(),
@@ -102,7 +127,10 @@ class _HomeFlashSaleState extends State<HomeFlashSale> {
             itemBuilder: (context, index) {
               return Padding(
                 padding: const EdgeInsets.only(right: AppSpacing.m),
-                child: ProductCard(product: widget.products[index]),
+                child: ProductCard(
+                  product: widget.products[index],
+                  heroContext: 'flash',
+                ),
               );
             },
           ),

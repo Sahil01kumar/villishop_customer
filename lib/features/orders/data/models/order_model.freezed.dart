@@ -39,8 +39,13 @@ mixin _$OrderModel {
   List<OrderTimelineModel> get timeline => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime? get updatedAt => throw _privateConstructorUsedError;
+  DateTime? get confirmedAt => throw _privateConstructorUsedError;
+  DateTime? get preparingAt => throw _privateConstructorUsedError;
+  DateTime? get packedAt => throw _privateConstructorUsedError;
   DateTime? get partnerAssignedAt => throw _privateConstructorUsedError;
+  DateTime? get pickedUpAt => throw _privateConstructorUsedError;
   DateTime? get onTheWayAt => throw _privateConstructorUsedError;
+  DateTime? get nearbyAt => throw _privateConstructorUsedError;
   DateTime? get deliveredAt => throw _privateConstructorUsedError;
   DateTime? get cancelledAt => throw _privateConstructorUsedError;
   String? get orderNote => throw _privateConstructorUsedError;
@@ -78,8 +83,13 @@ abstract class $OrderModelCopyWith<$Res> {
       List<OrderTimelineModel> timeline,
       DateTime createdAt,
       DateTime? updatedAt,
+      DateTime? confirmedAt,
+      DateTime? preparingAt,
+      DateTime? packedAt,
       DateTime? partnerAssignedAt,
+      DateTime? pickedUpAt,
       DateTime? onTheWayAt,
+      DateTime? nearbyAt,
       DateTime? deliveredAt,
       DateTime? cancelledAt,
       String? orderNote,
@@ -121,8 +131,13 @@ class _$OrderModelCopyWithImpl<$Res, $Val extends OrderModel>
     Object? timeline = null,
     Object? createdAt = null,
     Object? updatedAt = freezed,
+    Object? confirmedAt = freezed,
+    Object? preparingAt = freezed,
+    Object? packedAt = freezed,
     Object? partnerAssignedAt = freezed,
+    Object? pickedUpAt = freezed,
     Object? onTheWayAt = freezed,
+    Object? nearbyAt = freezed,
     Object? deliveredAt = freezed,
     Object? cancelledAt = freezed,
     Object? orderNote = freezed,
@@ -189,13 +204,33 @@ class _$OrderModelCopyWithImpl<$Res, $Val extends OrderModel>
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      confirmedAt: freezed == confirmedAt
+          ? _value.confirmedAt
+          : confirmedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      preparingAt: freezed == preparingAt
+          ? _value.preparingAt
+          : preparingAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      packedAt: freezed == packedAt
+          ? _value.packedAt
+          : packedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       partnerAssignedAt: freezed == partnerAssignedAt
           ? _value.partnerAssignedAt
           : partnerAssignedAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      pickedUpAt: freezed == pickedUpAt
+          ? _value.pickedUpAt
+          : pickedUpAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       onTheWayAt: freezed == onTheWayAt
           ? _value.onTheWayAt
           : onTheWayAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      nearbyAt: freezed == nearbyAt
+          ? _value.nearbyAt
+          : nearbyAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
       deliveredAt: freezed == deliveredAt
           ? _value.deliveredAt
@@ -283,8 +318,13 @@ abstract class _$$OrderModelImplCopyWith<$Res>
       List<OrderTimelineModel> timeline,
       DateTime createdAt,
       DateTime? updatedAt,
+      DateTime? confirmedAt,
+      DateTime? preparingAt,
+      DateTime? packedAt,
       DateTime? partnerAssignedAt,
+      DateTime? pickedUpAt,
       DateTime? onTheWayAt,
+      DateTime? nearbyAt,
       DateTime? deliveredAt,
       DateTime? cancelledAt,
       String? orderNote,
@@ -328,8 +368,13 @@ class __$$OrderModelImplCopyWithImpl<$Res>
     Object? timeline = null,
     Object? createdAt = null,
     Object? updatedAt = freezed,
+    Object? confirmedAt = freezed,
+    Object? preparingAt = freezed,
+    Object? packedAt = freezed,
     Object? partnerAssignedAt = freezed,
+    Object? pickedUpAt = freezed,
     Object? onTheWayAt = freezed,
+    Object? nearbyAt = freezed,
     Object? deliveredAt = freezed,
     Object? cancelledAt = freezed,
     Object? orderNote = freezed,
@@ -396,13 +441,33 @@ class __$$OrderModelImplCopyWithImpl<$Res>
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      confirmedAt: freezed == confirmedAt
+          ? _value.confirmedAt
+          : confirmedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      preparingAt: freezed == preparingAt
+          ? _value.preparingAt
+          : preparingAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      packedAt: freezed == packedAt
+          ? _value.packedAt
+          : packedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       partnerAssignedAt: freezed == partnerAssignedAt
           ? _value.partnerAssignedAt
           : partnerAssignedAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      pickedUpAt: freezed == pickedUpAt
+          ? _value.pickedUpAt
+          : pickedUpAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       onTheWayAt: freezed == onTheWayAt
           ? _value.onTheWayAt
           : onTheWayAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      nearbyAt: freezed == nearbyAt
+          ? _value.nearbyAt
+          : nearbyAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
       deliveredAt: freezed == deliveredAt
           ? _value.deliveredAt
@@ -443,8 +508,13 @@ class _$OrderModelImpl implements _OrderModel {
       required final List<OrderTimelineModel> timeline,
       required this.createdAt,
       this.updatedAt,
+      this.confirmedAt,
+      this.preparingAt,
+      this.packedAt,
       this.partnerAssignedAt,
+      this.pickedUpAt,
       this.onTheWayAt,
+      this.nearbyAt,
       this.deliveredAt,
       this.cancelledAt,
       this.orderNote,
@@ -500,9 +570,19 @@ class _$OrderModelImpl implements _OrderModel {
   @override
   final DateTime? updatedAt;
   @override
+  final DateTime? confirmedAt;
+  @override
+  final DateTime? preparingAt;
+  @override
+  final DateTime? packedAt;
+  @override
   final DateTime? partnerAssignedAt;
   @override
+  final DateTime? pickedUpAt;
+  @override
   final DateTime? onTheWayAt;
+  @override
+  final DateTime? nearbyAt;
   @override
   final DateTime? deliveredAt;
   @override
@@ -521,7 +601,7 @@ class _$OrderModelImpl implements _OrderModel {
 
   @override
   String toString() {
-    return 'OrderModel(orderId: $orderId, orderNumber: $orderNumber, trackingId: $trackingId, customerId: $customerId, status: $status, lifecycleState: $lifecycleState, paymentStatus: $paymentStatus, shopOrders: $shopOrders, deliveryAddressSnapshot: $deliveryAddressSnapshot, deliverySlotSnapshot: $deliverySlotSnapshot, paymentMethodSnapshot: $paymentMethodSnapshot, invoiceSnapshot: $invoiceSnapshot, timeline: $timeline, createdAt: $createdAt, updatedAt: $updatedAt, partnerAssignedAt: $partnerAssignedAt, onTheWayAt: $onTheWayAt, deliveredAt: $deliveredAt, cancelledAt: $cancelledAt, orderNote: $orderNote, specialInstructions: $specialInstructions)';
+    return 'OrderModel(orderId: $orderId, orderNumber: $orderNumber, trackingId: $trackingId, customerId: $customerId, status: $status, lifecycleState: $lifecycleState, paymentStatus: $paymentStatus, shopOrders: $shopOrders, deliveryAddressSnapshot: $deliveryAddressSnapshot, deliverySlotSnapshot: $deliverySlotSnapshot, paymentMethodSnapshot: $paymentMethodSnapshot, invoiceSnapshot: $invoiceSnapshot, timeline: $timeline, createdAt: $createdAt, updatedAt: $updatedAt, confirmedAt: $confirmedAt, preparingAt: $preparingAt, packedAt: $packedAt, partnerAssignedAt: $partnerAssignedAt, pickedUpAt: $pickedUpAt, onTheWayAt: $onTheWayAt, nearbyAt: $nearbyAt, deliveredAt: $deliveredAt, cancelledAt: $cancelledAt, orderNote: $orderNote, specialInstructions: $specialInstructions)';
   }
 
   @override
@@ -557,10 +637,20 @@ class _$OrderModelImpl implements _OrderModel {
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt) &&
+            (identical(other.confirmedAt, confirmedAt) ||
+                other.confirmedAt == confirmedAt) &&
+            (identical(other.preparingAt, preparingAt) ||
+                other.preparingAt == preparingAt) &&
+            (identical(other.packedAt, packedAt) ||
+                other.packedAt == packedAt) &&
             (identical(other.partnerAssignedAt, partnerAssignedAt) ||
                 other.partnerAssignedAt == partnerAssignedAt) &&
+            (identical(other.pickedUpAt, pickedUpAt) ||
+                other.pickedUpAt == pickedUpAt) &&
             (identical(other.onTheWayAt, onTheWayAt) ||
                 other.onTheWayAt == onTheWayAt) &&
+            (identical(other.nearbyAt, nearbyAt) ||
+                other.nearbyAt == nearbyAt) &&
             (identical(other.deliveredAt, deliveredAt) ||
                 other.deliveredAt == deliveredAt) &&
             (identical(other.cancelledAt, cancelledAt) ||
@@ -590,8 +680,13 @@ class _$OrderModelImpl implements _OrderModel {
         const DeepCollectionEquality().hash(_timeline),
         createdAt,
         updatedAt,
+        confirmedAt,
+        preparingAt,
+        packedAt,
         partnerAssignedAt,
+        pickedUpAt,
         onTheWayAt,
+        nearbyAt,
         deliveredAt,
         cancelledAt,
         orderNote,
@@ -631,8 +726,13 @@ abstract class _OrderModel implements OrderModel {
       required final List<OrderTimelineModel> timeline,
       required final DateTime createdAt,
       final DateTime? updatedAt,
+      final DateTime? confirmedAt,
+      final DateTime? preparingAt,
+      final DateTime? packedAt,
       final DateTime? partnerAssignedAt,
+      final DateTime? pickedUpAt,
       final DateTime? onTheWayAt,
+      final DateTime? nearbyAt,
       final DateTime? deliveredAt,
       final DateTime? cancelledAt,
       final String? orderNote,
@@ -672,9 +772,19 @@ abstract class _OrderModel implements OrderModel {
   @override
   DateTime? get updatedAt;
   @override
+  DateTime? get confirmedAt;
+  @override
+  DateTime? get preparingAt;
+  @override
+  DateTime? get packedAt;
+  @override
   DateTime? get partnerAssignedAt;
   @override
+  DateTime? get pickedUpAt;
+  @override
   DateTime? get onTheWayAt;
+  @override
+  DateTime? get nearbyAt;
   @override
   DateTime? get deliveredAt;
   @override

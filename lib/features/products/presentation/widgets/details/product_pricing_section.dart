@@ -153,7 +153,9 @@ class ProductPricingSection extends StatelessWidget {
         Text(
           '${product.totalReviews} Ratings',
           style: TextStyle(
-              fontSize: 10, fontWeight: FontWeight.w800, color: Colors.grey[600]),
+              fontSize: 10,
+              fontWeight: FontWeight.w800,
+              color: Colors.grey[600]),
         ),
       ],
     );
@@ -175,7 +177,8 @@ class ProductPricingSection extends StatelessWidget {
               color: Colors.green.withAlpha(20),
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.timer_outlined, color: Colors.green, size: 20),
+            child:
+                const Icon(Icons.timer_outlined, color: Colors.green, size: 20),
           ),
           const SizedBox(width: 16),
           Expanded(

@@ -31,13 +31,26 @@ _$OrderTrackingModelImpl _$$OrderTrackingModelImplFromJson(
       riderPhone: json['riderPhone'] as String?,
       riderPhoto: json['riderPhoto'] as String?,
       riderRating: (json['riderRating'] as num?)?.toDouble() ?? 4.8,
+      completedDeliveries: (json['completedDeliveries'] as num?)?.toInt() ?? 0,
+      vehicleType: json['vehicleType'] as String?,
       vehicleNumber: json['vehicleNumber'] as String?,
+      currentSpeedKmph: (json['currentSpeedKmph'] as num?)?.toDouble() ?? 0.0,
       polylinePoints: json['polylinePoints'] as String?,
       otp: json['otp'] as String?,
       health: $enumDecodeNullable(_$DeliveryHealthEnumMap, json['health']) ??
           DeliveryHealth.excellent,
+      delayReason:
+          $enumDecodeNullable(_$DelayReasonEnumMap, json['delayReason']) ??
+              DelayReason.none,
       isReroutingActive: json['isReroutingActive'] as bool? ?? false,
       inCustomerRadius: json['inCustomerRadius'] as bool? ?? false,
+      isNearbyZoneDelivery: json['isNearbyZoneDelivery'] as bool? ?? false,
+      nearbyZoneName: json['nearbyZoneName'] as String?,
+      isExpress: json['isExpress'] as bool? ?? false,
+      isPriority: json['isPriority'] as bool? ?? false,
+      isColdChain: json['isColdChain'] as bool? ?? false,
+      isFragile: json['isFragile'] as bool? ?? false,
+      isCOD: json['isCOD'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$OrderTrackingModelImplToJson(
@@ -57,18 +70,31 @@ Map<String, dynamic> _$$OrderTrackingModelImplToJson(
       'riderPhone': instance.riderPhone,
       'riderPhoto': instance.riderPhoto,
       'riderRating': instance.riderRating,
+      'completedDeliveries': instance.completedDeliveries,
+      'vehicleType': instance.vehicleType,
       'vehicleNumber': instance.vehicleNumber,
+      'currentSpeedKmph': instance.currentSpeedKmph,
       'polylinePoints': instance.polylinePoints,
       'otp': instance.otp,
       'health': _$DeliveryHealthEnumMap[instance.health]!,
+      'delayReason': _$DelayReasonEnumMap[instance.delayReason]!,
       'isReroutingActive': instance.isReroutingActive,
       'inCustomerRadius': instance.inCustomerRadius,
+      'isNearbyZoneDelivery': instance.isNearbyZoneDelivery,
+      'nearbyZoneName': instance.nearbyZoneName,
+      'isExpress': instance.isExpress,
+      'isPriority': instance.isPriority,
+      'isColdChain': instance.isColdChain,
+      'isFragile': instance.isFragile,
+      'isCOD': instance.isCOD,
     };
 
 const _$TrackingStatusEnumMap = {
-  TrackingStatus.orderPlaced: 'order_placed',
-  TrackingStatus.partnerAssigned: 'partner_assigned',
-  TrackingStatus.liveTracking: 'live_tracking',
+  TrackingStatus.orderConfirmed: 'order_confirmed',
+  TrackingStatus.preparing: 'preparing',
+  TrackingStatus.riderAssigned: 'rider_assigned',
+  TrackingStatus.onTheWay: 'on_the_way',
+  TrackingStatus.nearby: 'nearby',
   TrackingStatus.delivered: 'delivered',
 };
 
@@ -76,6 +102,16 @@ const _$DeliveryHealthEnumMap = {
   DeliveryHealth.excellent: 'excellent',
   DeliveryHealth.moderate: 'moderate',
   DeliveryHealth.delayed: 'delayed',
+};
+
+const _$DelayReasonEnumMap = {
+  DelayReason.none: 'none',
+  DelayReason.traffic: 'traffic',
+  DelayReason.heavyRain: 'rain',
+  DelayReason.festivalRush: 'festival',
+  DelayReason.highDemand: 'high_demand',
+  DelayReason.storeDelay: 'store_delay',
+  DelayReason.vehicleIssue: 'vehicle_issue',
 };
 
 _$TrackingTimelineItemImpl _$$TrackingTimelineItemImplFromJson(

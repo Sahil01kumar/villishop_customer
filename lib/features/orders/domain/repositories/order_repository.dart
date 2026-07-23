@@ -11,7 +11,9 @@ abstract class OrderRepository {
 
   Future<List<OrderModel>> getCustomerOrders(String customerId);
 
-  Future<void> updateOrderStatus(String orderId, OrderLifecycleState newState);
+  Stream<List<OrderModel>> watchCustomerOrders(String customerId);
+
+  Future<OrderModel?> updateOrderStatus(String orderId, OrderLifecycleState newState);
 
   Stream<OrderModel?> observeOrder(String orderId);
 

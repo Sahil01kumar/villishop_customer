@@ -10,6 +10,8 @@ _$BannerModelImpl _$$BannerModelImplFromJson(Map<String, dynamic> json) =>
     _$BannerModelImpl(
       id: json['id'] as String,
       imageUrl: json['imageUrl'] as String,
+      title: json['title'] as String?,
+      subtitle: json['subtitle'] as String?,
       deepLink: json['deepLink'] as String?,
     );
 
@@ -17,5 +19,7 @@ Map<String, dynamic> _$$BannerModelImplToJson(_$BannerModelImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'imageUrl': instance.imageUrl,
+      'title': instance.title,
+      'subtitle': instance.subtitle,
       'deepLink': instance.deepLink,
     };

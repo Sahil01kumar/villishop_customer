@@ -26,7 +26,7 @@ import '../widgets/shop_cart_section.dart';
 import '../widgets/saved_for_later_section.dart';
 import '../widgets/premium_empty_cart.dart';
 import '../../../home/providers/home_provider.dart';
-import '../../../products/presentation/widgets/product_grid_card.dart';
+import '../../../home/presentation/widgets/product_card.dart';
 
 class CartScreen extends ConsumerStatefulWidget {
   const CartScreen({super.key});
@@ -283,61 +283,98 @@ class _CartScreenState extends ConsumerState<CartScreen> {
 
   Widget _buildStickyCheckout(
       BuildContext context, CartModel cart, double grandTotal) {
+    final double savings =
+        cart.overallSummary.totalDiscount + cart.overallSummary.couponDiscount;
+
     return Container(
       padding: const EdgeInsets.fromLTRB(AppSpacing.m, 12, AppSpacing.m, 32),
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withAlpha(8),
+              color: Colors.black.withAlpha(10),
               blurRadius: 20,
               offset: const Offset(0, -10))
         ],
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      child: Row(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
+          if (savings > 0)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                decoration: BoxDecoration(
+                  color: Colors.green.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.celebration_rounded,
+                        color: Colors.green.shade700, size: 14),
+                    const SizedBox(width: 6),
+                    Text(
+                      'Yay! You are saving ₹${savings.toStringAsFixed(0)} on this order',
+                      style: TextStyle(
+                        color: Colors.green.shade900,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          Row(
             children: [
-              Text('₹${grandTotal.toStringAsFixed(0)}',
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w900,
-                      fontSize: 24,
-                      letterSpacing: -1)),
-              const Text('VIEW DETAILED BILL',
-                  style: TextStyle(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 10,
-                      letterSpacing: 0.5)),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('₹${grandTotal.toStringAsFixed(0)}',
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w900,
+                          fontSize: 26,
+                          letterSpacing: -1)),
+                  const Text('VIEW DETAILED BILL',
+                      style: TextStyle(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 10,
+                          letterSpacing: 0.5)),
+                ],
+              ),
+              const Spacer(),
+              ElevatedButton(
+                onPressed: () {
+                  ref
+                      .read(checkoutProvider.notifier)
+                      .updateStep(CheckoutStep.address);
+                  context.push(AppRoutes.orderReview);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size(190, 56),
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16)),
+                ),
+                child: const Row(
+                  children: [
+                    Text('Next: Review',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w900, fontSize: 16)),
+                    SizedBox(width: 8),
+                    Icon(Icons.arrow_forward_ios_rounded, size: 14),
+                  ],
+                ),
+              ),
             ],
-          ),
-          const Spacer(),
-          ElevatedButton(
-            onPressed: () {
-              ref
-                  .read(checkoutProvider.notifier)
-                  .updateStep(CheckoutStep.address);
-              context.push(AppRoutes.orderReview);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              foregroundColor: Colors.white,
-              minimumSize: const Size(180, 56),
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16)),
-            ),
-            child: const Row(
-              children: [
-                Text('Next: Review',
-                    style:
-                        TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
-                SizedBox(width: 8),
-                Icon(Icons.arrow_forward_ios_rounded, size: 14),
-              ],
-            ),
           ),
         ],
       ),
@@ -381,14 +418,15 @@ class _CartScreenState extends ConsumerState<CartScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Padding(
-          padding: EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.l, AppSpacing.m, AppSpacing.m),
+          padding: EdgeInsets.fromLTRB(
+              AppSpacing.m, AppSpacing.l, AppSpacing.m, AppSpacing.m),
           child: Text(
             'Before you checkout',
             style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
           ),
         ),
         SizedBox(
-          height: 250,
+          height: 280,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
@@ -398,7 +436,10 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                 padding: const EdgeInsets.only(right: 12),
                 child: SizedBox(
                   width: 150,
-                  child: ProductGridCard(product: recommended[index]),
+                  child: ProductCard(
+                    product: recommended[index],
+                    heroContext: 'cart_recommended',
+                  ),
                 ),
               );
             },
@@ -409,4 +450,3 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     );
   }
 }
-

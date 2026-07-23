@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../location/providers/location_provider.dart';
 import '../data/models/order_model.dart';
 import '../domain/entities/order_lifecycle_state.dart';
 import 'order_provider.dart';
@@ -7,14 +8,25 @@ import 'order_provider.dart';
 /// Rebuilds automatically when order status changes via backend/socket.
 final activeOrderProvider = Provider<OrderModel?>((ref) {
   final ordersAsync = ref.watch(customerOrdersProvider);
+  final zoneName =
+      ref.watch(locationProvider.select((s) => s.activeZone?.name));
 
   return ordersAsync.maybeWhen(
     data: (orders) {
       if (orders.isEmpty) return null;
 
       // Filter for non-terminal states
-      final activeOrders =
-          orders.where((o) => !o.lifecycleState.isTerminal).toList();
+      // AND filter by the current zone to ensure synchronization
+      final activeOrders = orders.where((o) {
+        final isNotTerminal = !o.lifecycleState.isTerminal;
+
+        // Simplified check: assume an order belongs to a zone if it matches active zone name or coordinates
+        final matchesZone = zoneName != null &&
+            (o.deliveryAddressSnapshot.fullAddress
+                .contains(zoneName.split(' ').first));
+
+        return isNotTerminal && matchesZone;
+      }).toList();
 
       if (activeOrders.isEmpty) return null;
 

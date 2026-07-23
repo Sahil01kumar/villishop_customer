@@ -35,12 +35,27 @@ _$OrderModelImpl _$$OrderModelImplFromJson(Map<String, dynamic> json) =>
       updatedAt: json['updatedAt'] == null
           ? null
           : DateTime.parse(json['updatedAt'] as String),
+      confirmedAt: json['confirmedAt'] == null
+          ? null
+          : DateTime.parse(json['confirmedAt'] as String),
+      preparingAt: json['preparingAt'] == null
+          ? null
+          : DateTime.parse(json['preparingAt'] as String),
+      packedAt: json['packedAt'] == null
+          ? null
+          : DateTime.parse(json['packedAt'] as String),
       partnerAssignedAt: json['partnerAssignedAt'] == null
           ? null
           : DateTime.parse(json['partnerAssignedAt'] as String),
+      pickedUpAt: json['pickedUpAt'] == null
+          ? null
+          : DateTime.parse(json['pickedUpAt'] as String),
       onTheWayAt: json['onTheWayAt'] == null
           ? null
           : DateTime.parse(json['onTheWayAt'] as String),
+      nearbyAt: json['nearbyAt'] == null
+          ? null
+          : DateTime.parse(json['nearbyAt'] as String),
       deliveredAt: json['deliveredAt'] == null
           ? null
           : DateTime.parse(json['deliveredAt'] as String),
@@ -71,8 +86,13 @@ Map<String, dynamic> _$$OrderModelImplToJson(_$OrderModelImpl instance) =>
       'timeline': instance.timeline,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),
+      'confirmedAt': instance.confirmedAt?.toIso8601String(),
+      'preparingAt': instance.preparingAt?.toIso8601String(),
+      'packedAt': instance.packedAt?.toIso8601String(),
       'partnerAssignedAt': instance.partnerAssignedAt?.toIso8601String(),
+      'pickedUpAt': instance.pickedUpAt?.toIso8601String(),
       'onTheWayAt': instance.onTheWayAt?.toIso8601String(),
+      'nearbyAt': instance.nearbyAt?.toIso8601String(),
       'deliveredAt': instance.deliveredAt?.toIso8601String(),
       'cancelledAt': instance.cancelledAt?.toIso8601String(),
       'orderNote': instance.orderNote,
@@ -82,7 +102,6 @@ Map<String, dynamic> _$$OrderModelImplToJson(_$OrderModelImpl instance) =>
 const _$OrderStatusEnumMap = {
   OrderStatus.placed: 'placed',
   OrderStatus.confirmed: 'confirmed',
-  OrderStatus.accepted: 'accepted',
   OrderStatus.preparing: 'preparing',
   OrderStatus.packed: 'packed',
   OrderStatus.readyForPickup: 'readyForPickup',
@@ -96,8 +115,13 @@ const _$OrderStatusEnumMap = {
 
 const _$OrderLifecycleStateEnumMap = {
   OrderLifecycleState.orderPlaced: 'orderPlaced',
+  OrderLifecycleState.confirmed: 'confirmed',
+  OrderLifecycleState.preparing: 'preparing',
+  OrderLifecycleState.packed: 'packed',
   OrderLifecycleState.deliveryPartnerAssigned: 'deliveryPartnerAssigned',
+  OrderLifecycleState.pickedUp: 'pickedUp',
   OrderLifecycleState.onTheWay: 'onTheWay',
+  OrderLifecycleState.nearby: 'nearby',
   OrderLifecycleState.delivered: 'delivered',
   OrderLifecycleState.cancelled: 'cancelled',
   OrderLifecycleState.failed: 'failed',

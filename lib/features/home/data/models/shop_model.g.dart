@@ -16,6 +16,19 @@ _$ShopModelImpl _$$ShopModelImplFromJson(Map<String, dynamic> json) =>
       imageUrl: json['imageUrl'] as String,
       distance: json['distance'] as String,
       minOrder: json['minOrder'] as String,
+      totalReviews: (json['totalReviews'] as num?)?.toInt() ?? 0,
+      description: json['description'] as String?,
+      storeTiming: json['storeTiming'] as String?,
+      address: json['address'] as String?,
+      isFavourite: json['isFavourite'] as bool? ?? false,
+      offers: (json['offers'] as List<dynamic>?)
+              ?.map((e) => OfferModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      policies: (json['policies'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$$ShopModelImplToJson(_$ShopModelImpl instance) =>
@@ -28,4 +41,11 @@ Map<String, dynamic> _$$ShopModelImplToJson(_$ShopModelImpl instance) =>
       'imageUrl': instance.imageUrl,
       'distance': instance.distance,
       'minOrder': instance.minOrder,
+      'totalReviews': instance.totalReviews,
+      'description': instance.description,
+      'storeTiming': instance.storeTiming,
+      'address': instance.address,
+      'isFavourite': instance.isFavourite,
+      'offers': instance.offers,
+      'policies': instance.policies,
     };

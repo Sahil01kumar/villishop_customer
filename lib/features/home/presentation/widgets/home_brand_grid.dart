@@ -8,12 +8,30 @@ class HomeBrandGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Map<String, String>> brands = [
-      {'name': 'Amul', 'image': 'https://cdn-icons-png.flaticon.com/512/5968/5968204.png'},
-      {'name': 'Mother Dairy', 'image': 'https://cdn-icons-png.flaticon.com/512/5968/5968204.png'},
-      {'name': 'Nestle', 'image': 'https://cdn-icons-png.flaticon.com/512/5968/5968204.png'},
-      {'name': 'Aashirvaad', 'image': 'https://cdn-icons-png.flaticon.com/512/5968/5968204.png'},
-      {'name': 'Fortune', 'image': 'https://cdn-icons-png.flaticon.com/512/5968/5968204.png'},
-      {'name': 'Tata', 'image': 'https://cdn-icons-png.flaticon.com/512/5968/5968204.png'},
+      {
+        'name': 'Amul',
+        'image': 'https://cdn-icons-png.flaticon.com/512/5968/5968204.png'
+      },
+      {
+        'name': 'Mother Dairy',
+        'image': 'https://cdn-icons-png.flaticon.com/512/5968/5968204.png'
+      },
+      {
+        'name': 'Nestle',
+        'image': 'https://cdn-icons-png.flaticon.com/512/5968/5968204.png'
+      },
+      {
+        'name': 'Aashirvaad',
+        'image': 'https://cdn-icons-png.flaticon.com/512/5968/5968204.png'
+      },
+      {
+        'name': 'Fortune',
+        'image': 'https://cdn-icons-png.flaticon.com/512/5968/5968204.png'
+      },
+      {
+        'name': 'Tata',
+        'image': 'https://cdn-icons-png.flaticon.com/512/5968/5968204.png'
+      },
     ];
 
     return Column(
@@ -44,14 +62,17 @@ class HomeBrandGrid extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Image.network(
-                        brands[index]['image']!,
+                        brands[index]['image'] ?? '',
                         fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Icon(Icons.image_outlined, color: Colors.grey),
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      brands[index]['name']!,
-                      style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                      brands[index]['name'] ?? '',
+                      style: const TextStyle(
+                          fontSize: 10, fontWeight: FontWeight.bold),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),

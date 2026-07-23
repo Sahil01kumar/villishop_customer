@@ -17,7 +17,7 @@ final mapMarkersProvider = Provider<Set<Marker>>((ref) {
       markerId: const MarkerId('customer'),
       position: points.customer,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-      infoWindow: const InfoWindow(title: 'Delivery Location'),
+      infoWindow: const InfoWindow(title: 'You are here'),
     ),
     Marker(
       markerId: const MarkerId('store'),
@@ -38,8 +38,9 @@ final mapMarkersProvider = Provider<Set<Marker>>((ref) {
         rotation: riderHeading,
         anchor: const Offset(0.5, 0.5),
         flat: true,
+        // In production we would use a custom PNG icon for a delivery scooter/bike
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
-        infoWindow: const InfoWindow(title: 'Delivery Partner'),
+        infoWindow: const InfoWindow(title: 'Rahul (VilliShop Partner)'),
       ),
     );
   }
@@ -65,6 +66,9 @@ final mapPolylinesProvider = Provider<Set<Polyline>>((ref) {
       color: const Color(0xFF2196F3),
       width: 5,
       geodesic: true,
+      jointType: JointType.round,
+      startCap: Cap.roundCap,
+      endCap: Cap.roundCap,
     ),
   };
 });

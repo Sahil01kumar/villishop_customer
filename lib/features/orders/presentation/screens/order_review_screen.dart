@@ -157,24 +157,26 @@ class _OrderReviewScreenState extends ConsumerState<OrderReviewScreen> {
       ),
       child: Row(
         children: [
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('₹${total.toStringAsFixed(0)}',
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w900,
-                      fontSize: 24,
-                      letterSpacing: -1)),
-              const Text('TOTAL PAYABLE',
-                  style: TextStyle(
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 10,
-                      letterSpacing: 0.5)),
-            ],
+          Expanded(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('₹${total.toStringAsFixed(0)}',
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 24,
+                        letterSpacing: -1)),
+                const Text('TOTAL PAYABLE',
+                    style: TextStyle(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 10,
+                        letterSpacing: 0.5)),
+              ],
+            ),
           ),
-          const Spacer(),
+          const SizedBox(width: 12),
           ElevatedButton(
             onPressed: isProcessing ? null : () => _handleProceed(context, ref),
             style: ElevatedButton.styleFrom(

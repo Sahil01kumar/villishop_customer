@@ -9,13 +9,13 @@ class SmartOrderTimeline extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'TRACK PROGRESS',
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          child: Text(
+            'ORDER TIMELINE',
             style: TextStyle(
               fontWeight: FontWeight.w900,
               fontSize: 10,
@@ -23,8 +23,10 @@ class SmartOrderTimeline extends StatelessWidget {
               color: Colors.grey,
             ),
           ),
-          const SizedBox(height: 16),
-          ListView.builder(
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: ListView.builder(
             shrinkWrap: true,
             padding: EdgeInsets.zero,
             physics: const NeverScrollableScrollPhysics(),
@@ -36,8 +38,8 @@ class SmartOrderTimeline extends StatelessWidget {
               );
             },
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -60,39 +62,35 @@ class _TimelineItem extends StatelessWidget {
           Column(
             children: [
               Container(
-                width: 20,
-                height: 20,
+                width: 24,
+                height: 24,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: color.withAlpha(item.isCurrent ? 30 : 50),
+                  border: item.isCurrent
+                      ? Border.all(color: color, width: 1.5)
+                      : null,
                 ),
                 child: Center(
                   child: item.isCompleted
-                      ? const Icon(Icons.check, size: 12, color: Colors.green)
+                      ? const Icon(Icons.check_rounded,
+                          size: 14, color: Colors.green)
                       : (item.isCurrent
-                          ? Container(
-                              width: 8,
-                              height: 8,
-                              decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: AppColors.primary),
-                            )
-                              .animate(onPlay: (c) => c.repeat())
-                              .scale(
-                                  duration: 1.seconds,
-                                  end: const Offset(1.5, 1.5))
-                              .fadeOut()
-                          : null),
+                          ? _buildCurrentIndicator()
+                          : _getStatusIcon(item.status, color)),
                 ),
               ),
               if (!isLast)
                 Expanded(
                   child: Container(
-                    width: 2,
+                    width: 2.5,
                     margin: const EdgeInsets.symmetric(vertical: 4),
-                    color: item.isCompleted
-                        ? Colors.green
-                        : const Color(0xFFEEEEEE),
+                    decoration: BoxDecoration(
+                      color: item.isCompleted
+                          ? Colors.green
+                          : const Color(0xFFF1F1F1),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
                   ),
                 ),
             ],
@@ -100,30 +98,51 @@ class _TimelineItem extends StatelessWidget {
           const SizedBox(width: 16),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 24),
+              padding: const EdgeInsets.only(bottom: 32),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    item.title,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w900,
-                      fontSize: 15,
-                      color: item.isCurrent
-                          ? Colors.black
-                          : (item.isCompleted
-                              ? Colors.black87
-                              : Colors.grey[400]),
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          item.title,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w900,
+                            fontSize: 15,
+                            letterSpacing: -0.2,
+                            color: item.isCurrent
+                                ? Colors.black
+                                : (item.isCompleted
+                                    ? Colors.black87
+                                    : Colors.grey[400]),
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      if (item.isCompleted || item.isCurrent)
+                        Text(
+                          _formatTime(item.timestamp),
+                          style: TextStyle(
+                            color: Colors.grey[500],
+                            fontSize: 11,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                    ],
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 6),
                   Text(
                     item.description,
                     style: TextStyle(
                       color:
-                          item.isCurrent ? Colors.grey[800] : Colors.grey[500],
+                          item.isCurrent ? Colors.grey[700] : Colors.grey[400],
                       fontSize: 12,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w700,
+                      height: 1.4,
                     ),
                   ),
                 ],
@@ -133,5 +152,62 @@ class _TimelineItem extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _buildCurrentIndicator() {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+          width: 8,
+          height: 8,
+          decoration: const BoxDecoration(
+              shape: BoxShape.circle, color: AppColors.primary),
+        ),
+        Container(
+          width: 18,
+          height: 18,
+          decoration: BoxDecoration(
+              shape: BoxShape.circle, color: AppColors.primary.withAlpha(40)),
+        )
+            .animate(onPlay: (c) => c.repeat())
+            .scale(
+                duration: 1200.ms,
+                begin: const Offset(0.5, 0.5),
+                end: const Offset(1.5, 1.5))
+            .fadeOut(),
+      ],
+    );
+  }
+
+  Widget _getStatusIcon(TrackingStatus status, Color color) {
+    IconData iconData;
+    switch (status) {
+      case TrackingStatus.orderConfirmed:
+        iconData = Icons.receipt_long_rounded;
+        break;
+      case TrackingStatus.preparing:
+        iconData = Icons.soup_kitchen_rounded;
+        break;
+      case TrackingStatus.riderAssigned:
+        iconData = Icons.person_add_rounded;
+        break;
+      case TrackingStatus.onTheWay:
+        iconData = Icons.directions_bike_rounded;
+        break;
+      case TrackingStatus.nearby:
+        iconData = Icons.near_me_rounded;
+        break;
+      case TrackingStatus.delivered:
+        iconData = Icons.home_work_rounded;
+        break;
+    }
+    return Icon(iconData, size: 10, color: color);
+  }
+
+  String _formatTime(DateTime dt) {
+    final hour = dt.hour > 12 ? dt.hour - 12 : (dt.hour == 0 ? 12 : dt.hour);
+    final amPm = dt.hour >= 12 ? 'PM' : 'AM';
+    return '$hour:${dt.minute.toString().padLeft(2, '0')} $amPm';
   }
 }

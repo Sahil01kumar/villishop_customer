@@ -47,7 +47,9 @@ class NotificationCenterScreen extends ConsumerWidget {
             child: notificationsAsync.when(
               data: (_) => filteredNotifications.isEmpty
                   ? const EmptyWidget(
-                      message: 'No notifications yet.',
+                      title: 'No Notifications',
+                      message:
+                          'We will keep you posted with your order updates and latest offers.',
                       icon: Icons.notifications_off_outlined,
                     )
                   : ListView.builder(

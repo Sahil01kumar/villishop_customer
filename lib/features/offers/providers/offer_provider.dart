@@ -4,6 +4,7 @@ import '../data/repositories/offer_repository_impl.dart';
 import '../data/models/offer_model.dart';
 import '../data/models/coupon_model.dart';
 import '../data/models/campaign_model.dart';
+import '../../location/providers/location_provider.dart';
 import 'offer_state.dart';
 
 final offerRepositoryProvider = Provider<OfferRepository>((ref) {
@@ -12,12 +13,19 @@ final offerRepositoryProvider = Provider<OfferRepository>((ref) {
 
 class OfferNotifier extends StateNotifier<OfferState> {
   final OfferRepository _repository;
+  final bool isDisabled;
 
-  OfferNotifier(this._repository) : super(const OfferState()) {
-    init();
+  OfferNotifier(this._repository, {this.isDisabled = false})
+      : super(const OfferState()) {
+    if (!isDisabled) {
+      init();
+    } else {
+      state = state.copyWith(isLoading: false);
+    }
   }
 
   Future<void> init() async {
+    if (isDisabled) return;
     state = state.copyWith(isLoading: true, errorMessage: null);
     try {
       final results = await Future.wait([
@@ -56,5 +64,12 @@ class OfferNotifier extends StateNotifier<OfferState> {
 }
 
 final offerProvider = StateNotifierProvider<OfferNotifier, OfferState>((ref) {
-  return OfferNotifier(ref.watch(offerRepositoryProvider));
+  final locState = ref.watch(locationProvider);
+  final isServiceable =
+      locState.isServiceable && locState.selectedAddress != null;
+
+  return OfferNotifier(
+    ref.watch(offerRepositoryProvider),
+    isDisabled: !isServiceable,
+  );
 });

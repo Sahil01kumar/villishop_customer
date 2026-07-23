@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/router/app_router.dart';
@@ -19,10 +20,10 @@ class ShopCard extends StatelessWidget {
     return GestureDetector(
       onTap: () => context.push('${AppRoutes.shopDetails}/${shop.id}'),
       child: Container(
-        width: 260,
+        width: 280,
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withAlpha(5),
@@ -30,6 +31,7 @@ class ShopCard extends StatelessWidget {
               offset: const Offset(0, 8),
             ),
           ],
+          border: Border.all(color: Colors.grey.withAlpha(20)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,9 +40,9 @@ class ShopCard extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius:
-                      const BorderRadius.vertical(top: Radius.circular(20)),
+                      const BorderRadius.vertical(top: Radius.circular(24)),
                   child: Container(
-                    height: 140,
+                    height: 150,
                     width: double.infinity,
                     color: const Color(0xFFF8F9FB),
                     child: shop.imageUrl.isNotEmpty
@@ -51,12 +53,12 @@ class ShopCard extends StatelessWidget {
                               color: Colors.grey[100],
                             ),
                             errorWidget: (context, url, error) => const Icon(
-                                Icons.storefront,
+                                Icons.storefront_rounded,
                                 size: 50,
                                 color: Colors.grey),
                           )
                         : const Center(
-                            child: Icon(Icons.storefront,
+                            child: Icon(Icons.storefront_rounded,
                                 size: 60, color: AppColors.primary)),
                   ),
                 ),
@@ -67,9 +69,12 @@ class ShopCard extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
-                      color: Colors.black.withAlpha(180),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+                        color: Colors.black.withAlpha(200),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black.withAlpha(30), blurRadius: 5)
+                        ]),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -79,7 +84,7 @@ class ShopCard extends StatelessWidget {
                         Text(
                           shop.deliveryTime,
                           style: const TextStyle(
-                              fontSize: 11,
+                              fontSize: 12,
                               fontWeight: FontWeight.w900,
                               color: Colors.white),
                         ),
@@ -95,15 +100,20 @@ class ShopCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: Colors.orange,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
+                          color: Colors.orange,
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.orange.withAlpha(50),
+                                blurRadius: 5)
+                          ]),
                       child: const Text(
-                        'POPULAR',
+                        'BEST RATED',
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 9,
-                            fontWeight: FontWeight.w900),
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 0.5),
                       ),
                     ),
                   ),
@@ -122,51 +132,59 @@ class ShopCard extends StatelessWidget {
                           shop.name,
                           style: const TextStyle(
                               fontWeight: FontWeight.w900,
-                              fontSize: 17,
-                              letterSpacing: -0.2),
+                              fontSize: 18,
+                              letterSpacing: -0.5),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
+                      const SizedBox(width: 8),
                       Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           const Icon(Icons.star_rounded,
-                              size: 18, color: Colors.green),
+                              size: 20, color: Colors.green),
                           const SizedBox(width: 2),
                           Text(
                             shop.rating.toString(),
                             style: const TextStyle(
-                                fontWeight: FontWeight.w900, fontSize: 13),
+                                fontWeight: FontWeight.w900, fontSize: 14),
                           ),
                         ],
                       ),
                     ],
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: 4),
                   Text(
                     shop.category,
                     style: TextStyle(
                         color: Colors.grey[600],
                         fontSize: 13,
                         fontWeight: FontWeight.w600),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 16),
                   Row(
                     children: [
                       Icon(Icons.location_on_outlined,
-                          size: 14, color: Colors.grey[500]),
+                          size: 16, color: Colors.grey[500]),
                       const SizedBox(width: 4),
-                      Text(shop.distance,
-                          style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold)),
-                      const Spacer(),
+                      Flexible(
+                        child: Text(shop.distance,
+                            style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 12,
+                                fontWeight: FontWeight.w800),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis),
+                      ),
+                      const SizedBox(width: 8),
                       Text('Min. ${shop.minOrder}',
                           style: TextStyle(
                               color: Colors.grey[500],
                               fontSize: 11,
-                              fontWeight: FontWeight.bold)),
+                              fontWeight: FontWeight.w900)),
                     ],
                   ),
                 ],
@@ -175,6 +193,6 @@ class ShopCard extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ).animate().fadeIn(duration: 400.ms).slideX(begin: 0.1, end: 0);
   }
 }

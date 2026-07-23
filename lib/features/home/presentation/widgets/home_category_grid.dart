@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_dimensions.dart';
+import '../../../../core/router/app_router.dart';
 import '../widgets/section_header.dart';
 import '../widgets/category_item.dart';
 import '../../data/models/category_model.dart';
@@ -25,6 +27,7 @@ class HomeCategoryGrid extends ConsumerWidget {
           title: 'Shop by Category',
           onSeeAll: () {
             ref.read(navigationIndexProvider.notifier).state = 1;
+            context.go(AppRoutes.categories);
           },
         ),
         GridView.builder(
@@ -35,7 +38,7 @@ class HomeCategoryGrid extends ConsumerWidget {
             crossAxisCount: 5,
             mainAxisSpacing: 16,
             crossAxisSpacing: 12,
-            childAspectRatio: 0.7,
+            childAspectRatio: 0.65,
           ),
           itemCount: displayedCategories.length,
           itemBuilder: (context, index) {
@@ -46,6 +49,7 @@ class HomeCategoryGrid extends ConsumerWidget {
                 ref.read(pendingCategoryIdProvider.notifier).state =
                     category.id;
                 ref.read(navigationIndexProvider.notifier).state = 1;
+                context.go(AppRoutes.categories);
               },
             );
           },

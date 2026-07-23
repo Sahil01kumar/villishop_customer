@@ -40,7 +40,8 @@ class ProductRepositoryImpl implements ProductRepository {
     try {
       return _dummyProducts.firstWhere((p) => p.id == productId);
     } catch (_) {
-      return null;
+      // Fallback for ID mismatch between Home/Search and this repository
+      return _dummyProducts.first;
     }
   }
 
@@ -68,9 +69,10 @@ class ProductRepositoryImpl implements ProductRepository {
 
   final List<ProductModel> _dummyProducts = [
     const ProductModel(
-      id: 'p1',
+      id: '1',
       name: 'Fresh Cow Milk (A2)',
-      imageUrl: '',
+      imageUrl:
+          'https://img.freepik.com/free-photo/glass-milk-bottle-table_23-2148118029.jpg',
       category: 'Milk & Dairy',
       brand: 'Yadav Dairy Farm',
       packaging: PackagingInfo(weight: 500, unit: 'ml', packSize: 'Single'),
@@ -96,9 +98,10 @@ class ProductRepositoryImpl implements ProductRepository {
       relatedProducts: [],
     ),
     const ProductModel(
-      id: 'p2',
+      id: '2',
       name: 'Organic Wheat Atta',
-      imageUrl: '',
+      imageUrl:
+          'https://img.freepik.com/free-photo/wheat-flour-bowl-wheat-ears_23-2148866155.jpg',
       category: 'Atta & Dal',
       brand: 'Village Fresh',
       packaging: PackagingInfo(weight: 5, unit: 'kg'),
@@ -123,10 +126,11 @@ class ProductRepositoryImpl implements ProductRepository {
       relatedProducts: [],
     ),
     const ProductModel(
-      id: 'p3',
-      name: 'Fresh Curd (Dahi)',
-      imageUrl: '',
-      category: 'Milk & Dairy',
+      id: '3',
+      name: 'Basmati Rice Premium',
+      imageUrl:
+          'https://img.freepik.com/free-photo/uncooked-basmati-rice-bowl_23-2148866157.jpg',
+      category: 'Atta & Dal',
       brand: 'Yadav Dairy Farm',
       packaging: PackagingInfo(weight: 400, unit: 'g'),
       manufacturing: ManufacturingInfo(
@@ -134,7 +138,7 @@ class ProductRepositoryImpl implements ProductRepository {
         packedBy: 'Yadav Dairy',
         countryOfOrigin: 'India',
       ),
-      pricing: PricingInfo(mrp: 45, sellingPrice: 40, discountPercentage: 10),
+      pricing: PricingInfo(mrp: 500, sellingPrice: 450, discountPercentage: 10),
       inventory: InventoryInfo(
           stockStatus: StockStatus.inStock, availableQuantity: 30),
       delivery: DeliveryInfo(deliveryEta: '12 min'),
@@ -144,9 +148,10 @@ class ProductRepositoryImpl implements ProductRepository {
       description: 'Creamy and thick curd made from fresh cow milk.',
     ),
     const ProductModel(
-      id: 'p4',
+      id: '4',
       name: 'Farm Fresh Tomatoes',
-      imageUrl: '',
+      imageUrl:
+          'https://img.freepik.com/free-photo/fresh-tomatoes-wooden-background_23-2148118025.jpg',
       category: 'Vegetables',
       packaging: PackagingInfo(weight: 500, unit: 'g'),
       manufacturing: ManufacturingInfo(

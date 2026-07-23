@@ -12,18 +12,12 @@ abstract class AuthRepository {
   });
   Future<UserCredential> verifyOTP(String verificationId, String smsCode);
 
-  // Email/Password Auth
-  Future<UserCredential> signInWithEmailPassword(String email, String password);
-  Future<UserCredential> signUpWithEmailPassword(String email, String password);
-  Future<void> sendPasswordResetEmail(String email);
-  Future<void> sendEmailVerification();
-
   // Social Auth
   Future<UserCredential> signInWithGoogle();
 
   // Account actions
   Future<void> signOut();
   Future<UserModel?> getCurrentUser();
-  Future<void> updateDisplayName(String name);
   Future<void> updateProfile(UserModel user);
+  Future<bool> checkUserExists(String phoneNumber);
 }

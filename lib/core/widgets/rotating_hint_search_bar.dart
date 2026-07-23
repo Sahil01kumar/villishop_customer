@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../constants/app_colors.dart';
 
-
 class RotatingHintSearchBar extends StatefulWidget {
   final List<String> hints;
   final VoidCallback? onTap;
@@ -28,7 +27,7 @@ class _RotatingHintSearchBarState extends State<RotatingHintSearchBar> {
   void initState() {
     super.initState();
     if (widget.hints.length > 1) {
-      _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
+      _timer = Timer.periodic(const Duration(seconds: 4), (timer) {
         if (mounted) {
           setState(() {
             _currentHintIndex = (_currentHintIndex + 1) % widget.hints.length;
@@ -65,36 +64,48 @@ class _RotatingHintSearchBarState extends State<RotatingHintSearchBar> {
         ),
         child: Row(
           children: [
-            const Icon(Icons.search_rounded, color: AppColors.primary, size: 24),
+            const Icon(Icons.search_rounded,
+                color: AppColors.primary, size: 24),
             const SizedBox(width: 12),
             Expanded(
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 500),
-                transitionBuilder: (Widget child, Animation<double> animation) {
-                  return FadeTransition(
-                    opacity: animation,
-                    child: SlideTransition(
-                      position: Tween<Offset>(
-                        begin: const Offset(0.0, 0.5),
-                        end: Offset.zero,
-                      ).animate(animation),
-                      child: child,
+              child: ClipRect(
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 600),
+                  switchInCurve: Curves.easeOutQuart,
+                  switchOutCurve: Curves.easeInQuart,
+                  transitionBuilder:
+                      (Widget child, Animation<double> animation) {
+                    final isOut = child.key !=
+                        ValueKey<String>(widget.hints[_currentHintIndex]);
+                    return FadeTransition(
+                      opacity: animation,
+                      child: SlideTransition(
+                        position: Tween<Offset>(
+                          begin: isOut ? Offset.zero : const Offset(0.0, 1.0),
+                          end: isOut ? const Offset(0.0, -1.0) : Offset.zero,
+                        ).animate(animation),
+                        child: child,
+                      ),
+                    );
+                  },
+                  child: Text(
+                    widget.hints[_currentHintIndex],
+                    key: ValueKey<String>(widget.hints[_currentHintIndex]),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.grey[400],
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
                     ),
-                  );
-                },
-                child: Text(
-                  widget.hints[_currentHintIndex],
-                  key: ValueKey<String>(widget.hints[_currentHintIndex]),
-                  style: TextStyle(
-                    color: Colors.grey[400],
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
             ),
-            const VerticalDivider(width: 20, indent: 16, endIndent: 16, thickness: 1),
-            const Icon(Icons.mic_none_rounded, color: AppColors.primary, size: 22),
+            const VerticalDivider(
+                width: 20, indent: 16, endIndent: 16, thickness: 1),
+            const Icon(Icons.mic_none_rounded,
+                color: AppColors.primary, size: 22),
           ],
         ),
       ),

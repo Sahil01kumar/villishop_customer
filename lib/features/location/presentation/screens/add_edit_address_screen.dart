@@ -67,7 +67,8 @@ class _AddEditAddressScreenState extends ConsumerState<AddEditAddressScreen> {
   }
 
   void _onSave() {
-    if (_formKey.currentState!.validate()) {
+    final formState = _formKey.currentState;
+    if (formState != null && formState.validate()) {
       final newAddress = AddressModel(
         id: widget.address?.id ?? const Uuid().v4(),
         label: _selectedLabel,

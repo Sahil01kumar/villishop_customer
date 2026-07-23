@@ -49,9 +49,10 @@ class QuantityStepper extends ConsumerWidget {
           child: Text(
             'ADD',
             style: TextStyle(
-                color: Colors.green.shade700,
+                color: Colors.green.shade800,
                 fontWeight: FontWeight.w900,
-                fontSize: 13),
+                fontSize: 13,
+                letterSpacing: 0.5),
           ),
         ),
       );
@@ -74,7 +75,7 @@ class QuantityStepper extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _StepperButton(
-            icon: Icons.remove,
+            icon: Icons.remove_rounded,
             onPressed: () => ref
                 .read(cartProvider.notifier)
                 .decrementQuantity(product.shopId ?? 'local_shop', product.id),
@@ -93,7 +94,7 @@ class QuantityStepper extends ConsumerWidget {
             ),
           ),
           _StepperButton(
-            icon: Icons.add,
+            icon: Icons.add_rounded,
             onPressed: () => ref
                 .read(cartProvider.notifier)
                 .incrementQuantity(product.shopId ?? 'local_shop', product.id),
@@ -119,9 +120,9 @@ class _StepperButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         child: Container(
           width: 24,
-          height: 32,
+          height: double.infinity,
           alignment: Alignment.center,
-          child: Icon(icon, color: Colors.white, size: 16),
+          child: Icon(icon, color: Colors.white, size: 18),
         ),
       ),
     );

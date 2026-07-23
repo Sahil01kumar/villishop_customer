@@ -63,5 +63,9 @@ class MapInfrastructureNotifier extends StateNotifier<MapInfrastructureState> {
 final mapInfrastructureProvider =
     StateNotifierProvider<MapInfrastructureNotifier, MapInfrastructureState>(
         (ref) {
-  return MapInfrastructureNotifier();
+  final notifier = MapInfrastructureNotifier();
+  ref.onDispose(() {
+    notifier.disposeController();
+  });
+  return notifier;
 });

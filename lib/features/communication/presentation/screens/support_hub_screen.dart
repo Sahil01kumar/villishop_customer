@@ -100,13 +100,16 @@ class SupportHubScreen extends ConsumerWidget {
               'Fastest way to get your query resolved.',
               Icons.chat_bubble_outline_rounded,
               () async {
-                final thread = await ref.read(communicationRepositoryProvider).getOrCreateThread(
-                  orderId: 'general_support',
-                  participantId: 'admin_support',
-                  participantName: 'VilliShop Support',
-                  participantPhoto: '',
-                  participantType: ChatParticipantType.shop, // Use shop type for now
-                );
+                final thread = await ref
+                    .read(communicationRepositoryProvider)
+                    .getOrCreateThread(
+                      orderId: 'general_support',
+                      participantId: 'admin_support',
+                      participantName: 'VilliShop Support',
+                      participantPhoto: '',
+                      participantType:
+                          ChatParticipantType.shop, // Use shop type for now
+                    );
                 if (context.mounted) {
                   context.push(AppRoutes.chat, extra: thread);
                 }

@@ -17,4 +17,7 @@ abstract class LocationRepository {
   Future<LocationPermission> checkPermission();
   Future<LocationPermission> requestPermission();
   Future<bool> isLocationServiceEnabled();
+
+  Future<List<String>> searchPlaces(String query);
+  Future<Position?> getPositionFromAddress(String address);
 }

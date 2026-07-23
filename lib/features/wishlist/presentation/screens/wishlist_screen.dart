@@ -10,6 +10,7 @@ import 'package:villishop_customer/features/wishlist/providers/wishlist_provider
 import 'package:villishop_customer/features/wishlist/presentation/widgets/wishlist_product_card.dart';
 import 'package:villishop_customer/features/wishlist/presentation/widgets/favourite_shop_card.dart';
 import 'package:villishop_customer/features/wishlist/presentation/widgets/collection_card.dart';
+import 'package:villishop_customer/features/main/providers/navigation_provider.dart';
 
 class WishlistScreen extends ConsumerStatefulWidget {
   const WishlistScreen({super.key});
@@ -71,8 +72,13 @@ class _WishlistScreenState extends ConsumerState<WishlistScreen>
 
   Widget _buildProductsTab(dynamic state) {
     if (state.products.isEmpty) {
-      return const EmptyWidget(
-          message: 'No products in wishlist', icon: Icons.favorite_border);
+      return EmptyWidget(
+        title: 'Your Wishlist is Empty',
+        message: 'Explore products and add them to your wishlist to buy later.',
+        icon: Icons.favorite_border,
+        actionText: 'Explore Now',
+        onAction: () => ref.read(navigationIndexProvider.notifier).state = 0,
+      );
     }
     return ListView.separated(
       padding: const EdgeInsets.all(AppSpacing.m),
@@ -93,7 +99,10 @@ class _WishlistScreenState extends ConsumerState<WishlistScreen>
   Widget _buildShopsTab(dynamic state) {
     if (state.shops.isEmpty) {
       return const EmptyWidget(
-          message: 'No favourite shops', icon: Icons.storefront);
+        title: 'No Favourite Shops',
+        message: 'Mark shops as favourite to find them easily here.',
+        icon: Icons.storefront,
+      );
     }
     return ListView.separated(
       padding: const EdgeInsets.all(AppSpacing.m),
@@ -115,8 +124,10 @@ class _WishlistScreenState extends ConsumerState<WishlistScreen>
   Widget _buildCollectionsTab(dynamic state) {
     if (state.collections.isEmpty) {
       return const EmptyWidget(
-          message: 'No collections created',
-          icon: Icons.collections_bookmark_outlined);
+        title: 'No Collections',
+        message: 'Organise your favourites into custom collections.',
+        icon: Icons.collections_bookmark_outlined,
+      );
     }
     return GridView.builder(
       padding: const EdgeInsets.all(AppSpacing.m),

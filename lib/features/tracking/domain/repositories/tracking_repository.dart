@@ -16,4 +16,7 @@ abstract class TrackingRepository {
     required GeoPoint destination,
     GeoPoint? currentRiderLocation,
   });
+
+  /// Stop tracking and unsubscribe from realtime updates
+  void stopTracking(String orderId);
 }

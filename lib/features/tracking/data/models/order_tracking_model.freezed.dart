@@ -34,12 +34,23 @@ mixin _$OrderTrackingModel {
   String? get riderPhone => throw _privateConstructorUsedError;
   String? get riderPhoto => throw _privateConstructorUsedError;
   double get riderRating => throw _privateConstructorUsedError;
+  int get completedDeliveries => throw _privateConstructorUsedError;
+  String? get vehicleType => throw _privateConstructorUsedError;
   String? get vehicleNumber => throw _privateConstructorUsedError;
+  double get currentSpeedKmph => throw _privateConstructorUsedError;
   String? get polylinePoints => throw _privateConstructorUsedError;
   String? get otp => throw _privateConstructorUsedError;
   DeliveryHealth get health => throw _privateConstructorUsedError;
+  DelayReason get delayReason => throw _privateConstructorUsedError;
   bool get isReroutingActive => throw _privateConstructorUsedError;
   bool get inCustomerRadius => throw _privateConstructorUsedError;
+  bool get isNearbyZoneDelivery => throw _privateConstructorUsedError;
+  String? get nearbyZoneName => throw _privateConstructorUsedError;
+  bool get isExpress => throw _privateConstructorUsedError;
+  bool get isPriority => throw _privateConstructorUsedError;
+  bool get isColdChain => throw _privateConstructorUsedError;
+  bool get isFragile => throw _privateConstructorUsedError;
+  bool get isCOD => throw _privateConstructorUsedError;
 
   /// Serializes this OrderTrackingModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -72,12 +83,23 @@ abstract class $OrderTrackingModelCopyWith<$Res> {
       String? riderPhone,
       String? riderPhoto,
       double riderRating,
+      int completedDeliveries,
+      String? vehicleType,
       String? vehicleNumber,
+      double currentSpeedKmph,
       String? polylinePoints,
       String? otp,
       DeliveryHealth health,
+      DelayReason delayReason,
       bool isReroutingActive,
-      bool inCustomerRadius});
+      bool inCustomerRadius,
+      bool isNearbyZoneDelivery,
+      String? nearbyZoneName,
+      bool isExpress,
+      bool isPriority,
+      bool isColdChain,
+      bool isFragile,
+      bool isCOD});
 
   $GeoPointCopyWith<$Res> get sourceLocation;
   $GeoPointCopyWith<$Res> get destinationLocation;
@@ -113,12 +135,23 @@ class _$OrderTrackingModelCopyWithImpl<$Res, $Val extends OrderTrackingModel>
     Object? riderPhone = freezed,
     Object? riderPhoto = freezed,
     Object? riderRating = null,
+    Object? completedDeliveries = null,
+    Object? vehicleType = freezed,
     Object? vehicleNumber = freezed,
+    Object? currentSpeedKmph = null,
     Object? polylinePoints = freezed,
     Object? otp = freezed,
     Object? health = null,
+    Object? delayReason = null,
     Object? isReroutingActive = null,
     Object? inCustomerRadius = null,
+    Object? isNearbyZoneDelivery = null,
+    Object? nearbyZoneName = freezed,
+    Object? isExpress = null,
+    Object? isPriority = null,
+    Object? isColdChain = null,
+    Object? isFragile = null,
+    Object? isCOD = null,
   }) {
     return _then(_value.copyWith(
       trackingId: null == trackingId
@@ -177,10 +210,22 @@ class _$OrderTrackingModelCopyWithImpl<$Res, $Val extends OrderTrackingModel>
           ? _value.riderRating
           : riderRating // ignore: cast_nullable_to_non_nullable
               as double,
+      completedDeliveries: null == completedDeliveries
+          ? _value.completedDeliveries
+          : completedDeliveries // ignore: cast_nullable_to_non_nullable
+              as int,
+      vehicleType: freezed == vehicleType
+          ? _value.vehicleType
+          : vehicleType // ignore: cast_nullable_to_non_nullable
+              as String?,
       vehicleNumber: freezed == vehicleNumber
           ? _value.vehicleNumber
           : vehicleNumber // ignore: cast_nullable_to_non_nullable
               as String?,
+      currentSpeedKmph: null == currentSpeedKmph
+          ? _value.currentSpeedKmph
+          : currentSpeedKmph // ignore: cast_nullable_to_non_nullable
+              as double,
       polylinePoints: freezed == polylinePoints
           ? _value.polylinePoints
           : polylinePoints // ignore: cast_nullable_to_non_nullable
@@ -193,6 +238,10 @@ class _$OrderTrackingModelCopyWithImpl<$Res, $Val extends OrderTrackingModel>
           ? _value.health
           : health // ignore: cast_nullable_to_non_nullable
               as DeliveryHealth,
+      delayReason: null == delayReason
+          ? _value.delayReason
+          : delayReason // ignore: cast_nullable_to_non_nullable
+              as DelayReason,
       isReroutingActive: null == isReroutingActive
           ? _value.isReroutingActive
           : isReroutingActive // ignore: cast_nullable_to_non_nullable
@@ -200,6 +249,34 @@ class _$OrderTrackingModelCopyWithImpl<$Res, $Val extends OrderTrackingModel>
       inCustomerRadius: null == inCustomerRadius
           ? _value.inCustomerRadius
           : inCustomerRadius // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isNearbyZoneDelivery: null == isNearbyZoneDelivery
+          ? _value.isNearbyZoneDelivery
+          : isNearbyZoneDelivery // ignore: cast_nullable_to_non_nullable
+              as bool,
+      nearbyZoneName: freezed == nearbyZoneName
+          ? _value.nearbyZoneName
+          : nearbyZoneName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      isExpress: null == isExpress
+          ? _value.isExpress
+          : isExpress // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isPriority: null == isPriority
+          ? _value.isPriority
+          : isPriority // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isColdChain: null == isColdChain
+          ? _value.isColdChain
+          : isColdChain // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isFragile: null == isFragile
+          ? _value.isFragile
+          : isFragile // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isCOD: null == isCOD
+          ? _value.isCOD
+          : isCOD // ignore: cast_nullable_to_non_nullable
               as bool,
     ) as $Val);
   }
@@ -262,12 +339,23 @@ abstract class _$$OrderTrackingModelImplCopyWith<$Res>
       String? riderPhone,
       String? riderPhoto,
       double riderRating,
+      int completedDeliveries,
+      String? vehicleType,
       String? vehicleNumber,
+      double currentSpeedKmph,
       String? polylinePoints,
       String? otp,
       DeliveryHealth health,
+      DelayReason delayReason,
       bool isReroutingActive,
-      bool inCustomerRadius});
+      bool inCustomerRadius,
+      bool isNearbyZoneDelivery,
+      String? nearbyZoneName,
+      bool isExpress,
+      bool isPriority,
+      bool isColdChain,
+      bool isFragile,
+      bool isCOD});
 
   @override
   $GeoPointCopyWith<$Res> get sourceLocation;
@@ -304,12 +392,23 @@ class __$$OrderTrackingModelImplCopyWithImpl<$Res>
     Object? riderPhone = freezed,
     Object? riderPhoto = freezed,
     Object? riderRating = null,
+    Object? completedDeliveries = null,
+    Object? vehicleType = freezed,
     Object? vehicleNumber = freezed,
+    Object? currentSpeedKmph = null,
     Object? polylinePoints = freezed,
     Object? otp = freezed,
     Object? health = null,
+    Object? delayReason = null,
     Object? isReroutingActive = null,
     Object? inCustomerRadius = null,
+    Object? isNearbyZoneDelivery = null,
+    Object? nearbyZoneName = freezed,
+    Object? isExpress = null,
+    Object? isPriority = null,
+    Object? isColdChain = null,
+    Object? isFragile = null,
+    Object? isCOD = null,
   }) {
     return _then(_$OrderTrackingModelImpl(
       trackingId: null == trackingId
@@ -368,10 +467,22 @@ class __$$OrderTrackingModelImplCopyWithImpl<$Res>
           ? _value.riderRating
           : riderRating // ignore: cast_nullable_to_non_nullable
               as double,
+      completedDeliveries: null == completedDeliveries
+          ? _value.completedDeliveries
+          : completedDeliveries // ignore: cast_nullable_to_non_nullable
+              as int,
+      vehicleType: freezed == vehicleType
+          ? _value.vehicleType
+          : vehicleType // ignore: cast_nullable_to_non_nullable
+              as String?,
       vehicleNumber: freezed == vehicleNumber
           ? _value.vehicleNumber
           : vehicleNumber // ignore: cast_nullable_to_non_nullable
               as String?,
+      currentSpeedKmph: null == currentSpeedKmph
+          ? _value.currentSpeedKmph
+          : currentSpeedKmph // ignore: cast_nullable_to_non_nullable
+              as double,
       polylinePoints: freezed == polylinePoints
           ? _value.polylinePoints
           : polylinePoints // ignore: cast_nullable_to_non_nullable
@@ -384,6 +495,10 @@ class __$$OrderTrackingModelImplCopyWithImpl<$Res>
           ? _value.health
           : health // ignore: cast_nullable_to_non_nullable
               as DeliveryHealth,
+      delayReason: null == delayReason
+          ? _value.delayReason
+          : delayReason // ignore: cast_nullable_to_non_nullable
+              as DelayReason,
       isReroutingActive: null == isReroutingActive
           ? _value.isReroutingActive
           : isReroutingActive // ignore: cast_nullable_to_non_nullable
@@ -391,6 +506,34 @@ class __$$OrderTrackingModelImplCopyWithImpl<$Res>
       inCustomerRadius: null == inCustomerRadius
           ? _value.inCustomerRadius
           : inCustomerRadius // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isNearbyZoneDelivery: null == isNearbyZoneDelivery
+          ? _value.isNearbyZoneDelivery
+          : isNearbyZoneDelivery // ignore: cast_nullable_to_non_nullable
+              as bool,
+      nearbyZoneName: freezed == nearbyZoneName
+          ? _value.nearbyZoneName
+          : nearbyZoneName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      isExpress: null == isExpress
+          ? _value.isExpress
+          : isExpress // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isPriority: null == isPriority
+          ? _value.isPriority
+          : isPriority // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isColdChain: null == isColdChain
+          ? _value.isColdChain
+          : isColdChain // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isFragile: null == isFragile
+          ? _value.isFragile
+          : isFragile // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isCOD: null == isCOD
+          ? _value.isCOD
+          : isCOD // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
   }
@@ -414,12 +557,23 @@ class _$OrderTrackingModelImpl implements _OrderTrackingModel {
       this.riderPhone,
       this.riderPhoto,
       this.riderRating = 4.8,
+      this.completedDeliveries = 0,
+      this.vehicleType,
       this.vehicleNumber,
+      this.currentSpeedKmph = 0.0,
       this.polylinePoints,
       this.otp,
       this.health = DeliveryHealth.excellent,
+      this.delayReason = DelayReason.none,
       this.isReroutingActive = false,
-      this.inCustomerRadius = false})
+      this.inCustomerRadius = false,
+      this.isNearbyZoneDelivery = false,
+      this.nearbyZoneName,
+      this.isExpress = false,
+      this.isPriority = false,
+      this.isColdChain = false,
+      this.isFragile = false,
+      this.isCOD = false})
       : _timeline = timeline;
 
   factory _$OrderTrackingModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -463,7 +617,15 @@ class _$OrderTrackingModelImpl implements _OrderTrackingModel {
   @JsonKey()
   final double riderRating;
   @override
+  @JsonKey()
+  final int completedDeliveries;
+  @override
+  final String? vehicleType;
+  @override
   final String? vehicleNumber;
+  @override
+  @JsonKey()
+  final double currentSpeedKmph;
   @override
   final String? polylinePoints;
   @override
@@ -473,14 +635,37 @@ class _$OrderTrackingModelImpl implements _OrderTrackingModel {
   final DeliveryHealth health;
   @override
   @JsonKey()
+  final DelayReason delayReason;
+  @override
+  @JsonKey()
   final bool isReroutingActive;
   @override
   @JsonKey()
   final bool inCustomerRadius;
+  @override
+  @JsonKey()
+  final bool isNearbyZoneDelivery;
+  @override
+  final String? nearbyZoneName;
+  @override
+  @JsonKey()
+  final bool isExpress;
+  @override
+  @JsonKey()
+  final bool isPriority;
+  @override
+  @JsonKey()
+  final bool isColdChain;
+  @override
+  @JsonKey()
+  final bool isFragile;
+  @override
+  @JsonKey()
+  final bool isCOD;
 
   @override
   String toString() {
-    return 'OrderTrackingModel(trackingId: $trackingId, orderId: $orderId, status: $status, timeline: $timeline, sourceLocation: $sourceLocation, destinationLocation: $destinationLocation, deliveryAddress: $deliveryAddress, currentRiderLocation: $currentRiderLocation, estimatedDistanceKm: $estimatedDistanceKm, estimatedEtaMinutes: $estimatedEtaMinutes, riderName: $riderName, riderPhone: $riderPhone, riderPhoto: $riderPhoto, riderRating: $riderRating, vehicleNumber: $vehicleNumber, polylinePoints: $polylinePoints, otp: $otp, health: $health, isReroutingActive: $isReroutingActive, inCustomerRadius: $inCustomerRadius)';
+    return 'OrderTrackingModel(trackingId: $trackingId, orderId: $orderId, status: $status, timeline: $timeline, sourceLocation: $sourceLocation, destinationLocation: $destinationLocation, deliveryAddress: $deliveryAddress, currentRiderLocation: $currentRiderLocation, estimatedDistanceKm: $estimatedDistanceKm, estimatedEtaMinutes: $estimatedEtaMinutes, riderName: $riderName, riderPhone: $riderPhone, riderPhoto: $riderPhoto, riderRating: $riderRating, completedDeliveries: $completedDeliveries, vehicleType: $vehicleType, vehicleNumber: $vehicleNumber, currentSpeedKmph: $currentSpeedKmph, polylinePoints: $polylinePoints, otp: $otp, health: $health, delayReason: $delayReason, isReroutingActive: $isReroutingActive, inCustomerRadius: $inCustomerRadius, isNearbyZoneDelivery: $isNearbyZoneDelivery, nearbyZoneName: $nearbyZoneName, isExpress: $isExpress, isPriority: $isPriority, isColdChain: $isColdChain, isFragile: $isFragile, isCOD: $isCOD)';
   }
 
   @override
@@ -513,16 +698,37 @@ class _$OrderTrackingModelImpl implements _OrderTrackingModel {
                 other.riderPhoto == riderPhoto) &&
             (identical(other.riderRating, riderRating) ||
                 other.riderRating == riderRating) &&
+            (identical(other.completedDeliveries, completedDeliveries) ||
+                other.completedDeliveries == completedDeliveries) &&
+            (identical(other.vehicleType, vehicleType) ||
+                other.vehicleType == vehicleType) &&
             (identical(other.vehicleNumber, vehicleNumber) ||
                 other.vehicleNumber == vehicleNumber) &&
+            (identical(other.currentSpeedKmph, currentSpeedKmph) ||
+                other.currentSpeedKmph == currentSpeedKmph) &&
             (identical(other.polylinePoints, polylinePoints) ||
                 other.polylinePoints == polylinePoints) &&
             (identical(other.otp, otp) || other.otp == otp) &&
             (identical(other.health, health) || other.health == health) &&
+            (identical(other.delayReason, delayReason) ||
+                other.delayReason == delayReason) &&
             (identical(other.isReroutingActive, isReroutingActive) ||
                 other.isReroutingActive == isReroutingActive) &&
             (identical(other.inCustomerRadius, inCustomerRadius) ||
-                other.inCustomerRadius == inCustomerRadius));
+                other.inCustomerRadius == inCustomerRadius) &&
+            (identical(other.isNearbyZoneDelivery, isNearbyZoneDelivery) ||
+                other.isNearbyZoneDelivery == isNearbyZoneDelivery) &&
+            (identical(other.nearbyZoneName, nearbyZoneName) ||
+                other.nearbyZoneName == nearbyZoneName) &&
+            (identical(other.isExpress, isExpress) ||
+                other.isExpress == isExpress) &&
+            (identical(other.isPriority, isPriority) ||
+                other.isPriority == isPriority) &&
+            (identical(other.isColdChain, isColdChain) ||
+                other.isColdChain == isColdChain) &&
+            (identical(other.isFragile, isFragile) ||
+                other.isFragile == isFragile) &&
+            (identical(other.isCOD, isCOD) || other.isCOD == isCOD));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -543,12 +749,23 @@ class _$OrderTrackingModelImpl implements _OrderTrackingModel {
         riderPhone,
         riderPhoto,
         riderRating,
+        completedDeliveries,
+        vehicleType,
         vehicleNumber,
+        currentSpeedKmph,
         polylinePoints,
         otp,
         health,
+        delayReason,
         isReroutingActive,
-        inCustomerRadius
+        inCustomerRadius,
+        isNearbyZoneDelivery,
+        nearbyZoneName,
+        isExpress,
+        isPriority,
+        isColdChain,
+        isFragile,
+        isCOD
       ]);
 
   /// Create a copy of OrderTrackingModel
@@ -584,12 +801,23 @@ abstract class _OrderTrackingModel implements OrderTrackingModel {
       final String? riderPhone,
       final String? riderPhoto,
       final double riderRating,
+      final int completedDeliveries,
+      final String? vehicleType,
       final String? vehicleNumber,
+      final double currentSpeedKmph,
       final String? polylinePoints,
       final String? otp,
       final DeliveryHealth health,
+      final DelayReason delayReason,
       final bool isReroutingActive,
-      final bool inCustomerRadius}) = _$OrderTrackingModelImpl;
+      final bool inCustomerRadius,
+      final bool isNearbyZoneDelivery,
+      final String? nearbyZoneName,
+      final bool isExpress,
+      final bool isPriority,
+      final bool isColdChain,
+      final bool isFragile,
+      final bool isCOD}) = _$OrderTrackingModelImpl;
 
   factory _OrderTrackingModel.fromJson(Map<String, dynamic> json) =
       _$OrderTrackingModelImpl.fromJson;
@@ -623,7 +851,13 @@ abstract class _OrderTrackingModel implements OrderTrackingModel {
   @override
   double get riderRating;
   @override
+  int get completedDeliveries;
+  @override
+  String? get vehicleType;
+  @override
   String? get vehicleNumber;
+  @override
+  double get currentSpeedKmph;
   @override
   String? get polylinePoints;
   @override
@@ -631,9 +865,25 @@ abstract class _OrderTrackingModel implements OrderTrackingModel {
   @override
   DeliveryHealth get health;
   @override
+  DelayReason get delayReason;
+  @override
   bool get isReroutingActive;
   @override
   bool get inCustomerRadius;
+  @override
+  bool get isNearbyZoneDelivery;
+  @override
+  String? get nearbyZoneName;
+  @override
+  bool get isExpress;
+  @override
+  bool get isPriority;
+  @override
+  bool get isColdChain;
+  @override
+  bool get isFragile;
+  @override
+  bool get isCOD;
 
   /// Create a copy of OrderTrackingModel
   /// with the given fields replaced by the non-null parameter values.

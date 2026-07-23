@@ -8,7 +8,8 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/shimmer_widget.dart';
 import '../../../../core/router/app_router.dart';
 import '../../providers/category_provider.dart';
-import '../../../../features/products/presentation/widgets/product_grid_card.dart';
+import '../../../../features/home/presentation/widgets/product_card.dart';
+import '../../../../core/widgets/floating_cart_bar.dart';
 
 class CategoriesScreen extends ConsumerStatefulWidget {
   const CategoriesScreen({super.key});
@@ -32,9 +33,10 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
 
     // Auto-scroll logic when a category is selected from Home
     ref.listen<CategoryState>(categoryProvider, (previous, next) {
-      if (next.selectedParent != null && next.parentCategories.isNotEmpty) {
+      final selectedParent = next.selectedParent;
+      if (selectedParent != null && next.parentCategories.isNotEmpty) {
         final index = next.parentCategories
-            .indexWhere((c) => c.id == next.selectedParent!.id);
+            .indexWhere((c) => c.id == selectedParent.id);
         if (index != -1 && _sidebarController.hasClients) {
           _sidebarController.animateTo(
             index * 100.0, // Fixed height for sidebar items
@@ -73,6 +75,8 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
                 ),
               ],
             ),
+      floatingActionButton: const FloatingCartBar(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
@@ -109,6 +113,7 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
                 ),
               ),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
                     width: 54,
@@ -149,17 +154,20 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    category.name,
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight:
-                          isSelected ? FontWeight.w900 : FontWeight.w700,
-                      color: isSelected ? AppColors.primary : Colors.black54,
+                  Flexible(
+                    child: Text(
+                      category.name,
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight:
+                            isSelected ? FontWeight.w900 : FontWeight.w700,
+                        color: isSelected ? AppColors.primary : Colors.black54,
+                        height: 1.0,
+                      ),
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
@@ -244,11 +252,15 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> {
                         crossAxisCount: 2,
                         mainAxisSpacing: 12,
                         crossAxisSpacing: 12,
-                        childAspectRatio: 0.55,
+                        childAspectRatio: 0.58,
                       ),
                       itemCount: state.products.length,
                       itemBuilder: (context, index) {
-                        return ProductGridCard(product: state.products[index])
+                        return ProductCard(
+                                product: state.products[index],
+                                width: double.infinity,
+                                heroContext: 'category',
+                              )
                             .animate()
                             .fadeIn(delay: (index * 50).ms)
                             .scale(begin: const Offset(0.95, 0.95));

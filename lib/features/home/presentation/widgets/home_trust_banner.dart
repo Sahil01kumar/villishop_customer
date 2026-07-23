@@ -24,29 +24,36 @@ class HomeTrustBanner extends StatelessWidget {
         ],
       ),
       child: isTablet ? _buildHorizontalRow() : _buildResponsiveGrid(),
-    ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.1, end: 0, curve: Curves.easeOut);
+    )
+        .animate()
+        .fadeIn(duration: 600.ms)
+        .slideY(begin: 0.1, end: 0, curve: Curves.easeOut);
   }
 
   Widget _buildHorizontalRow() {
     return const Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Expanded(child: _TrustFeatureItem(
+        Expanded(
+            child: _TrustFeatureItem(
           icon: Icons.verified_rounded,
           title: 'Fresh Quality',
           subtitle: '100% Fresh Products',
         )),
-        Expanded(child: _TrustFeatureItem(
+        Expanded(
+            child: _TrustFeatureItem(
           icon: Icons.local_shipping_rounded,
           title: 'Fast Delivery',
           subtitle: '10–30 Minutes',
         )),
-        Expanded(child: _TrustFeatureItem(
+        Expanded(
+            child: _TrustFeatureItem(
           icon: Icons.currency_rupee_rounded,
           title: 'Best Prices',
           subtitle: 'Village Special Offers',
         )),
-        Expanded(child: _TrustFeatureItem(
+        Expanded(
+            child: _TrustFeatureItem(
           icon: Icons.support_agent_rounded,
           title: '24×7 Support',
           subtitle: 'Always Here to Help',
@@ -60,12 +67,14 @@ class HomeTrustBanner extends StatelessWidget {
       children: [
         Row(
           children: [
-            Expanded(child: _TrustFeatureItem(
+            Expanded(
+                child: _TrustFeatureItem(
               icon: Icons.verified_rounded,
               title: 'Fresh Quality',
               subtitle: '100% Fresh Products',
             )),
-            Expanded(child: _TrustFeatureItem(
+            Expanded(
+                child: _TrustFeatureItem(
               icon: Icons.local_shipping_rounded,
               title: 'Fast Delivery',
               subtitle: '10–30 Minutes',
@@ -75,12 +84,14 @@ class HomeTrustBanner extends StatelessWidget {
         SizedBox(height: 20),
         Row(
           children: [
-            Expanded(child: _TrustFeatureItem(
+            Expanded(
+                child: _TrustFeatureItem(
               icon: Icons.currency_rupee_rounded,
               title: 'Best Prices',
               subtitle: 'Village Special Offers',
             )),
-            Expanded(child: _TrustFeatureItem(
+            Expanded(
+                child: _TrustFeatureItem(
               icon: Icons.support_agent_rounded,
               title: '24×7 Support',
               subtitle: 'Always Here to Help',
@@ -108,6 +119,7 @@ class _TrustFeatureItem extends StatelessWidget {
     return Semantics(
       label: '$title: $subtitle',
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Container(
             padding: const EdgeInsets.all(10),
@@ -118,22 +130,30 @@ class _TrustFeatureItem extends StatelessWidget {
             child: Icon(icon, color: Colors.white, size: 20),
           ),
           const SizedBox(height: 8),
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontWeight: FontWeight.w900,
-              fontSize: 12,
-              color: Colors.black,
+          Flexible(
+            child: Text(
+              title,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontWeight: FontWeight.w900,
+                fontSize: 11,
+                color: Colors.black,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
-          Text(
-            subtitle,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 9,
-              color: Colors.grey[600],
+          Flexible(
+            child: Text(
+              subtitle,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 9,
+                color: Colors.grey[600],
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],

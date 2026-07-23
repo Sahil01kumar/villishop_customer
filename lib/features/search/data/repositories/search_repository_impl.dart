@@ -5,6 +5,9 @@ import '../../../../core/services/shared_pref_service.dart';
 import '../../../products/data/models/sub_models/packaging_info.dart';
 import '../../../products/data/models/sub_models/manufacturing_info.dart';
 import '../../../products/data/models/sub_models/pricing_info.dart';
+import '../../../products/data/models/sub_models/delivery_info.dart';
+import '../../../products/data/models/sub_models/inventory_info.dart';
+import '../../../products/data/models/sub_models/health_labels.dart';
 
 class SearchRepositoryImpl implements SearchRepository {
   final SharedPreferenceService _prefs;
@@ -45,35 +48,9 @@ class SearchRepositoryImpl implements SearchRepository {
     await Future.delayed(const Duration(milliseconds: 500));
     if (query.isEmpty) return [];
 
-    return [
-      const ProductModel(
-        id: '1',
-        name: 'Fresh Cow Milk',
-        imageUrl: '',
-        category: 'Milk & Dairy',
-        packaging: PackagingInfo(weight: 500, unit: 'ml'),
-        manufacturing: ManufacturingInfo(
-            manufacturer: 'Yadav Dairy',
-            packedBy: 'Yadav Dairy',
-            countryOfOrigin: 'India'),
-        pricing: PricingInfo(mrp: 32, sellingPrice: 28, discountPercentage: 12),
-        rating: 4.5,
-      ),
-      const ProductModel(
-        id: '2',
-        name: 'Organic Wheat Atta',
-        imageUrl: '',
-        category: 'Atta & Dal',
-        packaging: PackagingInfo(weight: 5, unit: 'kg'),
-        manufacturing: ManufacturingInfo(
-            manufacturer: 'Village Fresh',
-            packedBy: 'Village Fresh',
-            countryOfOrigin: 'India'),
-        pricing:
-            PricingInfo(mrp: 210, sellingPrice: 180, discountPercentage: 14),
-        rating: 4.8,
-      ),
-    ].where((p) => p.name.toLowerCase().contains(query.toLowerCase())).toList();
+    return _dummyProducts
+        .where((p) => p.name.toLowerCase().contains(query.toLowerCase()))
+        .toList();
   }
 
   @override
@@ -88,10 +65,47 @@ class SearchRepositoryImpl implements SearchRepository {
         category: 'Dairy & Eggs',
         rating: 4.8,
         deliveryTime: '12 min',
-        imageUrl: '',
+        imageUrl:
+            'https://img.freepik.com/free-photo/view-cow-farm_23-2149526438.jpg',
         distance: '1.2 km',
         minOrder: '₹50',
       ),
     ].where((s) => s.name.toLowerCase().contains(query.toLowerCase())).toList();
   }
+
+  final List<ProductModel> _dummyProducts = [
+    const ProductModel(
+      id: '1',
+      name: 'Fresh Cow Milk (A2)',
+      imageUrl:
+          'https://img.freepik.com/free-photo/glass-milk-bottle-table_23-2148118029.jpg',
+      category: 'Milk & Dairy',
+      packaging: PackagingInfo(weight: 500, unit: 'ml'),
+      manufacturing: ManufacturingInfo(
+          manufacturer: 'Yadav Dairy',
+          packedBy: 'Yadav Dairy',
+          countryOfOrigin: 'India'),
+      pricing: PricingInfo(mrp: 32, sellingPrice: 28, discountPercentage: 12),
+      delivery: DeliveryInfo(deliveryEta: '10 MINS'),
+      inventory: InventoryInfo(stockStatus: StockStatus.inStock),
+      rating: 4.5,
+    ),
+    const ProductModel(
+      id: '2',
+      name: 'Organic Wheat Atta',
+      imageUrl:
+          'https://img.freepik.com/free-photo/wheat-flour-bowl-wheat-ears_23-2148866155.jpg',
+      category: 'Atta & Dal',
+      packaging: PackagingInfo(weight: 5, unit: 'kg'),
+      manufacturing: ManufacturingInfo(
+          manufacturer: 'Village Fresh',
+          packedBy: 'Village Fresh',
+          countryOfOrigin: 'India'),
+      pricing: PricingInfo(mrp: 210, sellingPrice: 180, discountPercentage: 14),
+      healthLabels: HealthLabels(isOrganic: true),
+      delivery: DeliveryInfo(deliveryEta: '15 MINS'),
+      inventory: InventoryInfo(stockStatus: StockStatus.inStock),
+      rating: 4.8,
+    ),
+  ];
 }

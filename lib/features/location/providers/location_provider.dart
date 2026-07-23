@@ -7,7 +7,10 @@ import 'package:geolocator/geolocator.dart';
 import '../data/models/address_model.dart';
 import '../domain/repositories/location_repository.dart';
 import '../data/repositories/location_repository_impl.dart';
+import '../domain/repositories/zone_repository.dart';
+import 'zone_repository_provider.dart';
 import '../../../../core/services/shared_pref_service.dart';
+import '../data/models/zone_model.dart';
 
 part 'location_provider.freezed.dart';
 
@@ -33,6 +36,7 @@ class LocationState with _$LocationState {
     String? errorMessage,
     @Default(true) bool isServiceable,
     @Default(false) bool isLiveTracking,
+    ZoneModel? activeZone,
   }) = _LocationState;
 }
 
@@ -42,13 +46,14 @@ final locationRepositoryProvider = Provider<LocationRepository>((ref) {
 
 class LocationNotifier extends StateNotifier<LocationState> {
   final LocationRepository _repository;
+  final ZoneRepository _zoneRepository;
   final SharedPreferenceService _prefs;
   StreamSubscription<Position>? _positionSubscription;
 
   static const String _selectedAddressKey = 'enterprise_selected_address_v1';
   static const String _recentAddressesKey = 'enterprise_recent_addresses_v1';
 
-  LocationNotifier(this._repository, this._prefs)
+  LocationNotifier(this._repository, this._zoneRepository, this._prefs)
       : super(const LocationState()) {
     _init();
   }
@@ -137,21 +142,37 @@ class LocationNotifier extends StateNotifier<LocationState> {
     if (state.selectedAddress == null ||
         state.selectedAddress?.id == 'current') {
       try {
-        final addressStr = await _repository.getAddressFromLatLng(
-            position.latitude, position.longitude);
-        final currentAddress = AddressModel(
-          id: 'current',
-          label: 'Current Location',
-          fullAddress: addressStr,
-          latitude: position.latitude,
-          longitude: position.longitude,
-        );
-        if (mounted) {
-          state = state.copyWith(
-            selectedAddress: currentAddress,
-            currentAddressName: addressStr,
+        // Optimization: Only reverse geocode if moved significantly (> 100m)
+        // or if we don't have an address yet
+        double distance = 101;
+        final currentPos = state.currentPosition;
+        if (currentPos != null) {
+          distance = Geolocator.distanceBetween(
+            currentPos.latitude,
+            currentPos.longitude,
+            position.latitude,
+            position.longitude,
           );
-          _checkServiceability(position.latitude, position.longitude);
+        }
+
+        if (state.currentAddressName == null || distance > 100) {
+          final addressStr = await _repository.getAddressFromLatLng(
+              position.latitude, position.longitude);
+
+          if (mounted && addressStr != state.currentAddressName) {
+            final currentAddress = AddressModel(
+              id: 'current',
+              label: 'Current Location',
+              fullAddress: addressStr,
+              latitude: position.latitude,
+              longitude: position.longitude,
+            );
+            state = state.copyWith(
+              selectedAddress: currentAddress,
+              currentAddressName: addressStr,
+            );
+            _checkServiceability(position.latitude, position.longitude);
+          }
         }
       } catch (e) {
         debugPrint('Geocoding failed: $e');
@@ -238,9 +259,11 @@ class LocationNotifier extends StateNotifier<LocationState> {
   }
 
   Future<void> _checkServiceability(double lat, double lng) async {
-    final serviceable = await _repository.checkServiceability(lat, lng);
+    final zone = await _zoneRepository.getZoneForLocation(lat, lng);
     if (mounted) {
-      state = state.copyWith(isServiceable: serviceable);
+      state = state.copyWith(
+          isServiceable: zone != null && zone.status == ZoneStatus.active,
+          activeZone: zone);
     }
   }
 
@@ -272,6 +295,7 @@ final locationProvider =
     StateNotifierProvider<LocationNotifier, LocationState>((ref) {
   return LocationNotifier(
     ref.watch(locationRepositoryProvider),
+    ref.watch(zoneRepositoryProvider),
     ref.watch(sharedPreferencesServiceProvider),
   );
 });

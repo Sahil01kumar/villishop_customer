@@ -24,6 +24,12 @@ class AddressReviewCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withAlpha(5),
+              blurRadius: 10,
+              offset: const Offset(0, 4))
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,22 +52,40 @@ class AddressReviewCard extends StatelessWidget {
           if (address != null) ...[
             Row(
               children: [
-                const Icon(Icons.location_on_rounded,
-                    color: AppColors.primary, size: 20),
-                const SizedBox(width: 8),
-                Text(address!.label,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w900, fontSize: 14)),
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withAlpha(10),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.location_on_rounded,
+                      color: AppColors.primary, size: 20),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(address!.label,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w900, fontSize: 15)),
+                      Text(
+                        '${address!.receiverName ?? 'Customer'} • ${address!.phoneNumber ?? ''}',
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                            color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
-            const SizedBox(height: 4),
-            Text(
-              '${address!.receiverName ?? 'Customer'} • ${address!.phoneNumber ?? ''}',
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-            ),
+            const SizedBox(height: 12),
             Text(
               address!.fullAddress,
-              style: TextStyle(color: Colors.grey[600], fontSize: 12),
+              style:
+                  TextStyle(color: Colors.grey[600], fontSize: 13, height: 1.4),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
@@ -88,6 +112,12 @@ class SlotReviewCard extends ConsumerWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withAlpha(5),
+              blurRadius: 10,
+              offset: const Offset(0, 4))
+        ],
       ),
       child: Row(
         children: [
@@ -110,23 +140,15 @@ class SlotReviewCard extends ConsumerWidget {
                 Text(isDeliverNow ? '⚡ Deliver Now' : '📅 Scheduled Delivery',
                     style: const TextStyle(
                         fontWeight: FontWeight.w900,
-                        fontSize: 14,
+                        fontSize: 13,
                         color: Colors.grey)),
                 Text(
                   isDeliverNow
-                      ? 'ETA: ${state.etaMinutes} mins'
+                      ? 'Arriving in ${state.etaMinutes} mins'
                       : (state.selectedSlot?.label ?? 'Select a slot'),
                   style: const TextStyle(
                       fontWeight: FontWeight.w900, fontSize: 16),
                 ),
-                if (isDeliverNow)
-                  const Text(
-                    'Arriving as fast as village wind!',
-                    style: TextStyle(
-                        color: Colors.green,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12),
-                  ),
               ],
             ),
           ),
@@ -150,6 +172,12 @@ class ShopProductsReviewSection extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withAlpha(5),
+              blurRadius: 10,
+              offset: const Offset(0, 4))
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,14 +185,14 @@ class ShopProductsReviewSection extends StatelessWidget {
           Row(
             children: [
               const Icon(Icons.storefront_rounded,
-                  color: AppColors.primary, size: 18),
+                  color: AppColors.primary, size: 20),
               const SizedBox(width: 8),
               Text(shopCart.shopName,
                   style: const TextStyle(
-                      fontWeight: FontWeight.w900, fontSize: 15)),
+                      fontWeight: FontWeight.w900, fontSize: 16)),
             ],
           ),
-          const Divider(height: 24),
+          const Divider(height: 32, thickness: 0.5),
           ListView.separated(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -174,50 +202,67 @@ class ShopProductsReviewSection extends StatelessWidget {
               final item = shopCart.items[index];
               final product = item.product;
               return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(12),
                     child: NetworkImageWithFallback(
                       imageUrl: product.imageUrl,
-                      fit: BoxFit.cover,
+                      fit: BoxFit.contain,
                       width: 60,
                       height: 60,
                       fallbackIcon: Icons.shopping_basket_outlined,
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(product.name,
                             style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 14)),
+                                fontWeight: FontWeight.w900,
+                                fontSize: 14,
+                                height: 1.1)),
                         Text(
                             product.packaging.variant ??
                                 '${product.packaging.weight} ${product.packaging.unit}',
                             style: TextStyle(
-                                color: Colors.grey[600], fontSize: 12)),
+                                color: Colors.grey[600],
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold)),
                         const SizedBox(height: 4),
                         Row(
                           children: [
-                            Text(
-                                '₹${product.pricing.sellingPrice.toStringAsFixed(0)}',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w900)),
-                            const SizedBox(width: 6),
-                            Text('₹${product.pricing.mrp.toStringAsFixed(0)}',
-                                style: const TextStyle(
-                                    decoration: TextDecoration.lineThrough,
-                                    color: Colors.grey,
-                                    fontSize: 11)),
+                            Flexible(
+                              child: Text(
+                                  '₹${product.pricing.sellingPrice.toStringAsFixed(0)}',
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w900,
+                                      fontSize: 15)),
+                            ),
+                            if (product.pricing.mrp >
+                                product.pricing.sellingPrice) ...[
+                              const SizedBox(width: 6),
+                              Flexible(
+                                child: Text(
+                                    '₹${product.pricing.mrp.toStringAsFixed(0)}',
+                                    style: const TextStyle(
+                                        decoration: TextDecoration.lineThrough,
+                                        color: Colors.grey,
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.bold),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis),
+                              ),
+                            ],
                           ],
                         ),
                       ],
                     ),
                   ),
-                  QuantityStepper(product: product, height: 36),
+                  const SizedBox(width: 12),
+                  QuantityStepper(product: product, height: 36, width: 72),
                 ],
               );
             },
@@ -242,17 +287,23 @@ class DeliveryInfoCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withAlpha(5),
+              blurRadius: 10,
+              offset: const Offset(0, 4))
+        ],
       ),
       child: Column(
         children: [
           _infoRow(Icons.shopping_bag_outlined, 'Items in Order',
               '$totalItems items'),
-          const Divider(height: 24),
+          const Divider(height: 24, thickness: 0.5),
           _infoRow(Icons.delivery_dining_rounded, 'Delivery Partner',
               'Assigned on checkout'),
-          const Divider(height: 24),
+          const Divider(height: 24, thickness: 0.5),
           _infoRow(Icons.straighten_rounded, 'Store Distance', '2.4 km'),
-          const Divider(height: 24),
+          const Divider(height: 24, thickness: 0.5),
           _infoRow(Icons.monitor_weight_outlined, 'Total Weight', '1.2 kg'),
         ],
       ),
@@ -264,12 +315,14 @@ class DeliveryInfoCard extends StatelessWidget {
       children: [
         Icon(icon, color: Colors.grey[600], size: 18),
         const SizedBox(width: 12),
-        Text(label,
-            style: TextStyle(
-                color: Colors.grey[600],
-                fontWeight: FontWeight.w600,
-                fontSize: 13)),
-        const Spacer(),
+        Expanded(
+          child: Text(label,
+              style: TextStyle(
+                  color: Colors.grey[600],
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13)),
+        ),
+        const SizedBox(width: 12),
         Text(value,
             style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 13)),
       ],
@@ -306,6 +359,12 @@ class SpecialInstructionsSection extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withAlpha(5),
+              blurRadius: 10,
+              offset: const Offset(0, 4))
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -375,6 +434,12 @@ class PriceBreakdownCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withAlpha(5),
+              blurRadius: 10,
+              offset: const Offset(0, 4))
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -395,7 +460,7 @@ class PriceBreakdownCard extends StatelessWidget {
           _summaryRow('Platform Fee', 2.0),
           _summaryRow('Handling & Packing', summary.packagingCharge),
           _summaryRow('Taxes & GST', summary.totalTax),
-          const Divider(height: 32),
+          const Divider(height: 32, thickness: 0.5),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

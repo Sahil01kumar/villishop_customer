@@ -13,7 +13,8 @@ class HomePromotionSection extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         image: const DecorationImage(
-          image: NetworkImage('https://img.freepik.com/free-vector/horizontal-banner-template-grocery-store_23-2148733290.jpg'),
+          image: NetworkImage(
+              'https://img.freepik.com/free-vector/horizontal-banner-template-grocery-store_23-2148733290.jpg'),
           fit: BoxFit.cover,
         ),
       ),
@@ -23,7 +24,7 @@ class HomePromotionSection extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               gradient: LinearGradient(
-                colors: [Colors.black.withAlpha(150), Colors.transparent],
+                colors: [Colors.black.withAlpha(160), Colors.transparent],
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
               ),
@@ -35,21 +36,29 @@ class HomePromotionSection extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  'Village Farmers Direct',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w900,
+                const Flexible(
+                  child: Text(
+                    'Village Farmers Direct',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 const SizedBox(height: 4),
-                const Text(
-                  'Support your local village farmers.\n100% Organic & Fresh.',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
+                const Flexible(
+                  child: Text(
+                    'Support your local village farmers. 100% Organic & Fresh.',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -58,12 +67,16 @@ class HomePromotionSection extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     foregroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     minimumSize: Size.zero,
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
                   ),
-                  child: const Text('SHOP NOW', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 10)),
+                  child: const Text('SHOP NOW',
+                      style:
+                          TextStyle(fontWeight: FontWeight.w900, fontSize: 10)),
                 ),
               ],
             ),

@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:villishop_customer/core/constants/app_colors.dart';
 import 'package:villishop_customer/core/widgets/loading_widget.dart';
 import 'package:villishop_customer/core/router/app_router.dart';
 import 'package:villishop_customer/core/maps/widgets/enterprise_tracking_map.dart';
@@ -14,6 +15,7 @@ import 'package:villishop_customer/features/orders/providers/order_provider.dart
 import 'package:villishop_customer/features/orders/data/models/order_model.dart';
 import 'package:villishop_customer/features/orders/domain/entities/order_lifecycle_state.dart';
 import 'package:villishop_customer/features/location/providers/location_provider.dart';
+import 'package:villishop_customer/core/utils/logger.dart';
 import '../widgets/enterprise_tracking_sheet.dart';
 
 class TrackingScreen extends ConsumerStatefulWidget {
@@ -27,6 +29,13 @@ class TrackingScreen extends ConsumerStatefulWidget {
 class _TrackingScreenState extends ConsumerState<TrackingScreen> {
   final DraggableScrollableController _sheetController =
       DraggableScrollableController();
+  bool _completionHandled = false;
+
+  @override
+  void dispose() {
+    _sheetController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -51,7 +60,9 @@ class _TrackingScreenState extends ConsumerState<TrackingScreen> {
     // Listen for delivery completion to trigger rating flow
     ref.listen<AsyncValue<OrderTrackingModel>>(trackingProvider(widget.orderId),
         (prev, next) {
-      if (next.value?.status == TrackingStatus.delivered) {
+      if (next.value?.status == TrackingStatus.delivered &&
+          !_completionHandled) {
+        _completionHandled = true;
         _handleDeliveryCompletion(context, ref, widget.orderId);
       }
     });
@@ -69,6 +80,11 @@ class _TrackingScreenState extends ConsumerState<TrackingScreen> {
                 () => ref.invalidate(orderDetailsProvider(widget.orderId)));
           }
 
+          // If order is already delivered, handle it as a static view
+          if (order.lifecycleState == OrderLifecycleState.delivered) {
+            return _buildDeliveredStaticView(context, order);
+          }
+
           return trackingAsync.when(
             data: (tracking) => _buildMainContent(context, tracking, order),
             loading: () => const Center(child: LoadingWidget()),
@@ -81,6 +97,47 @@ class _TrackingScreenState extends ConsumerState<TrackingScreen> {
         loading: () => const Center(child: LoadingWidget()),
         error: (e, stack) => _buildErrorView('Failed to load order details.',
             () => ref.invalidate(orderDetailsProvider(widget.orderId))),
+      ),
+    );
+  }
+
+  Widget _buildDeliveredStaticView(BuildContext context, OrderModel order) {
+    return Container(
+      color: Colors.white,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Lottie.asset('assets/lottie/success_anim.json',
+              height: 200,
+              repeat: false,
+              errorBuilder: (context, error, stackTrace) => const Icon(
+                  Icons.check_circle_rounded,
+                  size: 100,
+                  color: Colors.green)),
+          const SizedBox(height: 24),
+          const Text('ORDER DELIVERED',
+              style: TextStyle(fontWeight: FontWeight.w900, fontSize: 24)),
+          const SizedBox(height: 8),
+          Text('Delivered to: ${order.deliveryAddressSnapshot.label}',
+              style: TextStyle(
+                  color: Colors.grey[600], fontWeight: FontWeight.bold)),
+          const SizedBox(height: 40),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 40),
+            child: ElevatedButton(
+              onPressed: () => context.go(AppRoutes.home),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.black,
+                foregroundColor: Colors.white,
+                minimumSize: const Size(double.infinity, 56),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16)),
+              ),
+              child: const Text('BACK TO HOME',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -159,7 +216,12 @@ class _TrackingScreenState extends ConsumerState<TrackingScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Lottie.asset('assets/lottie/success_anim.json',
-                height: 250, repeat: false),
+                height: 250,
+                repeat: false,
+                errorBuilder: (context, error, stackTrace) => const Icon(
+                    Icons.check_circle_rounded,
+                    size: 120,
+                    color: Colors.green)),
             const SizedBox(height: 24),
             const Text('DELIVERED SUCCESSFULLY!',
                 style: TextStyle(
@@ -192,15 +254,44 @@ class _TrackingScreenState extends ConsumerState<TrackingScreen> {
 
   Future<void> _handleDeliveryCompletion(
       BuildContext context, WidgetRef ref, String orderId) async {
-    final order = await ref.read(orderRepositoryProvider).getOrderById(orderId);
-    if (order != null) {
-      await ref
-          .read(orderRepositoryProvider)
-          .updateOrderStatus(orderId, OrderLifecycleState.delivered);
-      ref.read(activeOrderIdProvider.notifier).clear();
-      if (context.mounted) {
-        context.go(AppRoutes.orderDelivered, extra: order);
+    AppLogger.i('TRACKING: Delivery completion flow started for $orderId');
+
+    try {
+      // 1. Show success overlay for 3 seconds before navigating
+      // This allows the user to see the "Delivered Successfully" animation on the map
+      await Future.delayed(const Duration(seconds: 3));
+      AppLogger.i('TRACKING: 3s delay completed');
+
+      final order = await ref.read(orderRepositoryProvider).getOrderById(orderId);
+      if (order != null) {
+        AppLogger.i('TRACKING: Order found, updating status and clearing active order');
+        
+        // Update status in repo - ensures persistence and refreshes other UI components
+        final updatedOrder = await ref
+            .read(orderRepositoryProvider)
+            .updateOrderStatus(orderId, OrderLifecycleState.delivered);
+
+        // Clear active order so the "Active Order Card" disappears from Home
+        ref.read(activeOrderIdProvider.notifier).clear();
+
+        if (context.mounted && updatedOrder != null) {
+          AppLogger.i('TRACKING: Navigating to Order Delivered Hub');
+          // Use context.go to reset the navigation stack to the success screen
+          context.go(AppRoutes.orderDelivered, extra: updatedOrder);
+          AppLogger.i('TRACKING: Navigation successful');
+        } else if (context.mounted) {
+          AppLogger.w('TRACKING: Updated order is null, falling back to home');
+          context.go(AppRoutes.home);
+        } else {
+          AppLogger.w('TRACKING: Context not mounted after delay, navigation aborted');
+        }
+      } else {
+        AppLogger.e('TRACKING: Order not found during completion flow: $orderId');
+        if (context.mounted) context.go(AppRoutes.home);
       }
+    } catch (e, stack) {
+      AppLogger.e('TRACKING: Error in delivery completion flow: $e', stack);
+      if (context.mounted) context.go(AppRoutes.home);
     }
   }
 }
@@ -242,7 +333,12 @@ class _PermissionRequiredView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Lottie.asset('assets/lottie/location_anim.json', height: 180),
+            Lottie.asset('assets/lottie/location_anim.json',
+                height: 180,
+                errorBuilder: (context, error, stackTrace) => const Icon(
+                    Icons.location_on_rounded,
+                    size: 100,
+                    color: AppColors.primary)),
             const SizedBox(height: 32),
             const Text('Location Access Needed',
                 style: TextStyle(

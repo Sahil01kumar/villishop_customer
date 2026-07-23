@@ -5,8 +5,6 @@ import '../../features/splash/splash_screen.dart';
 import '../../features/authentication/providers/auth_provider.dart';
 import '../../features/authentication/presentation/screens/login_screen.dart';
 import '../../features/authentication/presentation/screens/register_screen.dart';
-import '../../features/authentication/presentation/screens/forgot_password_screen.dart';
-import '../../features/authentication/presentation/screens/phone_login_screen.dart';
 import '../../features/authentication/presentation/screens/otp_verification_screen.dart';
 import '../../features/main/presentation/screens/main_screen.dart';
 import '../../features/search/presentation/screens/search_screen.dart';
@@ -25,8 +23,7 @@ import '../../features/orders/presentation/screens/order_delivered_success_scree
 import '../../features/wishlist/presentation/screens/wishlist_screen.dart';
 import '../../features/offers/presentation/screens/offers_screen.dart';
 import '../../features/wallet/presentation/screens/wallet_screen.dart';
-import '../../features/onboarding/presentation/screens/onboarding_screen.dart';
-import '../../features/profile/presentation/screens/profile_screen.dart';
+
 import '../../features/categories/providers/category_provider.dart';
 import '../../features/orders/presentation/screens/order_review_screen.dart';
 import '../../features/payment/presentation/screens/payment_selection_screen.dart';
@@ -36,6 +33,8 @@ import '../../features/notifications/presentation/screens/notification_center_sc
 import '../../features/communication/presentation/screens/chat_screen.dart';
 import '../../features/communication/presentation/screens/support_hub_screen.dart';
 import '../../features/location/presentation/screens/map_picker_screen.dart';
+import '../../features/settings/presentation/screens/about_screen.dart';
+import '../../features/location/presentation/screens/address_search_screen.dart';
 
 import '../../features/communication/data/models/chat_model.dart';
 import '../../features/orders/data/models/order_model.dart';
@@ -46,8 +45,6 @@ class AppRoutes {
   static const String categories = '/categories';
   static const String login = '/login';
   static const String register = '/register';
-  static const String forgotPassword = '/forgot-password';
-  static const String phoneLogin = '/phone-login';
   static const String otp = '/otp';
   static const String search = '/search';
   static const String addresses = '/addresses';
@@ -61,7 +58,6 @@ class AppRoutes {
   static const String wishlist = '/wishlist';
   static const String offers = '/offers';
   static const String wallet = '/wallet';
-  static const String onboarding = '/onboarding';
   static const String profile = '/profile';
   static const String editProfile = '/edit-profile';
   static const String orderReview = '/order-review';
@@ -75,6 +71,11 @@ class AppRoutes {
   static const String orderRating = '/order-rating';
   static const String trackingMap = '/tracking-map';
   static const String orderDelivered = '/order-delivered';
+  static const String cart = '/cart';
+  static const String orders = '/orders';
+  static const String settings = '/settings';
+  static const String addressSearch = '/address-search';
+  static const String about = '/about';
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -84,25 +85,22 @@ final routerProvider = Provider<GoRouter>((ref) {
     initialLocation: AppRoutes.splash,
     redirect: (context, state) {
       final isSplash = state.matchedLocation == AppRoutes.splash;
-      final isOnboarding = state.matchedLocation == AppRoutes.onboarding;
+      final isRegister = state.matchedLocation == AppRoutes.register;
       final isAuthRoute = state.matchedLocation == AppRoutes.login ||
-          state.matchedLocation == AppRoutes.register ||
-          state.matchedLocation == AppRoutes.forgotPassword ||
-          state.matchedLocation == AppRoutes.phoneLogin ||
           state.matchedLocation == AppRoutes.otp;
 
       return authState.maybeWhen(
         authenticated: (user) {
           if (!user.isProfileCompleted) {
-            return isOnboarding ? null : AppRoutes.onboarding;
+            return isRegister ? null : AppRoutes.register;
           }
 
-          if (isSplash || isAuthRoute || isOnboarding) return AppRoutes.home;
+          if (isSplash || isAuthRoute || isRegister) return AppRoutes.home;
           return null;
         },
         unauthenticated: () {
           if (isSplash) return AppRoutes.login;
-          if (state.matchedLocation == AppRoutes.home) return AppRoutes.login;
+          if (!isAuthRoute && !isRegister) return AppRoutes.login;
           return null;
         },
         orElse: () => null,
@@ -114,12 +112,18 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const SplashScreen(),
       ),
       GoRoute(
-        path: AppRoutes.onboarding,
-        builder: (context, state) => const OnboardingScreen(),
+        path: AppRoutes.register,
+        builder: (context, state) => const RegisterScreen(),
       ),
+      // Tab 0: Home
       GoRoute(
         path: AppRoutes.home,
-        builder: (context, state) => const MainScreen(),
+        builder: (context, state) => const MainScreen(initialTab: 0),
+      ),
+      // Tab 1: Categories
+      GoRoute(
+        path: AppRoutes.categories,
+        builder: (context, state) => const MainScreen(initialTab: 1),
       ),
       GoRoute(
         path: '${AppRoutes.categories}/:id',
@@ -133,21 +137,25 @@ final routerProvider = Provider<GoRouter>((ref) {
           return const MainScreen(initialTab: 1);
         },
       ),
+      // Tab 2: Cart
+      GoRoute(
+        path: AppRoutes.cart,
+        builder: (context, state) => const MainScreen(initialTab: 2),
+      ),
+      // Tab 3: Orders
+      GoRoute(
+        path: AppRoutes.orders,
+        builder: (context, state) => const MainScreen(initialTab: 3),
+      ),
+      // Tab 4: Profile
+      GoRoute(
+        path: AppRoutes.profile,
+        builder: (context, state) => const MainScreen(initialTab: 4),
+      ),
+
       GoRoute(
         path: AppRoutes.login,
         builder: (context, state) => const LoginScreen(),
-      ),
-      GoRoute(
-        path: AppRoutes.register,
-        builder: (context, state) => const RegisterScreen(),
-      ),
-      GoRoute(
-        path: AppRoutes.forgotPassword,
-        builder: (context, state) => const ForgotPasswordScreen(),
-      ),
-      GoRoute(
-        path: AppRoutes.phoneLogin,
-        builder: (context, state) => const PhoneLoginScreen(),
       ),
       GoRoute(
         path: AppRoutes.otp,
@@ -234,10 +242,6 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const WalletScreen(),
       ),
       GoRoute(
-        path: AppRoutes.profile,
-        builder: (context, state) => const ProfileScreen(),
-      ),
-      GoRoute(
         path: AppRoutes.orderReview,
         builder: (context, state) => const OrderReviewScreen(),
       ),
@@ -298,6 +302,18 @@ final routerProvider = Provider<GoRouter>((ref) {
           final id = state.pathParameters['id']!;
           return TrackingMapScreen(orderId: id);
         },
+      ),
+      GoRoute(
+        path: AppRoutes.settings,
+        builder: (context, state) => const SupportHubScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.addressSearch,
+        builder: (context, state) => const AddressSearchScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.about,
+        builder: (context, state) => const AboutScreen(),
       ),
     ],
   );

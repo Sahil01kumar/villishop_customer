@@ -101,8 +101,8 @@ final trackingStatusProvider = Provider.family<String, String>((ref, orderId) {
   );
 });
 
-final etaProvider = StateProvider<int>((ref) => 0);
-final distanceProvider = StateProvider<double>((ref) => 0.0);
+final etaProvider = StateProvider<int?>((ref) => null);
+final distanceProvider = StateProvider<double?>((ref) => null);
 
 /// Engine that bridges the Raw tracking stream with interpolated telemetry
 final trackingEngineProvider = Provider.family<void, String>((ref, orderId) {
@@ -116,7 +116,7 @@ final trackingEngineProvider = Provider.family<void, String>((ref, orderId) {
       ref.read(riderLocationProvider.notifier).updateTarget(
             pos,
             null, // Heading calculated by engine
-            0.0,
+            tracking.currentSpeedKmph,
           );
 
       ref.read(etaProvider.notifier).state = tracking.estimatedEtaMinutes;

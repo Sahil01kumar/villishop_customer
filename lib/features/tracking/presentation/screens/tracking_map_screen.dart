@@ -36,7 +36,7 @@ class _TrackingMapScreenState extends ConsumerState<TrackingMapScreen> {
             const Text('Live Tracking',
                 style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
             Text(
-              'ETA: $eta mins • ${distance.toStringAsFixed(1)} km',
+              'ETA: ${eta == null ? "Calculating..." : (eta <= 1 ? "Arriving Now" : "$eta mins")} • ${distance?.toStringAsFixed(1) ?? "..."} km',
               style: const TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,

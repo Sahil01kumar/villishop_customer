@@ -14,31 +14,34 @@ class HomeRepositoryImpl implements HomeRepository {
   HomeRepositoryImpl(this._dataSource, this._categoryRepository);
 
   @override
-  Future<List<BannerModel>> getBanners() => _dataSource.getBanners();
+  Future<List<BannerModel>> getBanners({String? zoneId}) =>
+      _dataSource.getBanners(zoneId: zoneId);
 
   @override
-  Future<List<CategoryModel>> getCategories() =>
-      _categoryRepository.getCategories();
+  Future<List<CategoryModel>> getCategories({String? zoneId}) =>
+      _categoryRepository.getCategories(); // Sub-repo might need zoneId too
 
   @override
-  Future<List<ShopModel>> getPopularShops() => _dataSource.getPopularShops();
+  Future<List<ShopModel>> getPopularShops({String? zoneId}) =>
+      _dataSource.getPopularShops(zoneId: zoneId);
 
   @override
-  Future<List<ProductModel>> getFeaturedProducts() =>
-      _dataSource.getFeaturedProducts();
+  Future<List<ProductModel>> getFeaturedProducts({String? zoneId}) =>
+      _dataSource.getFeaturedProducts(zoneId: zoneId);
 
   @override
-  Future<List<DealModel>> getTodayDeals() => _dataSource.getTodayDeals();
+  Future<List<DealModel>> getTodayDeals({String? zoneId}) =>
+      _dataSource.getTodayDeals(zoneId: zoneId);
 
   @override
-  Future<List<ProductModel>> getBestSellers() =>
-      _dataSource.getFeaturedProducts();
+  Future<List<ProductModel>> getBestSellers({String? zoneId}) =>
+      _dataSource.getBestSellers(zoneId: zoneId);
 
   @override
-  Future<List<ProductModel>> getNewArrivals() =>
-      _dataSource.getFeaturedProducts();
+  Future<List<ProductModel>> getNewArrivals({String? zoneId}) =>
+      _dataSource.getNewArrivals(zoneId: zoneId);
 
   @override
-  Future<List<ProductModel>> getSeasonalCollection() =>
-      _dataSource.getFeaturedProducts();
+  Future<List<ProductModel>> getSeasonalCollection({String? zoneId}) =>
+      _dataSource.getSeasonalCollection(zoneId: zoneId);
 }

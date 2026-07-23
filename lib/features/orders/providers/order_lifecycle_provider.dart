@@ -4,9 +4,6 @@ import '../data/models/order_model.dart';
 import '../domain/repositories/order_repository.dart';
 import 'order_provider.dart';
 
-/// Active Order ID being tracked/restored
-final activeOrderIdProvider = StateProvider<String?>((ref) => null);
-
 /// Single Source of Truth for the current order state
 final currentOrderProvider =
     StreamProvider.family<OrderModel?, String>((ref, orderId) {

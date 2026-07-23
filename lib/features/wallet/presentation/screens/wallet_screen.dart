@@ -62,17 +62,32 @@ class WalletScreen extends ConsumerWidget {
                       const SliverToBoxAdapter(
                         child: _SectionHeader(title: 'Transaction History'),
                       ),
-                      SliverPadding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.m),
-                        sliver: SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (context, index) => TransactionCard(
-                                transaction: state.transactions[index]),
-                            childCount: state.transactions.length,
+                      if (state.transactions.isEmpty)
+                        const SliverToBoxAdapter(
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 40),
+                            child: Center(
+                              child: Text(
+                                'No transactions yet.',
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                        )
+                      else
+                        SliverPadding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.m),
+                          sliver: SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (context, index) => TransactionCard(
+                                  transaction: state.transactions[index]),
+                              childCount: state.transactions.length,
+                            ),
                           ),
                         ),
-                      ),
 
                       const SliverToBoxAdapter(child: SizedBox(height: 100)),
                     ],

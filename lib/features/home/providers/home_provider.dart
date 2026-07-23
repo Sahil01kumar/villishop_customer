@@ -9,6 +9,7 @@ import '../domain/repositories/home_repository.dart';
 import '../data/repositories/home_repository_impl.dart';
 import '../data/data_sources/dummy_home_data_source.dart';
 import '../../categories/providers/category_provider.dart';
+import '../../location/providers/location_provider.dart';
 
 part 'home_provider.freezed.dart';
 
@@ -25,6 +26,8 @@ class HomeState with _$HomeState {
     @Default([]) List<ProductModel> newArrivals,
     @Default([]) List<ProductModel> seasonalCollection,
     String? errorMessage,
+    @Default(false) bool isDisabled,
+    String? zoneId,
   }) = _HomeState;
 }
 
@@ -40,23 +43,26 @@ final homeRepositoryProvider = Provider<HomeRepository>((ref) {
 class HomeController extends StateNotifier<HomeState> {
   final HomeRepository _repository;
 
-  HomeController(this._repository) : super(const HomeState()) {
-    fetchHomeData();
-  }
+  HomeController(this._repository) : super(const HomeState());
 
-  Future<void> fetchHomeData() async {
+  Future<void> fetchHomeData({bool silent = false}) async {
+    if (state.isDisabled) return;
     try {
-      state = state.copyWith(isLoading: true, errorMessage: null);
+      if (!silent) {
+        state = state.copyWith(isLoading: true, errorMessage: null);
+      }
+
+      final zoneId = state.zoneId;
 
       final results = await Future.wait([
-        _repository.getBanners(),
-        _repository.getCategories(),
-        _repository.getPopularShops(),
-        _repository.getFeaturedProducts(),
-        _repository.getTodayDeals(),
-        _repository.getBestSellers(),
-        _repository.getNewArrivals(),
-        _repository.getSeasonalCollection(),
+        _repository.getBanners(zoneId: zoneId),
+        _repository.getCategories(zoneId: zoneId),
+        _repository.getPopularShops(zoneId: zoneId),
+        _repository.getFeaturedProducts(zoneId: zoneId),
+        _repository.getTodayDeals(zoneId: zoneId),
+        _repository.getBestSellers(zoneId: zoneId),
+        _repository.getNewArrivals(zoneId: zoneId),
+        _repository.getSeasonalCollection(zoneId: zoneId),
       ]);
 
       state = state.copyWith(
@@ -75,9 +81,37 @@ class HomeController extends StateNotifier<HomeState> {
     }
   }
 
+  void updateZoneAndStatus({required bool isDisabled, String? zoneId}) {
+    bool shouldFetch = false;
+
+    if (state.isDisabled != isDisabled) {
+      state = state.copyWith(isDisabled: isDisabled);
+      if (!isDisabled) shouldFetch = true;
+    }
+
+    if (state.zoneId != zoneId) {
+      state = state.copyWith(zoneId: zoneId);
+      if (!isDisabled) shouldFetch = true;
+    }
+
+    if (shouldFetch) {
+      fetchHomeData();
+    }
+  }
+
   Future<void> refresh() => fetchHomeData();
 }
 
 final homeProvider = StateNotifierProvider<HomeController, HomeState>((ref) {
-  return HomeController(ref.watch(homeRepositoryProvider));
+  final controller = HomeController(ref.watch(homeRepositoryProvider));
+
+  ref.listen(locationProvider, (prev, next) {
+    final isServiceable = next.isServiceable && next.selectedAddress != null;
+    controller.updateZoneAndStatus(
+      isDisabled: !isServiceable,
+      zoneId: next.activeZone?.id,
+    );
+  }, fireImmediately: true);
+
+  return controller;
 });

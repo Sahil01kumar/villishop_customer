@@ -50,7 +50,9 @@ class ShopsScreen extends ConsumerWidget {
                 )
               : shopState.filteredShops.isEmpty
                   ? const EmptyWidget(
-                      message: 'No shops found nearby',
+                      title: 'No Shops Found',
+                      message:
+                          'We couldn\'t find any shops matching your search nearby.',
                       icon: Icons.storefront_outlined)
                   : RefreshIndicator(
                       onRefresh: () =>

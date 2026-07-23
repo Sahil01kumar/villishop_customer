@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../../core/services/payment_service.dart';
 import '../../authentication/providers/auth_provider.dart';
+import '../../finance/providers/finance_providers.dart';
 import '../data/models/payment_method_model.dart';
 
 part 'payment_provider.freezed.dart';
@@ -50,8 +51,24 @@ class PaymentNotifier extends StateNotifier<PaymentState> {
     state = state.copyWith(useWallet: value);
   }
 
-  double get remainingAmount => 0.0; // Implement calculation logic
-  double get walletDeduction => 0.0;
+  double get remainingAmount {
+    final invoice = _ref.watch(invoiceProvider).value;
+    if (invoice == null) return 0.0;
+
+    if (!state.useWallet) return invoice.grandTotal;
+
+    final balance = state.walletBalance + state.cashbackBalance;
+    return (invoice.grandTotal - balance).clamp(0.0, double.infinity);
+  }
+
+  double get walletDeduction {
+    if (!state.useWallet) return 0.0;
+    final invoice = _ref.watch(invoiceProvider).value;
+    if (invoice == null) return 0.0;
+
+    final balance = state.walletBalance + state.cashbackBalance;
+    return invoice.grandTotal > balance ? balance : invoice.grandTotal;
+  }
 
   Future<PaymentResponse> processPayment({
     required double amount,
@@ -83,4 +100,34 @@ class PaymentNotifier extends StateNotifier<PaymentState> {
 final paymentProvider =
     StateNotifierProvider<PaymentNotifier, PaymentState>((ref) {
   return PaymentNotifier(ref.watch(paymentServiceProvider), ref);
+});
+
+final payableAmountProvider = Provider<double>((ref) {
+  final invoiceAsync = ref.watch(invoiceProvider);
+
+  return invoiceAsync.maybeWhen(
+    data: (invoice) {
+      final paymentState = ref.watch(paymentProvider);
+      if (!paymentState.useWallet) return invoice.grandTotal;
+
+      final balance = paymentState.walletBalance + paymentState.cashbackBalance;
+      return (invoice.grandTotal - balance).clamp(0.0, double.infinity);
+    },
+    orElse: () => 0.0,
+  );
+});
+
+final walletDeductionProvider = Provider<double>((ref) {
+  final invoiceAsync = ref.watch(invoiceProvider);
+
+  return invoiceAsync.maybeWhen(
+    data: (invoice) {
+      final paymentState = ref.watch(paymentProvider);
+      if (!paymentState.useWallet) return 0.0;
+
+      final balance = paymentState.walletBalance + paymentState.cashbackBalance;
+      return invoice.grandTotal > balance ? balance : invoice.grandTotal;
+    },
+    orElse: () => 0.0,
+  );
 });

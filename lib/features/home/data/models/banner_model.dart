@@ -8,6 +8,8 @@ class BannerModel with _$BannerModel {
   const factory BannerModel({
     required String id,
     required String imageUrl,
+    String? title,
+    String? subtitle,
     String? deepLink,
   }) = _BannerModel;
 

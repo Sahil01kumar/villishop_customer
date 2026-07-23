@@ -62,21 +62,27 @@ class NotificationEngine {
       String message = '';
 
       switch (next.status) {
-        case TrackingStatus.orderPlaced:
+        case TrackingStatus.orderConfirmed:
           title = 'Order Placed';
           message = 'Confirmed at store.';
           break;
-        case TrackingStatus.partnerAssigned:
+        case TrackingStatus.riderAssigned:
           title = 'Partner Assigned';
-          message = '${next.riderName} is reaching store.';
+          message = '${next.riderName ?? "Rahul"} is reaching store.';
           break;
-        case TrackingStatus.liveTracking:
+        case TrackingStatus.onTheWay:
           title = 'Partner on the way';
-          message = '${next.riderName} picked up your order.';
+          message = '${next.riderName ?? "Rahul"} picked up your order.';
+          break;
+        case TrackingStatus.nearby:
+          title = 'Partner is nearby';
+          message = '${next.riderName ?? "Rahul"} is almost at your doorstep.';
           break;
         case TrackingStatus.delivered:
           title = 'Delivered';
           message = 'Order successfully received. Rate your partner!';
+          break;
+        default:
           break;
       }
 

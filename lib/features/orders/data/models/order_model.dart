@@ -14,8 +14,6 @@ enum OrderStatus {
   placed,
   @JsonValue('confirmed')
   confirmed,
-  @JsonValue('accepted')
-  accepted,
   @JsonValue('preparing')
   preparing,
   @JsonValue('packed')
@@ -71,8 +69,13 @@ class OrderModel with _$OrderModel {
     required List<OrderTimelineModel> timeline,
     required DateTime createdAt,
     DateTime? updatedAt,
+    DateTime? confirmedAt,
+    DateTime? preparingAt,
+    DateTime? packedAt,
     DateTime? partnerAssignedAt,
+    DateTime? pickedUpAt,
     DateTime? onTheWayAt,
+    DateTime? nearbyAt,
     DateTime? deliveredAt,
     DateTime? cancelledAt,
     String? orderNote,

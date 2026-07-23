@@ -20,7 +20,7 @@ import '../../../core/services/shared_pref_service.dart';
 import '../../../core/services/connectivity_service.dart';
 import '../../../core/error/order_error_logger.dart';
 import '../../../core/services/payment_service.dart';
-import 'order_lifecycle_provider.dart';
+import '../../tracking/providers/tracking_provider.dart';
 
 part 'order_provider.freezed.dart';
 
@@ -105,7 +105,14 @@ class OrderNotifier extends StateNotifier<OrderReviewState> {
             label: 'Deliver Now',
             estimatedMinutes: deliveryState.etaMinutes,
           )
-        : deliveryState.selectedSlot!;
+        : (deliveryState.selectedSlot ??
+            DeliverySlotModel(
+              slotId: 'error',
+              deliveryType: DeliveryType.standard,
+              startTime: DateTime.now(),
+              endTime: DateTime.now(),
+              label: 'Error: No Slot Selected',
+            ));
 
     final review = OrderReviewModel(
       cart: cart,
@@ -201,6 +208,11 @@ class PlaceOrderNotifier extends StateNotifier<PlaceOrderState> {
         throw Exception("Please select a payment method");
       }
 
+      final paymentMethod = paymentState.selectedMethod;
+      if (paymentMethod == null) {
+        throw Exception("Please select a payment method");
+      }
+
       state = const PlaceOrderState.loading(
           status: OrderPlacementStatus.reservingInventory);
 
@@ -213,7 +225,14 @@ class PlaceOrderNotifier extends StateNotifier<PlaceOrderState> {
               label: 'Deliver Now',
               estimatedMinutes: deliveryState.etaMinutes,
             )
-          : deliveryState.selectedSlot!;
+          : (deliveryState.selectedSlot ??
+              DeliverySlotModel(
+                slotId: 'error',
+                deliveryType: DeliveryType.standard,
+                startTime: DateTime.now(),
+                endTime: DateTime.now(),
+                label: 'Error: No Slot Selected',
+              ));
 
       final review = OrderReviewModel(
         cart: cart,
@@ -223,29 +242,33 @@ class PlaceOrderNotifier extends StateNotifier<PlaceOrderState> {
         orderNote: reviewState.orderNote,
       );
 
-      _pendingOrder = PlaceOrderEngine.buildOrderModel(
+      final pendingOrder = PlaceOrderEngine.buildOrderModel(
         review: review,
-        paymentMethod: paymentState.selectedMethod!,
+        paymentMethod: paymentMethod,
         invoice: invoice,
         customerId: user.id,
       );
 
-      await _repository.savePendingOrder(_pendingOrder!);
+      _pendingOrder = pendingOrder;
+      await _repository.savePendingOrder(pendingOrder);
 
-      await _executeOrderFlow(_pendingOrder!);
+      await _executeOrderFlow(pendingOrder);
     } catch (e) {
       _handleFailure(OrderPlacementStatus.cancelled, e.toString());
     }
   }
 
   Future<void> retryPlaceOrder() async {
-    if (_pendingOrder == null) {
+    final pending = _pendingOrder;
+    if (pending == null) {
       await _restorePendingOrder();
     }
-    if (_pendingOrder != null) {
+    
+    final toPlace = _pendingOrder;
+    if (toPlace != null) {
       state = const PlaceOrderState.retrying(
           status: OrderPlacementStatus.placingOrder, attempt: 1);
-      await _executeOrderFlow(_pendingOrder!);
+      await _executeOrderFlow(toPlace);
     } else {
       state = const PlaceOrderState.idle();
     }
@@ -262,9 +285,11 @@ class PlaceOrderNotifier extends StateNotifier<PlaceOrderState> {
       state = const PlaceOrderState.loading(
           status: OrderPlacementStatus.paymentProcessing);
 
+      final payableAmount = _ref.read(payableAmountProvider);
+
       final paymentResponse =
           await _ref.read(paymentProvider.notifier).processPayment(
-                amount: order.invoiceSnapshot.grandTotal,
+                amount: payableAmount,
                 orderId: order.orderId,
               );
 
@@ -285,7 +310,7 @@ class PlaceOrderNotifier extends StateNotifier<PlaceOrderState> {
       await _repository.clearPendingOrder();
       _pendingOrder = null;
 
-      _ref.read(activeOrderIdProvider.notifier).state = placedOrder.orderId;
+      _ref.read(activeOrderIdProvider.notifier).updateId(placedOrder.orderId);
 
       _ref.read(cartProvider.notifier).clearCart();
       _ref.read(orderReviewProvider.notifier).state = const OrderReviewState();
@@ -355,20 +380,33 @@ final placeOrderProvider =
   return PlaceOrderNotifier(ref.watch(orderRepositoryProvider), ref);
 });
 
-final customerOrdersProvider = FutureProvider<List<OrderModel>>((ref) async {
+final customerOrdersProvider = StreamProvider<List<OrderModel>>((ref) async* {
   final user = ref
       .watch(authProvider)
       .maybeWhen(authenticated: (u) => u, orElse: () => null);
-  if (user == null) return [];
+  if (user == null) {
+    yield [];
+    return;
+  }
 
   final repository = ref.watch(orderRepositoryProvider);
-  final orders = await repository.getCustomerOrders(user.id);
-  // Manual cache time or keepAlive if needed, but Riverpod 2 does this by default if watched.
-  return orders;
+  
+  // Emit initial data
+  final initialOrders = await repository.getCustomerOrders(user.id);
+  yield initialOrders;
+
+  // Then yield from stream
+  yield* repository.watchCustomerOrders(user.id);
 });
 
 final orderDetailsProvider =
-    FutureProvider.family<OrderModel?, String>((ref, orderId) async {
+    StreamProvider.family<OrderModel?, String>((ref, orderId) async* {
   final repository = ref.watch(orderRepositoryProvider);
-  return await repository.getOrderById(orderId);
+  
+  // Emit initial data
+  final initialOrder = await repository.getOrderById(orderId);
+  yield initialOrder;
+
+  // Then yield from stream
+  yield* repository.observeOrder(orderId);
 });

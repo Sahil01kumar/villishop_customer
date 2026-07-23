@@ -5,12 +5,12 @@ import 'package:villishop_customer/features/home/data/models/product_model.dart'
 import 'package:villishop_customer/features/home/data/models/deal_model.dart';
 
 abstract class HomeRepository {
-  Future<List<BannerModel>> getBanners();
-  Future<List<CategoryModel>> getCategories();
-  Future<List<ShopModel>> getPopularShops();
-  Future<List<ProductModel>> getFeaturedProducts();
-  Future<List<DealModel>> getTodayDeals();
-  Future<List<ProductModel>> getBestSellers();
-  Future<List<ProductModel>> getNewArrivals();
-  Future<List<ProductModel>> getSeasonalCollection();
+  Future<List<BannerModel>> getBanners({String? zoneId});
+  Future<List<CategoryModel>> getCategories({String? zoneId});
+  Future<List<ShopModel>> getPopularShops({String? zoneId});
+  Future<List<ProductModel>> getFeaturedProducts({String? zoneId});
+  Future<List<DealModel>> getTodayDeals({String? zoneId});
+  Future<List<ProductModel>> getBestSellers({String? zoneId});
+  Future<List<ProductModel>> getNewArrivals({String? zoneId});
+  Future<List<ProductModel>> getSeasonalCollection({String? zoneId});
 }

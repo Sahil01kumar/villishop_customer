@@ -11,7 +11,11 @@ class HomeQuickCategories extends StatelessWidget {
       {'name': 'Vegetables', 'icon': Icons.eco_outlined, 'color': Colors.green},
       {'name': 'Fruits', 'icon': Icons.apple_outlined, 'color': Colors.orange},
       {'name': 'Atta', 'icon': Icons.grain_outlined, 'color': Colors.brown},
-      {'name': 'Bakery', 'icon': Icons.bakery_dining_outlined, 'color': Colors.red},
+      {
+        'name': 'Bakery',
+        'icon': Icons.bakery_dining_outlined,
+        'color': Colors.red
+      },
     ];
 
     return SizedBox(
@@ -32,14 +36,19 @@ class HomeQuickCategories extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Icon(item['icon'] as IconData, size: 18, color: item['color'] as Color),
+                Icon(item['icon'] as IconData,
+                    size: 18, color: item['color'] as Color),
                 const SizedBox(width: 8),
-                Text(
-                  item['name'] as String,
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w900,
-                    color: item['color'] as Color,
+                Flexible(
+                  child: Text(
+                    item['name'] as String,
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w900,
+                      color: item['color'] as Color,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],

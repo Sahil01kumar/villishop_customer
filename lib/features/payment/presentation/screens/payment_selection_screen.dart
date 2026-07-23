@@ -209,11 +209,12 @@ class _PaymentSelectionScreenState
   Widget _buildBottomBar(BuildContext context, WidgetRef ref,
       PlaceOrderState placeOrderState, bool isProcessing) {
     final state = ref.watch(paymentProvider);
-    final notifier = ref.read(paymentProvider.notifier);
     final isOrderProcessing = placeOrderState.maybeWhen(
         loading: (_, __) => true,
         retrying: (_, __) => true,
         orElse: () => false);
+
+    final payableAmount = ref.watch(payableAmountProvider);
 
     return Container(
       padding: const EdgeInsets.fromLTRB(AppSpacing.m, 12, AppSpacing.m, 32),
@@ -232,7 +233,7 @@ class _PaymentSelectionScreenState
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('₹${notifier.remainingAmount.toStringAsFixed(0)}',
+              Text('₹${payableAmount.toStringAsFixed(0)}',
                   style: const TextStyle(
                       fontWeight: FontWeight.w900,
                       fontSize: 24,

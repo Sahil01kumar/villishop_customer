@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
 
 class NetworkImageWithFallback extends StatelessWidget {
@@ -23,25 +24,23 @@ class NetworkImageWithFallback extends StatelessWidget {
       return _buildFallback();
     }
 
-    return Image.network(
-      imageUrl,
+    return CachedNetworkImage(
+      imageUrl: imageUrl,
       fit: fit,
       width: width,
       height: height,
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) return child;
-        return Shimmer.fromColors(
-          baseColor: Colors.grey[300]!,
-          highlightColor: Colors.grey[100]!,
-          child: Container(
-            width: width ?? double.infinity,
-            height: height ?? double.infinity,
-            color: Colors.white,
-          ),
-        );
-      },
-      errorBuilder: (context, error, stackTrace) {
-        // Log error in debug mode only
+      memCacheWidth: width != null ? (width! * 2).toInt() : null,
+      memCacheHeight: height != null ? (height! * 2).toInt() : null,
+      placeholder: (context, url) => Shimmer.fromColors(
+        baseColor: Colors.grey[300] ?? Colors.grey,
+        highlightColor: Colors.grey[100] ?? Colors.white,
+        child: Container(
+          width: width ?? double.infinity,
+          height: height ?? double.infinity,
+          color: Colors.white,
+        ),
+      ),
+      errorWidget: (context, url, error) {
         debugPrint('Image loading failed for: $imageUrl');
         return _buildFallback();
       },

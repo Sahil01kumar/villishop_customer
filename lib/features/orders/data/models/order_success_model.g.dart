@@ -57,7 +57,6 @@ Map<String, dynamic> _$$OrderSuccessModelImplToJson(
 const _$OrderStatusEnumMap = {
   OrderStatus.placed: 'placed',
   OrderStatus.confirmed: 'confirmed',
-  OrderStatus.accepted: 'accepted',
   OrderStatus.preparing: 'preparing',
   OrderStatus.packed: 'packed',
   OrderStatus.readyForPickup: 'readyForPickup',

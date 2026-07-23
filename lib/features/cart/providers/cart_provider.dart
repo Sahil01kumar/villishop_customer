@@ -8,6 +8,7 @@ import 'package:villishop_customer/features/cart/providers/cart_state.dart';
 import '../../coupons/data/models/coupon_model.dart';
 import '../../delivery/data/models/delivery_slot_model.dart';
 import '../../delivery/providers/delivery_state.dart';
+import '../../location/providers/location_provider.dart';
 import '../../../core/services/shared_pref_service.dart';
 
 final cartRepositoryProvider = Provider<CartRepository>((ref) {
@@ -153,9 +154,10 @@ class CartNotifier extends StateNotifier<CartState> {
     }
 
     // Override with slot charge if scheduled and slot selected
+    final selectedSlot = deliveryState.selectedSlot;
     if (deliveryState.deliveryMode == DeliveryMode.scheduled &&
-        deliveryState.selectedSlot != null) {
-      fee = deliveryState.selectedSlot!.deliveryCharge;
+        selectedSlot != null) {
+      fee = selectedSlot.deliveryCharge;
     }
 
     state = state.copyWith(
@@ -175,7 +177,16 @@ class CartNotifier extends StateNotifier<CartState> {
 }
 
 final cartProvider = StateNotifierProvider<CartNotifier, CartState>((ref) {
-  return CartNotifier(ref.watch(cartRepositoryProvider));
+  final notifier = CartNotifier(ref.watch(cartRepositoryProvider));
+
+  // State Synchronization: Ensure cart is cleared or updated when zone changes
+  ref.listen(locationProvider.select((s) => s.activeZone?.id), (prev, next) {
+    if (prev != null && prev != next) {
+      notifier.clearCart();
+    }
+  });
+
+  return notifier;
 });
 
 final cartCountProvider = Provider<int>((ref) {

@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:villishop_customer/features/main/providers/navigation_provider.dart';
 import 'package:villishop_customer/features/location/providers/location_provider.dart';
 import 'package:villishop_customer/features/location/presentation/widgets/location_permission_sheet.dart';
+import 'package:villishop_customer/features/location/providers/zone_provider.dart';
+import 'package:villishop_customer/features/location/presentation/screens/coming_soon_screen.dart';
+import 'package:villishop_customer/features/location/data/models/zone_model.dart';
 import '../../../home/presentation/screens/home_screen.dart';
 import '../../../categories/presentation/screens/categories_screen.dart';
 import '../../../cart/presentation/screens/cart_screen.dart';
@@ -12,6 +15,7 @@ import '../../../orders/providers/active_order_provider.dart';
 import '../../../../core/persistence/persistence_keys.dart';
 import '../../../../core/persistence/providers/persistence_providers.dart';
 import '../../../../core/widgets/connectivity_banner.dart';
+import '../../../../core/widgets/loading_widget.dart';
 
 class MainScreen extends ConsumerStatefulWidget {
   final int? initialTab;
@@ -28,17 +32,24 @@ class _MainScreenState extends ConsumerState<MainScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _restoreLastTab();
+
+    // Initialize navigation state
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.initialTab != null) {
+        ref.read(navigationIndexProvider.notifier).state = widget.initialTab!;
+      } else {
+        _restoreLastTab();
+      }
+    });
+
     _checkLocation();
   }
 
   void _restoreLastTab() {
     final lastTab =
         ref.read(localStorageProvider).get<int>(PersistenceKeys.lastTab);
-    if (lastTab != null && widget.initialTab == null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ref.read(navigationIndexProvider.notifier).state = lastTab;
-      });
+    if (lastTab != null) {
+      ref.read(navigationIndexProvider.notifier).state = lastTab;
     }
   }
 
@@ -49,9 +60,19 @@ class _MainScreenState extends ConsumerState<MainScreen>
   }
 
   @override
+  void didUpdateWidget(MainScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialTab != null &&
+        widget.initialTab != oldWidget.initialTab) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(navigationIndexProvider.notifier).state = widget.initialTab!;
+      });
+    }
+  }
+
+  @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      // Refresh location when user returns from settings
       ref.read(locationProvider.notifier).checkPermissionAndStartTracking();
     }
   }
@@ -69,68 +90,89 @@ class _MainScreenState extends ConsumerState<MainScreen>
 
   @override
   Widget build(BuildContext context) {
-    // Sync initialTab with provider once
-    if (widget.initialTab != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ref.read(navigationIndexProvider.notifier).state = widget.initialTab!;
-      });
-    }
-
     final currentIndex = ref.watch(navigationIndexProvider);
+    final zoneAsync = ref.watch(currentZoneProvider);
 
-    final List<Widget> screens = [
-      const HomeScreen(),
-      const CategoriesScreen(),
-      const CartScreen(),
-      const OrdersScreen(),
-      const ProfileScreen(),
-    ];
+    return zoneAsync.when(
+      data: (zone) {
+        if (zone == null || zone.status != ZoneStatus.active) {
+          return const ComingSoonScreen();
+        }
 
-    return Scaffold(
-      body: Column(
-        children: [
-          const ConnectivityBanner(),
-          Expanded(
-            child: IndexedStack(
-              index: currentIndex,
-              children: screens,
-            ),
+        final List<Widget> screens = [
+          const HomeScreen(),
+          const CategoriesScreen(),
+          const CartScreen(),
+          const OrdersScreen(),
+          const ProfileScreen(),
+        ];
+
+        return Scaffold(
+          body: Column(
+            children: [
+              const ConnectivityBanner(),
+              Expanded(
+                child: IndexedStack(
+                  index: currentIndex,
+                  children: screens,
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: currentIndex,
-        onDestinationSelected: (index) {
-          ref.read(navigationIndexProvider.notifier).state = index;
-          ref.read(localStorageProvider).save(PersistenceKeys.lastTab, index);
-        },
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home),
-            label: 'Home',
+          bottomNavigationBar: NavigationBar(
+            selectedIndex: currentIndex,
+            onDestinationSelected: (index) {
+              ref.read(navigationIndexProvider.notifier).state = index;
+              ref
+                  .read(localStorageProvider)
+                  .save(PersistenceKeys.lastTab, index);
+            },
+            destinations: const [
+              NavigationDestination(
+                icon: Icon(Icons.home_outlined),
+                selectedIcon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.category_outlined),
+                selectedIcon: Icon(Icons.category),
+                label: 'Categories',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.shopping_cart_outlined),
+                selectedIcon: Icon(Icons.shopping_cart),
+                label: 'Cart',
+              ),
+              NavigationDestination(
+                icon: _OrdersIconWithBadge(),
+                selectedIcon: _OrdersIconWithBadge(isSelected: true),
+                label: 'Orders',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.person_outline),
+                selectedIcon: Icon(Icons.person),
+                label: 'Profile',
+              ),
+            ],
           ),
-          NavigationDestination(
-            icon: Icon(Icons.category_outlined),
-            selectedIcon: Icon(Icons.category),
-            label: 'Categories',
+        );
+      },
+      loading: () => const Scaffold(body: Center(child: LoadingWidget())),
+      error: (err, stack) => Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.error_outline, size: 48, color: Colors.red),
+              const SizedBox(height: 16),
+              Text('Error checking serviceability: $err'),
+              TextButton(
+                onPressed: () => ref.invalidate(currentZoneProvider),
+                child: const Text('Retry'),
+              ),
+            ],
           ),
-          NavigationDestination(
-            icon: Icon(Icons.shopping_cart_outlined),
-            selectedIcon: Icon(Icons.shopping_cart),
-            label: 'Cart',
-          ),
-          NavigationDestination(
-            icon: _OrdersIconWithBadge(),
-            selectedIcon: _OrdersIconWithBadge(isSelected: true),
-            label: 'Orders',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
+        ),
       ),
     );
   }

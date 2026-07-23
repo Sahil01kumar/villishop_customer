@@ -27,6 +27,8 @@ mixin _$HomeState {
   List<ProductModel> get seasonalCollection =>
       throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
+  bool get isDisabled => throw _privateConstructorUsedError;
+  String? get zoneId => throw _privateConstructorUsedError;
 
   /// Create a copy of HomeState
   /// with the given fields replaced by the non-null parameter values.
@@ -50,7 +52,9 @@ abstract class $HomeStateCopyWith<$Res> {
       List<ProductModel> bestSellers,
       List<ProductModel> newArrivals,
       List<ProductModel> seasonalCollection,
-      String? errorMessage});
+      String? errorMessage,
+      bool isDisabled,
+      String? zoneId});
 }
 
 /// @nodoc
@@ -78,6 +82,8 @@ class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
     Object? newArrivals = null,
     Object? seasonalCollection = null,
     Object? errorMessage = freezed,
+    Object? isDisabled = null,
+    Object? zoneId = freezed,
   }) {
     return _then(_value.copyWith(
       isLoading: null == isLoading
@@ -120,6 +126,14 @@ class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
               as String?,
+      isDisabled: null == isDisabled
+          ? _value.isDisabled
+          : isDisabled // ignore: cast_nullable_to_non_nullable
+              as bool,
+      zoneId: freezed == zoneId
+          ? _value.zoneId
+          : zoneId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -142,7 +156,9 @@ abstract class _$$HomeStateImplCopyWith<$Res>
       List<ProductModel> bestSellers,
       List<ProductModel> newArrivals,
       List<ProductModel> seasonalCollection,
-      String? errorMessage});
+      String? errorMessage,
+      bool isDisabled,
+      String? zoneId});
 }
 
 /// @nodoc
@@ -168,6 +184,8 @@ class __$$HomeStateImplCopyWithImpl<$Res>
     Object? newArrivals = null,
     Object? seasonalCollection = null,
     Object? errorMessage = freezed,
+    Object? isDisabled = null,
+    Object? zoneId = freezed,
   }) {
     return _then(_$HomeStateImpl(
       isLoading: null == isLoading
@@ -210,6 +228,14 @@ class __$$HomeStateImplCopyWithImpl<$Res>
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
               as String?,
+      isDisabled: null == isDisabled
+          ? _value.isDisabled
+          : isDisabled // ignore: cast_nullable_to_non_nullable
+              as bool,
+      zoneId: freezed == zoneId
+          ? _value.zoneId
+          : zoneId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -227,7 +253,9 @@ class _$HomeStateImpl implements _HomeState {
       final List<ProductModel> bestSellers = const [],
       final List<ProductModel> newArrivals = const [],
       final List<ProductModel> seasonalCollection = const [],
-      this.errorMessage})
+      this.errorMessage,
+      this.isDisabled = false,
+      this.zoneId})
       : _banners = banners,
         _categories = categories,
         _popularShops = popularShops,
@@ -316,10 +344,15 @@ class _$HomeStateImpl implements _HomeState {
 
   @override
   final String? errorMessage;
+  @override
+  @JsonKey()
+  final bool isDisabled;
+  @override
+  final String? zoneId;
 
   @override
   String toString() {
-    return 'HomeState(isLoading: $isLoading, banners: $banners, categories: $categories, popularShops: $popularShops, featuredProducts: $featuredProducts, todayDeals: $todayDeals, bestSellers: $bestSellers, newArrivals: $newArrivals, seasonalCollection: $seasonalCollection, errorMessage: $errorMessage)';
+    return 'HomeState(isLoading: $isLoading, banners: $banners, categories: $categories, popularShops: $popularShops, featuredProducts: $featuredProducts, todayDeals: $todayDeals, bestSellers: $bestSellers, newArrivals: $newArrivals, seasonalCollection: $seasonalCollection, errorMessage: $errorMessage, isDisabled: $isDisabled, zoneId: $zoneId)';
   }
 
   @override
@@ -345,7 +378,10 @@ class _$HomeStateImpl implements _HomeState {
             const DeepCollectionEquality()
                 .equals(other._seasonalCollection, _seasonalCollection) &&
             (identical(other.errorMessage, errorMessage) ||
-                other.errorMessage == errorMessage));
+                other.errorMessage == errorMessage) &&
+            (identical(other.isDisabled, isDisabled) ||
+                other.isDisabled == isDisabled) &&
+            (identical(other.zoneId, zoneId) || other.zoneId == zoneId));
   }
 
   @override
@@ -360,7 +396,9 @@ class _$HomeStateImpl implements _HomeState {
       const DeepCollectionEquality().hash(_bestSellers),
       const DeepCollectionEquality().hash(_newArrivals),
       const DeepCollectionEquality().hash(_seasonalCollection),
-      errorMessage);
+      errorMessage,
+      isDisabled,
+      zoneId);
 
   /// Create a copy of HomeState
   /// with the given fields replaced by the non-null parameter values.
@@ -382,7 +420,9 @@ abstract class _HomeState implements HomeState {
       final List<ProductModel> bestSellers,
       final List<ProductModel> newArrivals,
       final List<ProductModel> seasonalCollection,
-      final String? errorMessage}) = _$HomeStateImpl;
+      final String? errorMessage,
+      final bool isDisabled,
+      final String? zoneId}) = _$HomeStateImpl;
 
   @override
   bool get isLoading;
@@ -404,6 +444,10 @@ abstract class _HomeState implements HomeState {
   List<ProductModel> get seasonalCollection;
   @override
   String? get errorMessage;
+  @override
+  bool get isDisabled;
+  @override
+  String? get zoneId;
 
   /// Create a copy of HomeState
   /// with the given fields replaced by the non-null parameter values.

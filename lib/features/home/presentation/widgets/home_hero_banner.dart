@@ -55,8 +55,8 @@ class _HomeHeroBannerState extends State<HomeHeroBanner> {
 
     return Column(
       children: [
-        SizedBox(
-          height: 200,
+        AspectRatio(
+          aspectRatio: 16 / 9,
           child: PageView.builder(
             controller: _pageController,
             onPageChanged: (index) {
@@ -74,9 +74,10 @@ class _HomeHeroBannerState extends State<HomeHeroBanner> {
                       CachedNetworkImage(
                         imageUrl: banner.imageUrl,
                         width: double.infinity,
-                        height: 200,
+                        height: double.infinity,
                         fit: BoxFit.cover,
-                        placeholder: (context, url) => Container(color: Colors.grey[200]),
+                        placeholder: (context, url) =>
+                            Container(color: Colors.grey[200]),
                         errorWidget: (context, url, error) => Container(
                           color: Colors.grey[300],
                           child: const Icon(Icons.image_outlined, size: 40),
@@ -88,7 +89,7 @@ class _HomeHeroBannerState extends State<HomeHeroBanner> {
                             begin: Alignment.centerLeft,
                             end: Alignment.centerRight,
                             colors: [
-                              Colors.black.withAlpha(120),
+                              Colors.black.withAlpha(150),
                               Colors.transparent,
                             ],
                           ),
@@ -101,7 +102,8 @@ class _HomeHeroBannerState extends State<HomeHeroBanner> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 4),
                               decoration: BoxDecoration(
                                 color: Colors.yellow,
                                 borderRadius: BorderRadius.circular(4),
@@ -116,22 +118,30 @@ class _HomeHeroBannerState extends State<HomeHeroBanner> {
                               ),
                             ),
                             const SizedBox(height: 8),
-                            const Text(
-                              'Fresh Milk\nFrom Farm',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 24,
-                                fontWeight: FontWeight.w900,
-                                height: 1.1,
+                            Flexible(
+                              child: Text(
+                                banner.title ?? 'Fresh Milk\nFrom Farm',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w900,
+                                  height: 1.1,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                             const SizedBox(height: 4),
-                            const Text(
-                              'Up to 20% Off',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
+                            Flexible(
+                              child: Text(
+                                banner.subtitle ?? 'Up to 20% Off',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                           ],

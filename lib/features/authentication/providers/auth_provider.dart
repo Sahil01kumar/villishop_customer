@@ -6,7 +6,6 @@ import '../repositories/auth_repository_impl.dart';
 import 'auth_state.dart';
 import '../data/models/user_model.dart';
 import '../services/session_manager.dart';
-import '../../../core/utils/logger.dart';
 
 final firebaseAuthProvider =
     Provider<FirebaseAuth>((ref) => FirebaseAuth.instance);
@@ -56,26 +55,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
     });
   }
 
-  Future<void> signInWithEmail(String email, String password) async {
-    state = const AuthState.loading();
-    try {
-      await _repository.signInWithEmailPassword(email, password);
-    } catch (e) {
-      state = AuthState.error(e.toString());
-    }
-  }
-
-  Future<void> signUpWithEmail(
-      String email, String password, String name) async {
-    state = const AuthState.loading();
-    try {
-      await _repository.signUpWithEmailPassword(email, password);
-      await _repository.updateDisplayName(name);
-    } catch (e) {
-      state = AuthState.error(e.toString());
-    }
-  }
-
   Future<void> signInWithGoogle() async {
     state = const AuthState.loading();
     try {
@@ -85,11 +64,16 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
-  Future<void> forgotPassword(String email) async {
+  Future<void> verifyOTP(String verificationId, String smsCode) async {
+    state = const AuthState.loading();
     try {
-      await _repository.sendPasswordResetEmail(email);
+      await _repository.verifyOTP(verificationId, smsCode);
+      final user = await _repository.getCurrentUser();
+      if (user != null) {
+        state = AuthState.authenticated(user);
+      }
     } catch (e) {
-      AppLogger.e('Password reset error', e);
+      state = AuthState.error(e.toString());
     }
   }
 
@@ -101,9 +85,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   Future<void> updateProfile({
     required String name,
-    required String email,
+    String? email,
     required String phoneNumber,
-    required Gender gender,
+    Gender? gender,
     DateTime? dob,
   }) async {
     state.maybeWhen(
@@ -112,8 +96,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
           name: name,
           email: email,
           phoneNumber: phoneNumber,
-          gender: gender,
-          dateOfBirth: dob,
+          gender: gender ?? user.gender,
+          dateOfBirth: dob ?? user.dateOfBirth,
           isProfileCompleted: true,
         );
 

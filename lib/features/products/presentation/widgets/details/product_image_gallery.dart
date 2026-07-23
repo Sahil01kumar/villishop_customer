@@ -42,7 +42,8 @@ class ProductImageGallery extends ConsumerWidget {
                           fit: BoxFit.contain,
                           placeholder: (context, url) => Container(
                             color: Colors.white,
-                            child: const Center(child: CircularProgressIndicator()),
+                            child: const Center(
+                                child: CircularProgressIndicator()),
                           ),
                           errorWidget: (context, url, error) => const Icon(
                             Icons.shopping_bag_outlined,
@@ -56,7 +57,7 @@ class ProductImageGallery extends ConsumerWidget {
                 },
               ),
             ),
-            
+
             // Image indicators
             if (images.length > 1)
               Positioned(
@@ -109,7 +110,8 @@ class ProductImageGallery extends ConsumerWidget {
                   color: Colors.black.withAlpha(100),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.zoom_in_rounded, color: Colors.white, size: 16),
+                child: const Icon(Icons.zoom_in_rounded,
+                    color: Colors.white, size: 16),
               ),
             ),
           ],
