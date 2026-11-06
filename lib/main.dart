@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'core/config/supabase_app_config.dart';
 import 'core/theme/app_theme.dart';
 import 'core/router/app_router.dart';
 import 'core/constants/app_strings.dart';
@@ -24,8 +26,17 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   } catch (_) {}
 }
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Supabase is optional during local UI development. Configure it only with
+  // the dedicated VilliShop project's URL and publishable key.
+  if (SupabaseAppConfig.isConfigured) {
+    await Supabase.initialize(
+      url: SupabaseAppConfig.url,
+      publishableKey: SupabaseAppConfig.publishableKey,
+    );
+  }
 
   try {
     if (Firebase.apps.isEmpty) {
@@ -62,7 +73,6 @@ class _VilliShopAppState extends ConsumerState<VilliShopApp> {
   @override
   void initState() {
     super.initState();
-    // Use addPostFrameCallback to ensure initialization starts after the first build
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializeServices();
     });
@@ -72,43 +82,25 @@ class _VilliShopAppState extends ConsumerState<VilliShopApp> {
     if (!mounted) return;
 
     try {
-      // 1. Restore App State from Persistence
       await ref.read(appRecoveryServiceProvider).restoreAppState();
-
       if (!mounted) return;
 
-      // 2. Initialize Notification Manager
       await ref.read(notificationManagerProvider).initialize();
-
       if (!mounted) return;
 
-      // 3. Trigger Global Engines
       ref.read(notificationEngineProvider);
       ref.read(activeOrderIdProvider);
 
-      // 4. Connect Realtime Engine if authenticated
-      final authState = ref.read(authProvider);
-      authState.maybeWhen(
-        authenticated: (user) {
-          if (mounted) {
-            ref.read(realtimeEngineProvider).connect('dummy_token');
-          }
-        },
-        orElse: () {},
-      );
+      // The old realtime mock used a hard-coded dummy token. Do not connect
+      // with fake credentials; wire the Supabase realtime adapter in the next
+      // integration step after the dedicated project is provisioned.
 
       if (mounted) {
-        setState(() {
-          _isInitialized = true;
-        });
+        setState(() => _isInitialized = true);
       }
     } catch (e) {
       debugPrint('Initialization error: $e');
-      if (mounted) {
-        setState(() {
-          _isInitialized = true;
-        });
-      }
+      if (mounted) setState(() => _isInitialized = true);
     }
   }
 
@@ -117,14 +109,8 @@ class _VilliShopAppState extends ConsumerState<VilliShopApp> {
     final router = ref.watch(routerProvider);
     final settings = ref.watch(settingsProvider);
 
-    // Listen for Auth changes
     ref.listen(authProvider, (previous, next) {
       next.maybeWhen(
-        authenticated: (user) {
-          if (mounted && _isInitialized) {
-            ref.read(realtimeEngineProvider).connect('dummy_token');
-          }
-        },
         unauthenticated: () {
           if (mounted && _isInitialized) {
             ref.read(realtimeEngineProvider).disconnect();
